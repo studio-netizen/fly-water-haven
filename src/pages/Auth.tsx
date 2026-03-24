@@ -61,9 +61,8 @@ const Auth = () => {
       <div className="hidden lg:flex lg:w-1/2 bg-primary relative overflow-hidden items-center justify-center" style={{ backgroundImage: `url(${heroImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-primary/60" />
         <div className="relative z-10 text-center px-12">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <Fish className="w-12 h-12 text-primary-foreground" />
-            <h1 className="text-5xl font-bold text-primary-foreground font-serif">Flywaters</h1>
+          <div className="flex items-center justify-center mb-6">
+            <img src={logoWhite} alt="Flywaters" className="h-10" />
           </div>
           <p className="text-primary-foreground/80 text-lg max-w-md">
             Connettiti con altri pescatori, scopri spot di pesca incontaminati e condividi le tue migliori catture.
