@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Star, Plus, Filter, X } from 'lucide-react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import BottomNav from '@/components/BottomNav';
@@ -53,17 +52,11 @@ interface Spot {
   review_count: number;
 }
 
-const AddSpotMarker = ({ onAdd }: { onAdd: (lat: number, lng: number) => void }) => {
-  useMapEvents({
-    click(e) {
-      onAdd(e.latlng.lat, e.latlng.lng);
-    },
-  });
-  return null;
-};
-
 const SpotMap = () => {
   const { user } = useAuth();
+  const mapRef = useRef<L.Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const markersRef = useRef<L.LayerGroup | null>(null);
   const [spots, setSpots] = useState<Spot[]>([]);
   const [addMode, setAddMode] = useState(false);
   const [newSpotCoords, setNewSpotCoords] = useState<{ lat: number; lng: number } | null>(null);
@@ -75,8 +68,40 @@ const SpotMap = () => {
   const [spotAccess, setSpotAccess] = useState('');
   const [filterType, setFilterType] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
+  const addModeRef = useRef(false);
 
+  // Keep ref in sync with state
+  useEffect(() => {
+    addModeRef.current = addMode;
+  }, [addMode]);
+
+  // Initialize map
+  useEffect(() => {
+    if (!mapContainerRef.current || mapRef.current) return;
+
+    const map = L.map(mapContainerRef.current).setView([42.5, 12.5], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    markersRef.current = L.layerGroup().addTo(map);
+
+    map.on('click', (e: L.LeafletMouseEvent) => {
+      if (!addModeRef.current) return;
+      setNewSpotCoords({ lat: e.latlng.lat, lng: e.latlng.lng });
+      setShowAddDialog(true);
+      setAddMode(false);
+    });
+
+    mapRef.current = map;
+
+    return () => {
+      map.remove();
+      mapRef.current = null;
+    };
+  }, []);
+
+  // Fetch spots
   useEffect(() => {
     fetchSpots();
   }, []);
@@ -86,12 +111,41 @@ const SpotMap = () => {
     if (data) setSpots(data as Spot[]);
   };
 
-  const handleMapClick = (lat: number, lng: number) => {
-    if (!addMode) return;
-    setNewSpotCoords({ lat, lng });
-    setShowAddDialog(true);
-    setAddMode(false);
-  };
+  // Update markers when spots or filter changes
+  useEffect(() => {
+    if (!markersRef.current) return;
+    markersRef.current.clearLayers();
+
+    const filteredSpots = filterType && filterType !== 'all' ? spots.filter(s => s.spot_type === filterType) : spots;
+
+    filteredSpots.forEach(spot => {
+      const marker = L.marker([spot.latitude, spot.longitude], {
+        icon: createSpotIcon(spot.spot_type, spot.avg_rating),
+      });
+
+      const fishHtml = spot.fish_species?.length
+        ? `<div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap">${spot.fish_species.map(f => `<span style="font-size:11px;background:#f1f5f9;padding:1px 6px;border-radius:4px">${f}</span>`).join('')}</div>`
+        : '';
+
+      const ratingHtml = spot.avg_rating > 0
+        ? `<span style="font-size:11px">⭐ ${Number(spot.avg_rating).toFixed(1)} (${spot.review_count})</span>`
+        : '';
+
+      marker.bindPopup(`
+        <div style="min-width:180px">
+          <strong style="font-size:13px">${spot.name}</strong>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
+            <span style="font-size:11px;background:#e2e8f0;padding:1px 6px;border-radius:4px;text-transform:capitalize">${spot.spot_type}</span>
+            ${ratingHtml}
+          </div>
+          ${spot.description ? `<p style="font-size:11px;margin-top:4px;color:#64748b">${spot.description}</p>` : ''}
+          ${fishHtml}
+        </div>
+      `);
+
+      marker.addTo(markersRef.current!);
+    });
+  }, [spots, filterType]);
 
   const handleCreateSpot = async () => {
     if (!user || !newSpotCoords || !spotName) return;
@@ -121,8 +175,6 @@ const SpotMap = () => {
       setLoading(false);
     }
   };
-
-  const filteredSpots = filterType && filterType !== 'all' ? spots.filter(s => s.spot_type === filterType) : spots;
 
   return (
     <div className="h-screen flex flex-col">
@@ -154,54 +206,12 @@ const SpotMap = () => {
       </div>
 
       {addMode && (
-        <div className="absolute top-16 left-4 z-[1000] glass rounded-lg px-3 py-2 text-sm text-foreground shadow-lg">
+        <div className="absolute top-16 left-4 z-[1000] bg-card/90 backdrop-blur rounded-lg px-3 py-2 text-sm text-foreground shadow-lg">
           <MapPin className="w-4 h-4 inline mr-1 text-primary" /> Tap on the map to drop a pin
         </div>
       )}
 
-      <MapContainer
-        center={[42.5, 12.5]}
-        zoom={6}
-        style={{ height: '100%', width: '100%' }}
-        className="z-0"
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {addMode && <AddSpotMarker onAdd={handleMapClick} />}
-        {filteredSpots.map(spot => (
-          <Marker
-            key={spot.id}
-            position={[spot.latitude, spot.longitude]}
-            icon={createSpotIcon(spot.spot_type, spot.avg_rating)}
-            eventHandlers={{ click: () => setSelectedSpot(spot) }}
-          >
-            <Popup>
-              <div className="min-w-[200px]">
-                <h3 className="font-semibold text-sm">{spot.name}</h3>
-                <div className="flex items-center gap-2 mt-1">
-                  <Badge variant="secondary" className="text-xs capitalize">{spot.spot_type}</Badge>
-                  {spot.avg_rating > 0 && (
-                    <span className="flex items-center gap-0.5 text-xs">
-                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                      {Number(spot.avg_rating).toFixed(1)} ({spot.review_count})
-                    </span>
-                  )}
-                </div>
-                {spot.description && <p className="text-xs mt-1 text-muted-foreground">{spot.description}</p>}
-                {spot.fish_species && spot.fish_species.length > 0 && (
-                  <div className="flex gap-1 mt-1 flex-wrap">
-                    {spot.fish_species.map(f => (
-                      <span key={f} className="text-xs bg-secondary px-1.5 py-0.5 rounded">{f}</span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
+      <div ref={mapContainerRef} className="flex-1 z-0" />
 
       {/* Add spot dialog */}
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
