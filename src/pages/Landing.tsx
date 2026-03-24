@@ -51,7 +51,7 @@ const Landing = () => {
     <div className="min-h-screen" style={{ backgroundColor: '#f5f0e8', color: '#242242' }}>
 
       {/* ─── STICKY NAVBAR ─── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-[#242242]/70 backdrop-blur-md">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <img src={logoWhite} alt="Flywaters" className="h-8" />
 
