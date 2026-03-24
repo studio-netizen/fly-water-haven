@@ -140,6 +140,7 @@ const SpotMap = () => {
           </div>
           ${spot.description ? `<p style="font-size:11px;margin-top:4px;color:#64748b">${spot.description}</p>` : ''}
           ${fishHtml}
+          <a href="/spot/${spot.id}" style="display:inline-block;margin-top:8px;font-size:11px;color:#242242;font-weight:600;text-decoration:none">View details →</a>
         </div>
       `);
 
