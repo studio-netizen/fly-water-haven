@@ -264,6 +264,7 @@ const SpotMap = () => {
       </Dialog>
 
       <BottomNav />
+      </div>
     </div>
   );
 };
