@@ -11,6 +11,7 @@ import SpotMap from "./pages/SpotMap";
 import SpotDetail from "./pages/SpotDetail";
 import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
+import EditProfile from "./pages/EditProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
