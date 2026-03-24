@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Heart, MessageCircle, Star, UserPlus } from 'lucide-react';
-import BottomNav from '@/components/BottomNav';
+import { Button } from '@/components/ui/button';
+import { Heart, MessageCircle, Star, UserPlus, CheckCheck } from 'lucide-react';
+import AppLayout from '@/components/AppLayout';
 
 const ICONS: Record<string, any> = {
   like: Heart,
@@ -15,6 +17,7 @@ const ICONS: Record<string, any> = {
 
 const Notifications = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,15 +29,18 @@ const Notifications = () => {
     if (!user) return;
     const { data } = await supabase
       .from('notifications')
-      .select('*, profiles:actor_id(username, display_name, avatar_url)')
+      .select('*, profiles:actor_id(user_id, username, display_name, avatar_url)')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(50);
-
     if (data) setNotifications(data);
     setLoading(false);
+  };
 
+  const markAllRead = async () => {
+    if (!user) return;
     await supabase.from('notifications').update({ read: true }).eq('user_id', user.id).eq('read', false);
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
   const formatTime = (date: string) => {
@@ -59,37 +65,66 @@ const Notifications = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center pb-20">
-        <p className="text-muted-foreground">Accedi per vedere le notifiche</p>
-        <BottomNav />
-      </div>
+      <AppLayout>
+        <div className="flex items-center justify-center py-20">
+          <p className="text-muted-foreground">Accedi per vedere le notifiche</p>
+        </div>
+      </AppLayout>
     );
   }
 
+  const hasUnread = notifications.some(n => !n.read);
+
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <header className="sticky top-0 z-40 glass border-b border-border px-4 py-3">
-        <div className="max-w-lg mx-auto">
-          <h1 className="text-lg font-semibold text-foreground">Notifiche</h1>
+    <AppLayout>
+      <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
+        <div className="max-w-lg mx-auto flex items-center justify-between">
+          <h1 className="text-base font-semibold text-foreground">Notifiche</h1>
+          {hasUnread && (
+            <Button variant="ghost" size="sm" onClick={markAllRead} className="text-xs text-primary gap-1">
+              <CheckCheck className="w-4 h-4" /> Segna lette
+            </Button>
+          )}
         </div>
       </header>
 
       <div className="max-w-lg mx-auto">
+        {/* Desktop mark all read */}
+        {hasUnread && (
+          <div className="hidden lg:flex justify-end px-4 py-2 border-b border-border">
+            <Button variant="ghost" size="sm" onClick={markAllRead} className="text-xs text-primary gap-1">
+              <CheckCheck className="w-4 h-4" /> Segna tutte come lette
+            </Button>
+          </div>
+        )}
+
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
           </div>
         ) : notifications.length === 0 ? (
-          <p className="text-center py-20 text-muted-foreground">Nessuna notifica ancora</p>
+          <div className="text-center py-20 px-4">
+            <Heart className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+            <p className="text-foreground font-semibold">Nessuna notifica ancora</p>
+            <p className="text-sm text-muted-foreground mt-1">Le notifiche appariranno qui</p>
+          </div>
         ) : (
           notifications.map(n => {
             const Icon = ICONS[n.type] || Heart;
             const profile = n.profiles;
             return (
-              <div key={n.id} className={`flex items-center gap-3 px-4 py-3 border-b border-border ${!n.read ? 'bg-primary/5' : ''}`}>
-                <Avatar className="h-10 w-10">
+              <button
+                key={n.id}
+                onClick={() => {
+                  if (n.type === 'follow' && profile?.user_id) navigate(`/profile/${profile.user_id}`);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 border-b border-border text-left transition-colors hover:bg-muted/30 ${
+                  !n.read ? 'bg-primary/5' : ''
+                }`}
+              >
+                <Avatar className="h-11 w-11 flex-shrink-0">
                   <AvatarImage src={profile?.avatar_url || ''} />
-                  <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                  <AvatarFallback className="bg-muted text-muted-foreground text-sm">
                     {(profile?.display_name || 'U')[0].toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -98,17 +133,15 @@ const Notifications = () => {
                     <span className="font-semibold">{profile?.display_name || profile?.username || 'Qualcuno'}</span>{' '}
                     {getMessage(n.type)}
                   </p>
-                  <p className="text-xs text-muted-foreground">{formatTime(n.created_at)}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{formatTime(n.created_at)}</p>
                 </div>
-                <Icon className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-              </div>
+                <Icon className={`w-5 h-5 flex-shrink-0 ${n.type === 'like' ? 'text-destructive' : 'text-muted-foreground'}`} />
+              </button>
             );
           })
         )}
       </div>
-
-      <BottomNav />
-    </div>
+    </AppLayout>
   );
 };
 
