@@ -48,14 +48,14 @@ const Landing = () => {
         <div className="absolute inset-0 bg-[#242242]/50" />
 
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          <motion.p
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-xs tracking-[0.35em] uppercase text-white/70 mb-8"
+            className="mb-8"
           >
-            Flywaters — Community
-          </motion.p>
+            <img src={logoWhite} alt="Flywaters" className="h-10 sm:h-12 mx-auto" />
+          </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
