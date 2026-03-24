@@ -283,6 +283,9 @@ const Feed = () => {
                     )}
                   </div>
                   <span className="text-xs text-muted-foreground">{formatTime(post.created_at)}</span>
+                  {post.user_id === user?.id && (
+                    <PostActionsMenu post={post} onUpdated={fetchPosts} />
+                  )}
                 </div>
 
                 {/* Image – 4:5 ratio */}
