@@ -8,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Fish, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import heroImage from '@/assets/hero-fishing.jpg';
+import logoWhite from '@/assets/flywaters-logo-white.png';
+import logoDark from '@/assets/flywaters-logo-dark.png';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
