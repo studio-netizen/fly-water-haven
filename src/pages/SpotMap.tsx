@@ -122,7 +122,7 @@ const SpotMap = () => {
     }
   };
 
-  const filteredSpots = filterType ? spots.filter(s => s.spot_type === filterType) : spots;
+  const filteredSpots = filterType && filterType !== 'all' ? spots.filter(s => s.spot_type === filterType) : spots;
 
   return (
     <div className="h-screen flex flex-col">
