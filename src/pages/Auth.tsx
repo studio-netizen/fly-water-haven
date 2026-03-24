@@ -56,7 +56,8 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left panel - branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-primary relative overflow-hidden items-center justify-center">
+      <div className="hidden lg:flex lg:w-1/2 bg-primary relative overflow-hidden items-center justify-center" style={{ backgroundImage: `url(${heroImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="absolute inset-0 bg-primary/60" />
         <div className="relative z-10 text-center px-12">
           <div className="flex items-center justify-center gap-3 mb-6">
             <Fish className="w-12 h-12 text-primary-foreground" />
