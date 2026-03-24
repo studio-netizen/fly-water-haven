@@ -17,8 +17,9 @@ const FISHING_TYPES: Record<string, string> = {
 };
 
 const Profile = () => {
-  const { userId } = useParams<{ userId: string }>();
+  const { userId: paramUserId } = useParams<{ userId: string }>();
   const { user } = useAuth();
+  const userId = paramUserId || user?.id;
   const [profile, setProfile] = useState<any>(null);
   const [posts, setPosts] = useState<any[]>([]);
   const [stats, setStats] = useState({ posts: 0, followers: 0, following: 0 });

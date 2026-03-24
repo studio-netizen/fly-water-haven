@@ -38,6 +38,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Feed />} />
             <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/profile/:userId" element={<Profile />} />
             <Route path="/map" element={<SpotMap />} />
             <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
