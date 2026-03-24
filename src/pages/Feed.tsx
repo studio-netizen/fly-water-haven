@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Landing from './Landing';
 import { supabase } from '@/integrations/supabase/client';
 import { Heart, MessageCircle, MapPin, Fish } from 'lucide-react';
+import PostComments from '@/components/PostComments';
 import logoImg from '@/assets/flywaters-logo-dark.png';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -164,6 +165,12 @@ const Feed = () => {
                   </div>
                 )}
               </div>
+
+              <PostComments
+                postId={post.id}
+                commentCount={post.comment_count}
+                onCommentAdded={fetchPosts}
+              />
             </article>
           ))
         )}
