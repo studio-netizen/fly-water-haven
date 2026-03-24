@@ -46,9 +46,6 @@ const Landing = () => {
     setAuthOpen(true);
   };
 
-  // Fetch profile for avatar
-  const [profile, setProfile] = useState<{ avatar_url: string | null; display_name: string | null } | null>(null);
-  import { useEffect } from 'react'; // hoisted
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#f5f0e8', color: '#242242' }}>
