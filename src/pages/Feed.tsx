@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import Landing from './Landing';
 import { supabase } from '@/integrations/supabase/client';
 import { Heart, MessageCircle, MapPin, Fish } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
