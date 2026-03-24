@@ -183,7 +183,9 @@ const SpotMap = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex">
+      <DesktopSidebar />
+      <div className="flex-1 flex flex-col relative">
       {/* Controls */}
       <div className="absolute top-4 left-4 right-4 z-[1000] flex gap-2">
         {user && (
