@@ -89,10 +89,7 @@ const Feed = () => {
       {/* Header */}
       <header className="sticky top-0 z-40 glass border-b border-border px-4 py-3">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Fish className="w-6 h-6 text-primary" />
-            <h1 className="text-xl font-bold font-serif text-foreground">Flywaters</h1>
-          </div>
+          <img src={logoImg} alt="Flywaters" className="h-8" />
           <CreatePostDialog onPostCreated={fetchPosts} />
         </div>
       </header>

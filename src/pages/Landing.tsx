@@ -218,7 +218,7 @@ const Landing = () => {
       {/* ─── FOOTER ─── */}
       <footer className="bg-[#242242] text-[#f5f0e8]">
         <div className="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-sm font-serif font-semibold tracking-wide">Flywaters</p>
+          <img src={logoWhite} alt="Flywaters" className="h-6" />
           <p className="text-xs tracking-[0.2em] uppercase text-[#f5f0e8]/50">
             Lancia. Connetti. Ripeti.
           </p>
