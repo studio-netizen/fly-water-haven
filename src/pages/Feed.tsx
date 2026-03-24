@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import Landing from './Landing';
 import { supabase } from '@/integrations/supabase/client';
 import { Heart, MessageCircle, MapPin, Fish } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -25,15 +26,18 @@ interface Post {
 }
 
 const Feed = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
 
   useEffect(() => {
+    if (!user) return;
     fetchPosts();
-    if (user) fetchLikedPosts();
+    fetchLikedPosts();
   }, [user]);
+
+  if (!authLoading && !user) return <Landing />;
 
   const fetchPosts = async () => {
     const { data, error } = await supabase
