@@ -80,7 +80,7 @@ const Feed = () => {
     if (mins < 60) return `${mins}m`;
     const hrs = Math.floor(mins / 60);
     if (hrs < 24) return `${hrs}h`;
-    return `${Math.floor(hrs / 24)}d`;
+    return `${Math.floor(hrs / 24)}g`;
   };
 
   return (
@@ -105,8 +105,8 @@ const Feed = () => {
         ) : posts.length === 0 ? (
           <div className="text-center py-20 px-4">
             <Fish className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-foreground mb-2">No catches yet</h3>
-            <p className="text-muted-foreground">Be the first to share your fishing adventure!</p>
+            <h3 className="text-lg font-medium text-foreground mb-2">Nessuna cattura ancora</h3>
+            <p className="text-muted-foreground">Sii il primo a condividere la tua avventura di pesca!</p>
           </div>
         ) : (
           posts.map((post) => (
@@ -121,7 +121,7 @@ const Feed = () => {
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-foreground truncate">
-                    {post.profiles?.display_name || post.profiles?.username || 'Angler'}
+                    {post.profiles?.display_name || post.profiles?.username || 'Pescatore'}
                   </p>
                   {post.location_tag && (
                     <p className="text-xs text-muted-foreground flex items-center gap-1">
@@ -135,7 +135,7 @@ const Feed = () => {
 
               {/* Post image */}
               <div className="aspect-square bg-muted">
-                <img src={post.image_url} alt={post.caption || 'Fishing post'} className="w-full h-full object-cover" />
+                <img src={post.image_url} alt={post.caption || 'Post di pesca'} className="w-full h-full object-cover" />
               </div>
 
               {/* Actions */}
@@ -153,7 +153,7 @@ const Feed = () => {
 
                 {post.caption && (
                   <p className="text-sm text-foreground">
-                    <span className="font-semibold mr-1">{post.profiles?.username || 'angler'}</span>
+                    <span className="font-semibold mr-1">{post.profiles?.username || 'pescatore'}</span>
                     {post.caption}
                   </p>
                 )}

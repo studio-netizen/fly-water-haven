@@ -7,11 +7,11 @@ const BottomNav = () => {
   const location = useLocation();
 
   const links = [
-    { to: '/', icon: Home, label: 'Feed' },
-    { to: '/map', icon: Map, label: 'Map' },
-    { to: '/messages', icon: MessageCircle, label: 'Messages' },
-    { to: '/notifications', icon: Bell, label: 'Alerts' },
-    { to: user ? `/profile/${user.id}` : '/auth', icon: User, label: 'Profile' },
+    { to: '/', icon: Home, label: 'Home' },
+    { to: '/map', icon: Map, label: 'Mappa' },
+    { to: '/messages', icon: MessageCircle, label: 'Messaggi' },
+    { to: '/notifications', icon: Bell, label: 'Notifiche' },
+    { to: user ? `/profile/${user.id}` : '/auth', icon: User, label: 'Profilo' },
   ];
 
   return (

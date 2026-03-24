@@ -34,7 +34,6 @@ const Notifications = () => {
     if (data) setNotifications(data);
     setLoading(false);
 
-    // Mark all as read
     await supabase.from('notifications').update({ read: true }).eq('user_id', user.id).eq('read', false);
   };
 
@@ -44,24 +43,24 @@ const Notifications = () => {
     if (mins < 60) return `${mins}m`;
     const hrs = Math.floor(mins / 60);
     if (hrs < 24) return `${hrs}h`;
-    return `${Math.floor(hrs / 24)}d`;
+    return `${Math.floor(hrs / 24)}g`;
   };
 
   const getMessage = (type: string) => {
     switch (type) {
-      case 'like': return 'liked your post';
-      case 'comment': return 'commented on your post';
-      case 'follow': return 'started following you';
-      case 'review': return 'reviewed a spot you follow';
-      case 'message': return 'sent you a message';
-      default: return 'interacted with you';
+      case 'like': return 'ha messo Mi piace al tuo post';
+      case 'comment': return 'ha commentato il tuo post';
+      case 'follow': return 'ha iniziato a seguirti';
+      case 'review': return 'ha recensito uno spot che segui';
+      case 'message': return 'ti ha inviato un messaggio';
+      default: return 'ha interagito con te';
     }
   };
 
   if (!user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center pb-20">
-        <p className="text-muted-foreground">Sign in to view notifications</p>
+        <p className="text-muted-foreground">Accedi per vedere le notifiche</p>
         <BottomNav />
       </div>
     );
@@ -71,7 +70,7 @@ const Notifications = () => {
     <div className="min-h-screen bg-background pb-20">
       <header className="sticky top-0 z-40 glass border-b border-border px-4 py-3">
         <div className="max-w-lg mx-auto">
-          <h1 className="text-lg font-semibold text-foreground">Notifications</h1>
+          <h1 className="text-lg font-semibold text-foreground">Notifiche</h1>
         </div>
       </header>
 
@@ -81,7 +80,7 @@ const Notifications = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
           </div>
         ) : notifications.length === 0 ? (
-          <p className="text-center py-20 text-muted-foreground">No notifications</p>
+          <p className="text-center py-20 text-muted-foreground">Nessuna notifica ancora</p>
         ) : (
           notifications.map(n => {
             const Icon = ICONS[n.type] || Heart;
@@ -96,7 +95,7 @@ const Notifications = () => {
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-foreground">
-                    <span className="font-semibold">{profile?.display_name || profile?.username || 'Someone'}</span>{' '}
+                    <span className="font-semibold">{profile?.display_name || profile?.username || 'Qualcuno'}</span>{' '}
                     {getMessage(n.type)}
                   </p>
                   <p className="text-xs text-muted-foreground">{formatTime(n.created_at)}</p>

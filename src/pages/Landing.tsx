@@ -17,9 +17,9 @@ const slow = (delay = 0) => ({
 });
 
 const values = [
-  { label: 'DISCOVER', text: 'Find hidden spots across Italy' },
-  { label: 'SHARE', text: 'Post your catches and gear' },
-  { label: 'CONNECT', text: 'Message fellow anglers' },
+  { label: 'SCOPRI', text: 'Trova spot nascosti in tutta Italia' },
+  { label: 'CONDIVIDI', text: 'Pubblica le tue catture e la tua attrezzatura' },
+  { label: 'CONNETTI', text: 'Scrivi ad altri pescatori' },
 ];
 
 const spots = [
@@ -38,7 +38,7 @@ const Landing = () => {
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
         <img
           src={heroImg}
-          alt="Fly fisherman wading in a mountain river"
+          alt="Pescatore a mosca in un fiume di montagna"
           className="absolute inset-0 w-full h-full object-cover"
           width={1920}
           height={1080}
@@ -61,7 +61,7 @@ const Landing = () => {
             transition={{ duration: 1, delay: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             className="text-4xl sm:text-5xl md:text-7xl font-bold text-white leading-[1.1] tracking-tight font-serif"
           >
-            Every river tells<br />a story. Find yours.
+            Ogni fiume racconta<br />una storia. Trova la tua.
           </motion.h1>
 
           <motion.div
@@ -74,7 +74,7 @@ const Landing = () => {
               onClick={() => navigate('/map')}
               className="inline-block px-8 py-4 text-sm tracking-widest uppercase font-medium bg-[#242242] text-[#f5f0e8] hover:bg-[#242242]/85 transition-colors"
             >
-              Explore spots
+              Esplora gli spot
             </button>
           </motion.div>
         </div>
@@ -106,7 +106,7 @@ const Landing = () => {
           >
             <img
               src={editorialImg}
-              alt="Angler wading through a mountain stream in autumn"
+              alt="Pescatore in un torrente di montagna in autunno"
               className="w-full h-[500px] md:h-[600px] object-cover"
               loading="lazy"
               width={1280}
@@ -121,20 +121,20 @@ const Landing = () => {
             viewport={{ once: true, margin: '-100px' }}
             className="max-w-md"
           >
-            <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-4">Our mission</p>
+            <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-4">La nostra missione</p>
             <h2 className="text-3xl md:text-4xl font-bold font-serif leading-tight mb-6">
-              Built for fly fishers,<br />by fly fishers
+              Creato dai pescatori<br />a mosca, per i pescatori a mosca
             </h2>
             <p className="text-base leading-relaxed text-[#8c8c7a] mb-8">
-              We believe the best fishing stories start with the right spot.
-              Flywaters is a community where Italian anglers share their knowledge,
-              document their catches, and protect the waters they love.
+              Crediamo che le migliori storie di pesca inizino con lo spot giusto.
+              Flywaters è una community dove i pescatori italiani condividono le proprie conoscenze,
+              documentano le catture e proteggono le acque che amano.
             </p>
             <button
               onClick={() => navigate('/auth')}
               className="text-sm font-medium tracking-wide text-[#242242] hover:text-[#4a7c59] transition-colors inline-flex items-center gap-2 group"
             >
-              Join the community
+              Unisciti alla community
               <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
             </button>
           </motion.div>
@@ -172,7 +172,7 @@ const Landing = () => {
             viewport={{ once: true }}
             className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-4"
           >
-            Featured
+            In evidenza
           </motion.p>
           <motion.h2
             variants={slow(0.1)}
@@ -181,7 +181,7 @@ const Landing = () => {
             viewport={{ once: true }}
             className="text-3xl md:text-4xl font-bold font-serif mb-14"
           >
-            Spots worth the drive
+            Spot che valgono il viaggio
           </motion.h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
@@ -218,12 +218,12 @@ const Landing = () => {
         <div className="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="text-sm font-serif font-semibold tracking-wide">Flywaters</p>
           <p className="text-xs tracking-[0.2em] uppercase text-[#f5f0e8]/50">
-            Cast. Connect. Repeat.
+            Lancia. Connetti. Ripeti.
           </p>
           <div className="flex gap-8 text-xs tracking-wide text-[#f5f0e8]/60">
-            <a href="#" className="hover:text-[#f5f0e8] transition-colors">About</a>
+            <a href="#" className="hover:text-[#f5f0e8] transition-colors">Chi siamo</a>
             <a href="#" className="hover:text-[#f5f0e8] transition-colors">Privacy</a>
-            <a href="#" className="hover:text-[#f5f0e8] transition-colors">Contact</a>
+            <a href="#" className="hover:text-[#f5f0e8] transition-colors">Contatti</a>
           </div>
         </div>
       </footer>

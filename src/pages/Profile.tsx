@@ -9,11 +9,11 @@ import { Settings, Grid3X3, MapPin } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 
 const FISHING_TYPES: Record<string, string> = {
-  'fly-fishing': '🎣 Fly Fishing',
+  'fly-fishing': '🎣 Pesca a mosca',
   'spinning': '🔄 Spinning',
   'baitcasting': '🎯 Baitcasting',
   'surfcasting': '🌊 Surfcasting',
-  'ice-fishing': '🧊 Ice Fishing',
+  'ice-fishing': '🧊 Pesca sul ghiaccio',
 };
 
 const Profile = () => {
@@ -89,7 +89,7 @@ const Profile = () => {
     <div className="min-h-screen bg-background pb-20">
       <header className="sticky top-0 z-40 glass border-b border-border px-4 py-3">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-foreground">@{profile.username || 'angler'}</h1>
+          <h1 className="text-lg font-semibold text-foreground">@{profile.username || 'pescatore'}</h1>
           {isOwnProfile && (
             <Button variant="ghost" size="icon"><Settings className="w-5 h-5" /></Button>
           )}
@@ -130,7 +130,7 @@ const Profile = () => {
 
         {!isOwnProfile && user && (
           <Button onClick={toggleFollow} variant={isFollowing ? 'outline' : 'default'} className="w-full mb-4">
-            {isFollowing ? 'Following' : 'Follow'}
+            {isFollowing ? 'Seguendo' : 'Segui'}
           </Button>
         )}
 
@@ -147,7 +147,7 @@ const Profile = () => {
             ))}
           </div>
           {posts.length === 0 && (
-            <p className="text-center py-10 text-muted-foreground text-sm">No posts yet</p>
+            <p className="text-center py-10 text-muted-foreground text-sm">Nessun post ancora</p>
           )}
         </div>
       </div>
