@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Landing from './Landing';
 import { supabase } from '@/integrations/supabase/client';
 import { Heart, MessageCircle, Share2, MapPin, Send } from 'lucide-react';
+import PostActionsMenu from '@/components/PostActionsMenu';
 import PostComments from '@/components/PostComments';
 import logoImg from '@/assets/flywaters-logo-dark.png';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -282,6 +283,9 @@ const Feed = () => {
                     )}
                   </div>
                   <span className="text-xs text-muted-foreground">{formatTime(post.created_at)}</span>
+                  {post.user_id === user?.id && (
+                    <PostActionsMenu post={post} onUpdated={fetchPosts} />
+                  )}
                 </div>
 
                 {/* Image – 4:5 ratio */}

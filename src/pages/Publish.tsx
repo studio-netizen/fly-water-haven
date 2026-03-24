@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { ImagePlus, ArrowLeft, MapPin, X } from 'lucide-react';
 import { toast } from 'sonner';
 import AppLayout from '@/components/AppLayout';
+import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 
 const COMMON_SPECIES = ['Trota fario', 'Trota iridea', 'Temolo', 'Salmerino', 'Luccio', 'Persico', 'Carpa'];
 const COMMON_GEAR = ['Canna 3wt', 'Canna 5wt', 'Canna 7wt', 'Nymphing', 'Streamer', 'Secca', 'Spinning'];
@@ -20,26 +20,14 @@ const Publish = () => {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [caption, setCaption] = useState('');
-  const [locationTag, setLocationTag] = useState('');
   const [selectedSpecies, setSelectedSpecies] = useState<string[]>([]);
   const [selectedGear, setSelectedGear] = useState<string[]>([]);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isPublic, setIsPublic] = useState(true);
-  const [spotSearch, setSpotSearch] = useState('');
-  const [spots, setSpots] = useState<any[]>([]);
-  const [selectedSpot, setSelectedSpot] = useState<any>(null);
-
-  useEffect(() => {
-    if (spotSearch.length >= 2) {
-      supabase.from('spots').select('id, name, spot_type')
-        .ilike('name', `%${spotSearch}%`).limit(5)
-        .then(({ data }) => { if (data) setSpots(data); });
-    } else {
-      setSpots([]);
-    }
-  }, [spotSearch]);
+  const [location, setLocation] = useState<LocationResult | null>(null);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -67,8 +55,7 @@ const Publish = () => {
         user_id: user.id,
         image_url: publicUrl,
         caption: caption || null,
-        location_tag: selectedSpot?.name || locationTag || null,
-        spot_id: selectedSpot?.id || null,
+        location_tag: location?.name || null,
         fish_species: selectedSpecies.length > 0 ? selectedSpecies : null,
         gear_used: selectedGear.length > 0 ? selectedGear : null,
       });
@@ -125,6 +112,36 @@ const Publish = () => {
         </div>
         <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
 
+        {/* Location tagging */}
+        <div>
+          <Label className="text-sm font-medium">Posizione</Label>
+          {location ? (
+            <div className="flex items-center gap-2 mt-1.5 px-3 py-2 bg-primary/10 rounded-full w-fit">
+              <MapPin className="w-3.5 h-3.5 text-primary" />
+              <span className="text-sm font-medium text-foreground">{location.name}</span>
+              <button onClick={() => setLocation(null)}>
+                <X className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
+              </button>
+            </div>
+          ) : showLocationPicker ? (
+            <div className="mt-1.5">
+              <LocationPicker value={location} onChange={(loc) => { setLocation(loc); if (loc) setShowLocationPicker(false); }} placeholder="Cerca località..." />
+              <button onClick={() => setShowLocationPicker(false)} className="text-xs text-muted-foreground mt-1 hover:underline">
+                Annulla
+              </button>
+            </div>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-1.5 gap-2"
+              onClick={() => setShowLocationPicker(true)}
+            >
+              <MapPin className="w-4 h-4" /> Aggiungi posizione
+            </Button>
+          )}
+        </div>
+
         {/* Caption */}
         <div>
           <Textarea
@@ -135,53 +152,6 @@ const Publish = () => {
             className="resize-none"
           />
           <p className="text-xs text-muted-foreground mt-1 text-right">{caption.length}/300</p>
-        </div>
-
-        {/* Spot tagging */}
-        <div>
-          <Label className="text-sm font-medium">Tagga uno spot</Label>
-          {selectedSpot ? (
-            <div className="flex items-center gap-2 mt-1.5 px-3 py-2 bg-muted rounded-lg">
-              <MapPin className="w-4 h-4 text-primary" />
-              <span className="text-sm text-foreground flex-1">{selectedSpot.name}</span>
-              <button onClick={() => { setSelectedSpot(null); setSpotSearch(''); }}>
-                <X className="w-4 h-4 text-muted-foreground" />
-              </button>
-            </div>
-          ) : (
-            <div className="relative mt-1.5">
-              <Input
-                value={spotSearch}
-                onChange={e => setSpotSearch(e.target.value)}
-                placeholder="Cerca spot esistente..."
-                className="pl-9"
-              />
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              {spots.length > 0 && (
-                <div className="absolute top-full left-0 right-0 bg-background border border-border rounded-lg mt-1 shadow-lg z-10">
-                  {spots.map(s => (
-                    <button
-                      key={s.id}
-                      onClick={() => { setSelectedSpot(s); setSpotSearch(''); setSpots([]); }}
-                      className="w-full text-left px-3 py-2 hover:bg-muted text-sm text-foreground flex items-center gap-2"
-                    >
-                      <MapPin className="w-3.5 h-3.5 text-primary" />
-                      {s.name}
-                      <span className="text-xs text-muted-foreground ml-auto">{s.spot_type}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-          {!selectedSpot && (
-            <Input
-              value={locationTag}
-              onChange={e => setLocationTag(e.target.value)}
-              placeholder="oppure scrivi una località..."
-              className="mt-2"
-            />
-          )}
         </div>
 
         {/* Fish species chips */}
