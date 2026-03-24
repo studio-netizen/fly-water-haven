@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
+import logoWhite from '@/assets/flywaters-logo-white.png';
+import logoDark from '@/assets/flywaters-logo-dark.png';
 import heroImg from '@/assets/landing-hero.jpg';
 import editorialImg from '@/assets/landing-editorial.jpg';
 import spotLake from '@/assets/spot-lake.jpg';
