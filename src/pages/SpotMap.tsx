@@ -12,6 +12,7 @@ import { MapPin, Star, Plus, Filter, X } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import BottomNav from '@/components/BottomNav';
+import DesktopSidebar from '@/components/DesktopSidebar';
 import { toast } from 'sonner';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
