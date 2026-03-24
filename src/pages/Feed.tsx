@@ -31,6 +31,8 @@ const Feed = () => {
   const [loading, setLoading] = useState(true);
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
 
+  if (!authLoading && !user) return <Landing />;
+
   useEffect(() => {
     fetchPosts();
     if (user) fetchLikedPosts();
