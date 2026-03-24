@@ -77,9 +77,8 @@ const Auth = () => {
       {/* Right panel - form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md animate-fade-in">
-          <div className="lg:hidden flex items-center gap-2 mb-8 justify-center">
-            <Fish className="w-8 h-8 text-primary" />
-            <h1 className="text-3xl font-bold text-foreground font-serif">Flywaters</h1>
+          <div className="lg:hidden flex items-center justify-center mb-8">
+            <img src={logoDark} alt="Flywaters" className="h-8" />
           </div>
 
           <h2 className="text-2xl font-semibold text-foreground mb-2">
