@@ -5,7 +5,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Settings, Grid3X3, MapPin } from 'lucide-react';
+import { Settings, Grid3X3, MapPin, Pencil } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import BottomNav from '@/components/BottomNav';
 
 const FISHING_TYPES: Record<string, string> = {
