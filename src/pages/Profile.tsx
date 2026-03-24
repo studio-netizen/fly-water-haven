@@ -26,6 +26,7 @@ const Profile = () => {
   const [stats, setStats] = useState({ posts: 0, followers: 0, following: 0 });
   const [isFollowing, setIsFollowing] = useState(false);
   const isOwnProfile = user?.id === userId;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (userId) {
