@@ -8,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Fish, Mail, Lock, User, ArrowRight } from 'lucide-react';
 import heroImage from '@/assets/hero-fishing.jpg';
+import logoWhite from '@/assets/flywaters-logo-white.png';
+import logoDark from '@/assets/flywaters-logo-dark.png';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -59,9 +61,8 @@ const Auth = () => {
       <div className="hidden lg:flex lg:w-1/2 bg-primary relative overflow-hidden items-center justify-center" style={{ backgroundImage: `url(${heroImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-primary/60" />
         <div className="relative z-10 text-center px-12">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <Fish className="w-12 h-12 text-primary-foreground" />
-            <h1 className="text-5xl font-bold text-primary-foreground font-serif">Flywaters</h1>
+          <div className="flex items-center justify-center mb-6">
+            <img src={logoWhite} alt="Flywaters" className="h-10" />
           </div>
           <p className="text-primary-foreground/80 text-lg max-w-md">
             Connettiti con altri pescatori, scopri spot di pesca incontaminati e condividi le tue migliori catture.
@@ -76,9 +77,8 @@ const Auth = () => {
       {/* Right panel - form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md animate-fade-in">
-          <div className="lg:hidden flex items-center gap-2 mb-8 justify-center">
-            <Fish className="w-8 h-8 text-primary" />
-            <h1 className="text-3xl font-bold text-foreground font-serif">Flywaters</h1>
+          <div className="lg:hidden flex items-center justify-center mb-8">
+            <img src={logoDark} alt="Flywaters" className="h-8" />
           </div>
 
           <h2 className="text-2xl font-semibold text-foreground mb-2">

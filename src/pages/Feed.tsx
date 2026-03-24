@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Landing from './Landing';
 import { supabase } from '@/integrations/supabase/client';
 import { Heart, MessageCircle, MapPin, Fish } from 'lucide-react';
+import logoImg from '@/assets/flywaters-logo-dark.png';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import BottomNav from '@/components/BottomNav';
@@ -88,10 +89,7 @@ const Feed = () => {
       {/* Header */}
       <header className="sticky top-0 z-40 glass border-b border-border px-4 py-3">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Fish className="w-6 h-6 text-primary" />
-            <h1 className="text-xl font-bold font-serif text-foreground">Flywaters</h1>
-          </div>
+          <img src={logoImg} alt="Flywaters" className="h-8" />
           <CreatePostDialog onPostCreated={fetchPosts} />
         </div>
       </header>

@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
+import logoWhite from '@/assets/flywaters-logo-white.png';
+import logoDark from '@/assets/flywaters-logo-dark.png';
 import heroImg from '@/assets/landing-hero.jpg';
 import editorialImg from '@/assets/landing-editorial.jpg';
 import spotLake from '@/assets/spot-lake.jpg';
@@ -46,14 +48,14 @@ const Landing = () => {
         <div className="absolute inset-0 bg-[#242242]/50" />
 
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          <motion.p
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-xs tracking-[0.35em] uppercase text-white/70 mb-8"
+            className="mb-8"
           >
-            Flywaters — Community
-          </motion.p>
+            <img src={logoWhite} alt="Flywaters" className="h-10 sm:h-12 mx-auto" />
+          </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -216,7 +218,7 @@ const Landing = () => {
       {/* ─── FOOTER ─── */}
       <footer className="bg-[#242242] text-[#f5f0e8]">
         <div className="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-sm font-serif font-semibold tracking-wide">Flywaters</p>
+          <img src={logoWhite} alt="Flywaters" className="h-6" />
           <p className="text-xs tracking-[0.2em] uppercase text-[#f5f0e8]/50">
             Lancia. Connetti. Ripeti.
           </p>
