@@ -219,6 +219,13 @@ export type Database = {
             referencedRelation: "spots"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "posts_user_id_profiles_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       profiles: {

@@ -38,7 +38,7 @@ const Feed = () => {
   const fetchPosts = async () => {
     const { data, error } = await supabase
       .from('posts')
-      .select('*, profiles!posts_user_id_fkey(username, display_name, avatar_url)')
+      .select('*, profiles!posts_user_id_profiles_fkey(username, display_name, avatar_url)')
       .order('created_at', { ascending: false })
       .limit(50);
 
