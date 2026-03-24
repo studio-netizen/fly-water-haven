@@ -12,6 +12,7 @@ import SpotDetail from "./pages/SpotDetail";
 import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
 import EditProfile from "./pages/EditProfile";
+import Publish from "./pages/Publish";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/spot/:spotId" element={<SpotDetail />} />
             <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+            <Route path="/publish" element={<ProtectedRoute><Publish /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
