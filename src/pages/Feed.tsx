@@ -31,12 +31,13 @@ const Feed = () => {
   const [loading, setLoading] = useState(true);
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
 
-  if (!authLoading && !user) return <Landing />;
-
   useEffect(() => {
+    if (!user) return;
     fetchPosts();
-    if (user) fetchLikedPosts();
+    fetchLikedPosts();
   }, [user]);
+
+  if (!authLoading && !user) return <Landing />;
 
   const fetchPosts = async () => {
     const { data, error } = await supabase
