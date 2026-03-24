@@ -12,6 +12,7 @@ import { MapPin, Star, Plus, Filter, X } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import BottomNav from '@/components/BottomNav';
+import DesktopSidebar from '@/components/DesktopSidebar';
 import { toast } from 'sonner';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -182,7 +183,9 @@ const SpotMap = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex">
+      <DesktopSidebar />
+      <div className="flex-1 flex flex-col relative">
       {/* Controls */}
       <div className="absolute top-4 left-4 right-4 z-[1000] flex gap-2">
         {user && (
@@ -261,6 +264,7 @@ const SpotMap = () => {
       </Dialog>
 
       <BottomNav />
+      </div>
     </div>
   );
 };
