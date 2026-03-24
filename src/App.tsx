@@ -11,6 +11,7 @@ import SpotMap from "./pages/SpotMap";
 import SpotDetail from "./pages/SpotDetail";
 import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
+import EditProfile from "./pages/EditProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/:userId" element={<Profile />} />
+            <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
             <Route path="/map" element={<SpotMap />} />
             <Route path="/spot/:spotId" element={<SpotDetail />} />
             <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
