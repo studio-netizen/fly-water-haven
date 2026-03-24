@@ -93,7 +93,7 @@ const Profile = () => {
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <h1 className="text-lg font-semibold text-foreground">@{profile.username || 'pescatore'}</h1>
           {isOwnProfile && (
-            <Button variant="ghost" size="icon"><Settings className="w-5 h-5" /></Button>
+            <Button variant="ghost" size="icon" onClick={() => navigate('/profile/edit')}><Pencil className="w-5 h-5" /></Button>
           )}
         </div>
       </header>
