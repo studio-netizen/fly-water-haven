@@ -55,7 +55,6 @@ const Messages = () => {
 
   const fetchConversations = async () => {
     if (!user) return;
-    // Get all messages involving this user
     const { data } = await supabase
       .from('messages')
       .select('*')
@@ -64,7 +63,6 @@ const Messages = () => {
 
     if (!data) { setLoading(false); return; }
 
-    // Group by conversation partner
     const convMap = new Map<string, { last_message: string; last_time: string; unread: number }>();
     data.forEach(msg => {
       const partnerId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
@@ -80,7 +78,6 @@ const Messages = () => {
       }
     });
 
-    // Fetch profiles
     const userIds = Array.from(convMap.keys());
     if (userIds.length === 0) { setConversations([]); setLoading(false); return; }
 
@@ -116,7 +113,6 @@ const Messages = () => {
     if (data) {
       setMessages(data);
       scrollToBottom();
-      // Mark as read
       await supabase
         .from('messages')
         .update({ read: true })
@@ -147,7 +143,7 @@ const Messages = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center pb-20">
-        <p className="text-muted-foreground">Sign in to view messages</p>
+        <p className="text-muted-foreground">Accedi per vedere i messaggi</p>
         <BottomNav />
       </div>
     );
@@ -189,7 +185,7 @@ const Messages = () => {
             <Input
               value={newMessage}
               onChange={e => setNewMessage(e.target.value)}
-              placeholder="Type a message..."
+              placeholder="Scrivi un messaggio..."
               onKeyDown={e => e.key === 'Enter' && sendMessage()}
             />
             <Button size="icon" onClick={sendMessage} disabled={!newMessage.trim()}>
@@ -206,7 +202,7 @@ const Messages = () => {
     <div className="min-h-screen bg-background pb-20">
       <header className="sticky top-0 z-40 glass border-b border-border px-4 py-3">
         <div className="max-w-lg mx-auto">
-          <h1 className="text-lg font-semibold text-foreground">Messages</h1>
+          <h1 className="text-lg font-semibold text-foreground">Messaggi</h1>
         </div>
       </header>
 
@@ -217,8 +213,8 @@ const Messages = () => {
           </div>
         ) : conversations.length === 0 ? (
           <div className="text-center py-20 px-4">
-            <p className="text-muted-foreground">No messages yet</p>
-            <p className="text-sm text-muted-foreground mt-1">Start a conversation from someone's profile</p>
+            <p className="text-muted-foreground">Nessun messaggio ancora</p>
+            <p className="text-sm text-muted-foreground mt-1">Inizia una conversazione dal profilo di un utente</p>
           </div>
         ) : (
           conversations.map(conv => (

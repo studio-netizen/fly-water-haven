@@ -25,7 +25,7 @@ const Auth = () => {
       if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        toast.success('Welcome back!');
+        toast.success('Bentornato!');
         navigate('/');
       } else {
         const { error } = await supabase.auth.signUp({
@@ -37,7 +37,7 @@ const Auth = () => {
           },
         });
         if (error) throw error;
-        toast.success('Check your email to confirm your account!');
+        toast.success('Controlla la tua email per confermare l\'account!');
       }
     } catch (err: any) {
       toast.error(err.message);
@@ -64,10 +64,9 @@ const Auth = () => {
             <h1 className="text-5xl font-bold text-primary-foreground font-serif">Flywaters</h1>
           </div>
           <p className="text-primary-foreground/80 text-lg max-w-md">
-            Connect with fellow anglers, discover pristine fishing spots, and share your greatest catches.
+            Connettiti con altri pescatori, scopri spot di pesca incontaminati e condividi le tue migliori catture.
           </p>
         </div>
-        {/* Decorative wave */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-primary/50 to-transparent" />
         <svg className="absolute bottom-0 left-0 right-0" viewBox="0 0 1440 120" fill="none">
           <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1350,80 1440,60 L1440,120 L0,120 Z" fill="hsl(152,45%,30%)" fillOpacity="0.3"/>
@@ -83,19 +82,19 @@ const Auth = () => {
           </div>
 
           <h2 className="text-2xl font-semibold text-foreground mb-2">
-            {isLogin ? 'Welcome back' : 'Create your account'}
+            {isLogin ? 'Bentornato' : 'Crea il tuo account'}
           </h2>
           <p className="text-muted-foreground mb-8">
-            {isLogin ? 'Sign in to continue your fishing journey' : 'Join the community of fishing enthusiasts'}
+            {isLogin ? 'Accedi per continuare la tua avventura di pesca' : 'Unisciti alla community di appassionati di pesca'}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name">Nome completo</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input id="name" placeholder="Your name" value={fullName} onChange={(e) => setFullName(e.target.value)} className="pl-10" required />
+                  <Input id="name" placeholder="Il tuo nome" value={fullName} onChange={(e) => setFullName(e.target.value)} className="pl-10" required />
                 </div>
               </div>
             )}
@@ -103,7 +102,7 @@ const Auth = () => {
               <Label htmlFor="email">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input id="email" type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-10" required />
+                <Input id="email" type="email" placeholder="tu@esempio.com" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-10" required />
               </div>
             </div>
             <div className="space-y-2">
@@ -114,14 +113,14 @@ const Auth = () => {
               </div>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Loading...' : isLogin ? 'Sign In' : 'Create Account'}
+              {loading ? 'Caricamento...' : isLogin ? 'Accedi' : 'Crea account'}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </form>
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-border" /></div>
-            <div className="relative flex justify-center text-sm"><span className="px-3 bg-background text-muted-foreground">or continue with</span></div>
+            <div className="relative flex justify-center text-sm"><span className="px-3 bg-background text-muted-foreground">oppure continua con</span></div>
           </div>
 
           <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
@@ -130,9 +129,9 @@ const Auth = () => {
           </Button>
 
           <p className="text-center mt-6 text-sm text-muted-foreground">
-            {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
+            {isLogin ? "Non hai ancora un account?" : 'Hai già un account?'}{' '}
             <button type="button" onClick={() => setIsLogin(!isLogin)} className="text-primary font-medium hover:underline">
-              {isLogin ? 'Sign up' : 'Sign in'}
+              {isLogin ? 'Registrati' : 'Accedi'}
             </button>
           </p>
         </div>

@@ -55,7 +55,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
       });
 
       if (error) throw error;
-      toast.success('Post shared!');
+      toast.success('Post condiviso!');
       setOpen(false);
       setCaption('');
       setLocationTag('');
@@ -82,7 +82,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
       </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Share Your Catch</DialogTitle>
+          <DialogTitle>Condividi la tua cattura</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div
@@ -90,36 +90,36 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
             className="aspect-square rounded-lg border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-primary transition-colors overflow-hidden bg-muted"
           >
             {imagePreview ? (
-              <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+              <img src={imagePreview} alt="Anteprima" className="w-full h-full object-cover" />
             ) : (
               <div className="text-center">
                 <ImagePlus className="w-10 h-10 text-muted-foreground mx-auto mb-2" />
-                <p className="text-sm text-muted-foreground">Tap to add photo</p>
+                <p className="text-sm text-muted-foreground">Tocca per aggiungere una foto</p>
               </div>
             )}
           </div>
           <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
 
           <div className="space-y-2">
-            <Label>Caption</Label>
-            <Textarea value={caption} onChange={(e) => setCaption(e.target.value)} placeholder="Describe your catch..." rows={2} />
+            <Label>Didascalia</Label>
+            <Textarea value={caption} onChange={(e) => setCaption(e.target.value)} placeholder="Descrivi la tua cattura..." rows={2} />
           </div>
           <div className="space-y-2">
-            <Label>Location</Label>
-            <Input value={locationTag} onChange={(e) => setLocationTag(e.target.value)} placeholder="e.g. Lake Como, Italy" />
+            <Label>Località</Label>
+            <Input value={locationTag} onChange={(e) => setLocationTag(e.target.value)} placeholder="es. Lago di Como, Italia" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label>Fish Species</Label>
-              <Input value={fishSpecies} onChange={(e) => setFishSpecies(e.target.value)} placeholder="Trout, Bass" />
+              <Label>Specie ittica</Label>
+              <Input value={fishSpecies} onChange={(e) => setFishSpecies(e.target.value)} placeholder="Trota, Luccio" />
             </div>
             <div className="space-y-2">
-              <Label>Gear Used</Label>
-              <Input value={gearUsed} onChange={(e) => setGearUsed(e.target.value)} placeholder="5wt fly rod" />
+              <Label>Attrezzatura</Label>
+              <Input value={gearUsed} onChange={(e) => setGearUsed(e.target.value)} placeholder="Canna 5wt" />
             </div>
           </div>
           <Button onClick={handleSubmit} className="w-full" disabled={loading || !imageFile}>
-            {loading ? 'Uploading...' : 'Share Post'}
+            {loading ? 'Caricamento...' : 'Pubblica'}
           </Button>
         </div>
       </DialogContent>

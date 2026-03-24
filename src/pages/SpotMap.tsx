@@ -14,7 +14,6 @@ import 'leaflet/dist/leaflet.css';
 import BottomNav from '@/components/BottomNav';
 import { toast } from 'sonner';
 
-// Fix leaflet default markers
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
@@ -27,6 +26,13 @@ const SPOT_COLORS: Record<string, string> = {
   river: '#06b6d4',
   sea: '#1e40af',
   stream: '#14b8a6',
+};
+
+const SPOT_TYPE_LABELS: Record<string, string> = {
+  lake: 'Lago',
+  river: 'Fiume',
+  sea: 'Mare',
+  stream: 'Torrente',
 };
 
 const createSpotIcon = (type: string, rating: number) => {
@@ -70,12 +76,10 @@ const SpotMap = () => {
   const [loading, setLoading] = useState(false);
   const addModeRef = useRef(false);
 
-  // Keep ref in sync with state
   useEffect(() => {
     addModeRef.current = addMode;
   }, [addMode]);
 
-  // Initialize map
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -101,7 +105,6 @@ const SpotMap = () => {
     };
   }, []);
 
-  // Fetch spots
   useEffect(() => {
     fetchSpots();
   }, []);
@@ -111,7 +114,6 @@ const SpotMap = () => {
     if (data) setSpots(data as Spot[]);
   };
 
-  // Update markers when spots or filter changes
   useEffect(() => {
     if (!markersRef.current) return;
     markersRef.current.clearLayers();
@@ -131,16 +133,18 @@ const SpotMap = () => {
         ? `<span style="font-size:11px">⭐ ${Number(spot.avg_rating).toFixed(1)} (${spot.review_count})</span>`
         : '';
 
+      const typeLabel = SPOT_TYPE_LABELS[spot.spot_type] || spot.spot_type;
+
       marker.bindPopup(`
         <div style="min-width:180px">
           <strong style="font-size:13px">${spot.name}</strong>
           <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
-            <span style="font-size:11px;background:#e2e8f0;padding:1px 6px;border-radius:4px;text-transform:capitalize">${spot.spot_type}</span>
+            <span style="font-size:11px;background:#e2e8f0;padding:1px 6px;border-radius:4px">${typeLabel}</span>
             ${ratingHtml}
           </div>
           ${spot.description ? `<p style="font-size:11px;margin-top:4px;color:#64748b">${spot.description}</p>` : ''}
           ${fishHtml}
-          <a href="/spot/${spot.id}" style="display:inline-block;margin-top:8px;font-size:11px;color:#242242;font-weight:600;text-decoration:none">View details →</a>
+          <a href="/spot/${spot.id}" style="display:inline-block;margin-top:8px;font-size:11px;color:#242242;font-weight:600;text-decoration:none">Vedi dettagli →</a>
         </div>
       `);
 
@@ -163,7 +167,7 @@ const SpotMap = () => {
         access_info: spotAccess || null,
       });
       if (error) throw error;
-      toast.success('Spot added!');
+      toast.success('Spot aggiunto!');
       setShowAddDialog(false);
       setSpotName('');
       setSpotDesc('');
@@ -188,27 +192,27 @@ const SpotMap = () => {
             variant={addMode ? 'destructive' : 'default'}
             className="shadow-lg"
           >
-            {addMode ? <><X className="w-4 h-4 mr-1" /> Cancel</> : <><Plus className="w-4 h-4 mr-1" /> Add Spot</>}
+            {addMode ? <><X className="w-4 h-4 mr-1" /> Annulla</> : <><Plus className="w-4 h-4 mr-1" /> Aggiungi spot</>}
           </Button>
         )}
         <Select value={filterType} onValueChange={setFilterType}>
           <SelectTrigger className="w-32 bg-card shadow-lg">
             <Filter className="w-4 h-4 mr-1" />
-            <SelectValue placeholder="All types" />
+            <SelectValue placeholder="Tutti i tipi" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All types</SelectItem>
-            <SelectItem value="lake">Lake</SelectItem>
-            <SelectItem value="river">River</SelectItem>
-            <SelectItem value="sea">Sea</SelectItem>
-            <SelectItem value="stream">Stream</SelectItem>
+            <SelectItem value="all">Tutti i tipi</SelectItem>
+            <SelectItem value="lake">Lago</SelectItem>
+            <SelectItem value="river">Fiume</SelectItem>
+            <SelectItem value="sea">Mare</SelectItem>
+            <SelectItem value="stream">Torrente</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {addMode && (
         <div className="absolute top-16 left-4 z-[1000] bg-card/90 backdrop-blur rounded-lg px-3 py-2 text-sm text-foreground shadow-lg">
-          <MapPin className="w-4 h-4 inline mr-1 text-primary" /> Tap on the map to drop a pin
+          <MapPin className="w-4 h-4 inline mr-1 text-primary" /> Tocca sulla mappa per posizionare un pin
         </div>
       )}
 
@@ -218,39 +222,39 @@ const SpotMap = () => {
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add New Fishing Spot</DialogTitle>
+            <DialogTitle>Aggiungi nuovo spot di pesca</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
             <div className="space-y-1">
-              <Label>Name</Label>
-              <Input value={spotName} onChange={e => setSpotName(e.target.value)} placeholder="Spot name" />
+              <Label>Nome</Label>
+              <Input value={spotName} onChange={e => setSpotName(e.target.value)} placeholder="Nome dello spot" />
             </div>
             <div className="space-y-1">
-              <Label>Type</Label>
+              <Label>Tipo</Label>
               <Select value={spotType} onValueChange={setSpotType}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="lake">Lake</SelectItem>
-                  <SelectItem value="river">River</SelectItem>
-                  <SelectItem value="sea">Sea</SelectItem>
-                  <SelectItem value="stream">Stream</SelectItem>
+                  <SelectItem value="lake">Lago</SelectItem>
+                  <SelectItem value="river">Fiume</SelectItem>
+                  <SelectItem value="sea">Mare</SelectItem>
+                  <SelectItem value="stream">Torrente</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1">
-              <Label>Description</Label>
-              <Textarea value={spotDesc} onChange={e => setSpotDesc(e.target.value)} placeholder="Describe the spot..." rows={2} />
+              <Label>Descrizione</Label>
+              <Textarea value={spotDesc} onChange={e => setSpotDesc(e.target.value)} placeholder="Descrivi lo spot..." rows={2} />
             </div>
             <div className="space-y-1">
-              <Label>Fish Species (comma separated)</Label>
-              <Input value={spotFish} onChange={e => setSpotFish(e.target.value)} placeholder="Trout, Pike, Bass" />
+              <Label>Specie ittiche (separate da virgola)</Label>
+              <Input value={spotFish} onChange={e => setSpotFish(e.target.value)} placeholder="Trota, Luccio, Persico" />
             </div>
             <div className="space-y-1">
-              <Label>Access Info</Label>
-              <Input value={spotAccess} onChange={e => setSpotAccess(e.target.value)} placeholder="How to reach this spot" />
+              <Label>Informazioni di accesso</Label>
+              <Input value={spotAccess} onChange={e => setSpotAccess(e.target.value)} placeholder="Come raggiungere lo spot" />
             </div>
             <Button onClick={handleCreateSpot} className="w-full" disabled={loading || !spotName}>
-              {loading ? 'Saving...' : 'Add Spot'}
+              {loading ? 'Salvataggio...' : 'Aggiungi spot'}
             </Button>
           </div>
         </DialogContent>

@@ -10,6 +10,13 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import BottomNav from '@/components/BottomNav';
 
+const SPOT_TYPE_LABELS: Record<string, string> = {
+  lake: 'Lago',
+  river: 'Fiume',
+  sea: 'Mare',
+  stream: 'Torrente',
+};
+
 interface Spot {
   id: string;
   name: string;
@@ -87,7 +94,6 @@ const SpotDetail = () => {
   const [loading, setLoading] = useState(true);
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
-  // Review form
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -120,7 +126,7 @@ const SpotDetail = () => {
 
   const handleSubmitReview = async () => {
     if (!user || !spotId || rating === 0) {
-      toast.error('Please select a rating');
+      toast.error('Seleziona una valutazione');
       return;
     }
     setSubmitting(true);
@@ -132,7 +138,7 @@ const SpotDetail = () => {
         content: reviewText || null,
       });
       if (error) throw error;
-      toast.success('Review submitted');
+      toast.success('Recensione inviata');
       setRating(0);
       setReviewText('');
       fetchReviews();
@@ -145,7 +151,7 @@ const SpotDetail = () => {
   };
 
   const formatDate = (d: string) =>
-    new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
 
   if (loading) {
     return (
@@ -158,8 +164,8 @@ const SpotDetail = () => {
   if (!spot) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ backgroundColor: '#f5f0e8', color: '#242242' }}>
-        <p className="text-lg">Spot not found</p>
-        <Button variant="outline" onClick={() => navigate('/map')}>Back to map</Button>
+        <p className="text-lg">Spot non trovato</p>
+        <Button variant="outline" onClick={() => navigate('/map')}>Torna alla mappa</Button>
       </div>
     );
   }
@@ -169,7 +175,6 @@ const SpotDetail = () => {
   return (
     <div className="min-h-screen pb-24" style={{ backgroundColor: '#f5f0e8', color: '#242242' }}>
 
-      {/* ─── HEADER ─── */}
       <header className="sticky top-0 z-40 border-b border-[#242242]/10 px-4 py-3" style={{ backgroundColor: '#f5f0e8' }}>
         <div className="max-w-3xl mx-auto flex items-center gap-3">
           <button onClick={() => navigate('/map')} className="hover:opacity-70 transition-opacity">
@@ -177,7 +182,7 @@ const SpotDetail = () => {
           </button>
           <div className="flex-1 min-w-0">
             <h1 className="text-lg font-bold font-serif truncate">{spot.name}</h1>
-            <p className="text-xs tracking-wide uppercase text-[#8c8c7a]">{spot.spot_type}</p>
+            <p className="text-xs tracking-wide uppercase text-[#8c8c7a]">{SPOT_TYPE_LABELS[spot.spot_type] || spot.spot_type}</p>
           </div>
           {spot.avg_rating > 0 && (
             <div className="flex items-center gap-1.5">
@@ -191,32 +196,21 @@ const SpotDetail = () => {
 
       <div className="max-w-3xl mx-auto">
 
-        {/* ─── PHOTO GALLERY ─── */}
         {photos.length > 0 && (
           <div className="px-4 pt-6">
             <div className={`grid gap-2 ${photos.length === 1 ? 'grid-cols-1' : photos.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
               {photos.map((url, i) => (
-                <button
-                  key={i}
-                  onClick={() => setSelectedPhoto(url)}
-                  className="overflow-hidden"
-                >
-                  <img
-                    src={url}
-                    alt={`${spot.name} photo ${i + 1}`}
-                    className="w-full aspect-[4/3] object-cover hover:opacity-90 transition-opacity"
-                    loading="lazy"
-                  />
+                <button key={i} onClick={() => setSelectedPhoto(url)} className="overflow-hidden">
+                  <img src={url} alt={`${spot.name} foto ${i + 1}`} className="w-full aspect-[4/3] object-cover hover:opacity-90 transition-opacity" loading="lazy" />
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* ─── SPOT INFO ─── */}
         <div className="px-4 py-8 space-y-6">
           <div>
-            <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-2">Location</p>
+            <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-2">Posizione</p>
             <p className="text-sm text-[#8c8c7a] flex items-center gap-1.5">
               <MapPin className="w-4 h-4" />
               {spot.latitude.toFixed(4)}°N, {spot.longitude.toFixed(4)}°E
@@ -225,22 +219,17 @@ const SpotDetail = () => {
 
           {spot.description && (
             <div>
-              <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-2">About</p>
+              <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-2">Descrizione</p>
               <p className="text-sm leading-relaxed">{spot.description}</p>
             </div>
           )}
 
           {spot.fish_species && spot.fish_species.length > 0 && (
             <div>
-              <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-2">Fish species</p>
+              <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-2">Specie ittiche</p>
               <div className="flex flex-wrap gap-2">
                 {spot.fish_species.map((f) => (
-                  <span
-                    key={f}
-                    className="text-xs px-3 py-1 border border-[#242242]/15 text-[#242242]"
-                  >
-                    {f}
-                  </span>
+                  <span key={f} className="text-xs px-3 py-1 border border-[#242242]/15 text-[#242242]">{f}</span>
                 ))}
               </div>
             </div>
@@ -248,7 +237,7 @@ const SpotDetail = () => {
 
           {spot.access_info && (
             <div>
-              <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-2">Access</p>
+              <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-2">Accesso</p>
               <p className="text-sm leading-relaxed text-[#8c8c7a] flex items-start gap-1.5">
                 <Info className="w-4 h-4 mt-0.5 shrink-0" />
                 {spot.access_info}
@@ -257,22 +246,20 @@ const SpotDetail = () => {
           )}
         </div>
 
-        {/* ─── DIVIDER ─── */}
         <div className="mx-4 border-t border-[#242242]/10" />
 
-        {/* ─── WRITE REVIEW ─── */}
         {user && (
           <div className="px-4 py-8">
-            <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-4">Write a review</p>
+            <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-4">Scrivi una recensione</p>
             <div className="space-y-4">
               <div>
-                <p className="text-sm mb-2">Your rating</p>
+                <p className="text-sm mb-2">La tua valutazione</p>
                 <StarRating value={rating} onChange={setRating} size="lg" />
               </div>
               <Textarea
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
-                placeholder="Share your experience at this spot..."
+                placeholder="Condividi la tua esperienza in questo spot..."
                 rows={3}
                 className="bg-transparent border-[#242242]/15 rounded-none resize-none focus-visible:ring-[#4a7c59] placeholder:text-[#8c8c7a]/60"
               />
@@ -282,7 +269,7 @@ const SpotDetail = () => {
                 className="inline-flex items-center gap-2 px-6 py-3 text-sm tracking-wide uppercase font-medium bg-[#242242] text-[#f5f0e8] hover:bg-[#242242]/85 transition-colors disabled:opacity-40"
               >
                 <Send className="w-4 h-4" />
-                {submitting ? 'Submitting...' : 'Submit review'}
+                {submitting ? 'Invio in corso...' : 'Invia recensione'}
               </button>
             </div>
           </div>
@@ -290,27 +277,25 @@ const SpotDetail = () => {
 
         {!user && (
           <div className="px-4 py-8 text-center">
-            <p className="text-sm text-[#8c8c7a] mb-3">Sign in to leave a review</p>
+            <p className="text-sm text-[#8c8c7a] mb-3">Accedi per lasciare una recensione</p>
             <button
               onClick={() => navigate('/auth')}
               className="text-sm font-medium text-[#242242] hover:text-[#4a7c59] transition-colors"
             >
-              Sign in →
+              Accedi →
             </button>
           </div>
         )}
 
-        {/* ─── DIVIDER ─── */}
         <div className="mx-4 border-t border-[#242242]/10" />
 
-        {/* ─── REVIEWS LIST ─── */}
         <div className="px-4 py-8">
           <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-6">
-            Reviews {reviews.length > 0 && `(${reviews.length})`}
+            Recensioni {reviews.length > 0 && `(${reviews.length})`}
           </p>
 
           {reviews.length === 0 ? (
-            <p className="text-sm text-[#8c8c7a]">No reviews yet. Be the first to share your experience.</p>
+            <p className="text-sm text-[#8c8c7a]">Nessuna recensione ancora. Sii il primo a condividere la tua esperienza.</p>
           ) : (
             <div className="space-y-8">
               {reviews.map((review) => (
@@ -324,7 +309,7 @@ const SpotDetail = () => {
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">
-                        {review.profiles?.display_name || review.profiles?.username || 'Angler'}
+                        {review.profiles?.display_name || review.profiles?.username || 'Pescatore'}
                       </p>
                       <p className="text-xs text-[#8c8c7a]">{formatDate(review.created_at)}</p>
                     </div>
@@ -334,12 +319,7 @@ const SpotDetail = () => {
                     <p className="text-sm leading-relaxed text-[#8c8c7a] pl-11">{review.content}</p>
                   )}
                   {review.photo_url && (
-                    <img
-                      src={review.photo_url}
-                      alt="Review photo"
-                      className="ml-11 w-48 aspect-[4/3] object-cover"
-                      loading="lazy"
-                    />
+                    <img src={review.photo_url} alt="Foto della recensione" className="ml-11 w-48 aspect-[4/3] object-cover" loading="lazy" />
                   )}
                 </div>
               ))}
@@ -348,17 +328,9 @@ const SpotDetail = () => {
         </div>
       </div>
 
-      {/* ─── LIGHTBOX ─── */}
       {selectedPhoto && (
-        <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-          onClick={() => setSelectedPhoto(null)}
-        >
-          <img
-            src={selectedPhoto}
-            alt="Full size"
-            className="max-w-full max-h-full object-contain"
-          />
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4" onClick={() => setSelectedPhoto(null)}>
+          <img src={selectedPhoto} alt="Dimensione originale" className="max-w-full max-h-full object-contain" />
         </div>
       )}
 
