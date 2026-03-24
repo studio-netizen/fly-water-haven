@@ -1,6 +1,11 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import AuthModal from '@/components/AuthModal';
 import logoWhite from '@/assets/flywaters-logo-white.png';
 import logoDark from '@/assets/flywaters-logo-dark.png';
 import heroImg from '@/assets/landing-hero.jpg';
@@ -32,9 +37,63 @@ const spots = [
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { user, signOut, loading: authLoading } = useAuth();
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+
+  const openAuth = (mode: 'login' | 'register') => {
+    setAuthMode(mode);
+    setAuthOpen(true);
+  };
+
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#f5f0e8', color: '#242242' }}>
+
+      {/* ─── STICKY NAVBAR ─── */}
+      <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <img src={logoWhite} alt="Flywaters" className="h-8" />
+
+          {!authLoading && !user ? (
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => openAuth('login')}
+                className="hidden sm:inline-block px-5 py-2 text-xs tracking-widest uppercase font-medium border border-white/60 text-white hover:bg-white/10 transition-colors"
+              >
+                Accedi
+              </button>
+              <button
+                onClick={() => openAuth('register')}
+                className="px-5 py-2 text-xs tracking-widest uppercase font-medium bg-[#242242] text-[#f5f0e8] hover:bg-[#242242]/85 transition-colors sm:inline-block"
+              >
+                <span className="sm:hidden">Accedi</span>
+                <span className="hidden sm:inline">Registrati</span>
+              </button>
+            </div>
+          ) : user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity">
+                  <Avatar className="h-8 w-8 border border-white/30">
+                    <AvatarImage src={''} />
+                    <AvatarFallback className="bg-white/20 text-white text-sm">
+                      {(user.user_metadata?.full_name || user.email || 'U')[0].toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuItem onClick={() => navigate('/profile')}>Profilo</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/')}>Feed</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => signOut()}>Esci</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : null}
+        </div>
+      </nav>
+
+      <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultMode={authMode} />
 
       {/* ─── HERO ─── */}
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
