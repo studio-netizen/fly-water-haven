@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import AuthModal from '@/components/AuthModal';
 import logoWhite from '@/assets/flywaters-logo-white.png';
 import logoDark from '@/assets/flywaters-logo-dark.png';
-const heroImg = 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1920&q=80';
+const heroImg = 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?auto=format&fit=crop&w=1920&q=80';
 import editorialImg from '@/assets/editorial-wideshot.jpg';
 import craftImg from '@/assets/craft-anglers.jpg';
 import seasonCold from '@/assets/season-winter.jpg';
@@ -36,9 +36,9 @@ const seasons = [
 ];
 
 const spots = [
-  { img: spotLake, region: 'TRENTINO-ALTO ADIGE', name: 'Lago di Tovel' },
-  { img: spotRiver, region: 'FRIULI VENEZIA GIULIA', name: 'Torrente Natisone' },
-  { img: spotStream, region: 'LOMBARDIA', name: 'Torrente Mella' },
+  { img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80', region: 'TRENTINO-ALTO ADIGE', name: 'Lago di Tovel' },
+  { img: 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?auto=format&fit=crop&w=1200&q=80', region: 'FRIULI VENEZIA GIULIA', name: 'Torrente Natisone' },
+  { img: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=1200&q=80', region: 'LOMBARDIA', name: 'Torrente Mella' },
 ];
 
 const Landing = () => {
