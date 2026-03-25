@@ -8,19 +8,16 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import AuthModal from '@/components/AuthModal';
 import logoWhite from '@/assets/flywaters-logo-white.png';
 import logoDark from '@/assets/flywaters-logo-dark.png';
-
-const heroImg = 'https://images.unsplash.com/photo-OS-9PI6ZSd4?w=1920&q=80&auto=format&fit=crop';
-const editorialImg = 'https://images.unsplash.com/photo-Uh5dPAiMWcM?w=1920&q=80&auto=format&fit=crop';
-const craftImg = 'https://images.unsplash.com/photo-yJKb_4vjYwA?w=1080&q=80&auto=format&fit=crop';
-
-const seasonCold = 'https://images.unsplash.com/photo-ICJrlbyqb6A?w=800&q=80&auto=format&fit=crop';
-const seasonTemperate = 'https://images.unsplash.com/photo-C00vxe-S4lU?w=800&q=80&auto=format&fit=crop';
-const seasonWarm = 'https://images.unsplash.com/photo-aGgfrKZ1cM4?w=800&q=80&auto=format&fit=crop';
-const seasonSalt = 'https://images.unsplash.com/photo-LuuTp9Czo4A?w=800&q=80&auto=format&fit=crop';
-
-const spotLake = 'https://images.unsplash.com/photo-S4Q2TH4z0os?w=1200&q=80&auto=format&fit=crop';
-const spotRiver = 'https://images.unsplash.com/photo-6k-oAk0_IPY?w=1200&q=80&auto=format&fit=crop';
-const spotStream = 'https://images.unsplash.com/photo-VvLueHbbbz8?w=1200&q=80&auto=format&fit=crop';
+import heroImg from '@/assets/hero-flyfishing.jpg';
+import editorialImg from '@/assets/editorial-wideshot.jpg';
+import craftImg from '@/assets/craft-anglers.jpg';
+import seasonCold from '@/assets/season-winter.jpg';
+import seasonTemperate from '@/assets/season-spring.jpg';
+import seasonWarm from '@/assets/season-summer.jpg';
+import seasonSalt from '@/assets/season-saltwater.jpg';
+import spotLake from '@/assets/spot-alpine-lake.jpg';
+import spotRiver from '@/assets/spot-mountain-river.jpg';
+import spotStream from '@/assets/spot-forest-stream.jpg';
 
 const slow = (delay = 0) => ({
   hidden: { opacity: 0, y: 20 },
