@@ -19,6 +19,7 @@ interface Post {
   caption: string | null;
   location_tag: string | null;
   fish_species: string[] | null;
+  fishing_technique: string[] | null;
   gear_used: string[] | null;
   like_count: number;
   comment_count: number;
