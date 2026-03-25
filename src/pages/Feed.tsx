@@ -334,11 +334,19 @@ const Feed = () => {
                     </p>
                   )}
 
+                {/* No-Kill badge */}
+                  <div className="mt-1.5">
+                    <Badge variant="secondary" className="text-[11px] py-0.5 px-2 bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800">🐟 No-Kill</Badge>
+                  </div>
+
                   {/* Tags */}
-                  {((post.fish_species && post.fish_species.length > 0) || (post.gear_used && post.gear_used.length > 0)) && (
+                  {((post.fish_species && post.fish_species.length > 0) || (post.fishing_technique && post.fishing_technique.length > 0) || (post.gear_used && post.gear_used.length > 0)) && (
                     <div className="flex gap-1 mt-1.5 flex-wrap">
                       {post.fish_species?.map(s => (
                         <Badge key={s} variant="secondary" className="text-[11px] py-0 px-1.5">🐟 {s}</Badge>
+                      ))}
+                      {post.fishing_technique?.map(t => (
+                        <Badge key={t} variant="secondary" className="text-[11px] py-0 px-1.5">🎯 {t}</Badge>
                       ))}
                       {post.gear_used?.map(g => (
                         <Badge key={g} variant="outline" className="text-[11px] py-0 px-1.5">🎣 {g}</Badge>
