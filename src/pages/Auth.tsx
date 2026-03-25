@@ -90,6 +90,14 @@ const Auth = () => {
             {isLogin ? 'Accedi per continuare la tua avventura di pesca' : 'Unisciti alla community di appassionati di pesca'}
           </p>
 
+          {!isLogin && (
+            <div className="mb-6 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
+              <p className="text-sm text-emerald-800 dark:text-emerald-300">
+                🐟 Flywaters è una community no-kill. Ci impegniamo a rilasciare sempre i pesci catturati.
+              </p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div className="space-y-2">
