@@ -4,11 +4,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Plus, ImagePlus } from 'lucide-react';
 import { toast } from 'sonner';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
+import TagChipSelector from '@/components/TagChipSelector';
+import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR } from '@/lib/fishing-constants';
 
 interface Props {
   onPostCreated: () => void;
@@ -19,8 +20,9 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
   const [open, setOpen] = useState(false);
   const [caption, setCaption] = useState('');
   const [location, setLocation] = useState<LocationResult | null>(null);
-  const [fishSpecies, setFishSpecies] = useState('');
-  const [gearUsed, setGearUsed] = useState('');
+  const [selectedSpecies, setSelectedSpecies] = useState<string[]>([]);
+  const [selectedTechniques, setSelectedTechniques] = useState<string[]>([]);
+  const [selectedGear, setSelectedGear] = useState<string[]>([]);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -51,8 +53,9 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
         image_url: publicUrl,
         caption: caption || null,
         location_tag: location?.name || null,
-        fish_species: fishSpecies ? fishSpecies.split(',').map(s => s.trim()) : null,
-        gear_used: gearUsed ? gearUsed.split(',').map(s => s.trim()) : null,
+        fish_species: selectedSpecies.length > 0 ? selectedSpecies : null,
+        fishing_technique: selectedTechniques.length > 0 ? selectedTechniques : null,
+        gear_used: selectedGear.length > 0 ? selectedGear : null,
       });
 
       if (error) throw error;
@@ -60,8 +63,9 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
       setOpen(false);
       setCaption('');
       setLocation(null);
-      setFishSpecies('');
-      setGearUsed('');
+      setSelectedSpecies([]);
+      setSelectedTechniques([]);
+      setSelectedGear([]);
       setImageFile(null);
       setImagePreview(null);
       onPostCreated();
@@ -81,7 +85,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
           <Plus className="w-4 h-4" /> Post
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Condividi la tua cattura</DialogTitle>
         </DialogHeader>
@@ -109,16 +113,11 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
             <Label>Località</Label>
             <LocationPicker value={location} onChange={setLocation} placeholder="Cerca località..." />
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <Label>Specie ittica</Label>
-              <Input value={fishSpecies} onChange={(e) => setFishSpecies(e.target.value)} placeholder="Trota, Luccio" />
-            </div>
-            <div className="space-y-2">
-              <Label>Attrezzatura</Label>
-              <Input value={gearUsed} onChange={(e) => setGearUsed(e.target.value)} placeholder="Canna 5wt" />
-            </div>
-          </div>
+
+          <TagChipSelector label="Specie ittica" options={FISH_SPECIES} selected={selectedSpecies} onChange={setSelectedSpecies} />
+          <TagChipSelector label="Tecnica di pesca" options={FISHING_TECHNIQUES} selected={selectedTechniques} onChange={setSelectedTechniques} />
+          <TagChipSelector label="Attrezzatura utilizzata" options={FISHING_GEAR} selected={selectedGear} onChange={setSelectedGear} />
+
           <Button onClick={handleSubmit} className="w-full" disabled={loading || !imageFile}>
             {loading ? 'Caricamento...' : 'Pubblica'}
           </Button>

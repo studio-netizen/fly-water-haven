@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -10,6 +9,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
+import TagChipSelector from '@/components/TagChipSelector';
+import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR } from '@/lib/fishing-constants';
 
 interface Post {
   id: string;
@@ -18,6 +19,7 @@ interface Post {
   caption: string | null;
   location_tag: string | null;
   fish_species: string[] | null;
+  fishing_technique: string[] | null;
   gear_used: string[] | null;
 }
 
@@ -33,8 +35,9 @@ const PostActionsMenu = ({ post, onUpdated }: PostActionsMenuProps) => {
   const [location, setLocation] = useState<LocationResult | null>(
     post.location_tag ? { name: post.location_tag, address: post.location_tag, lat: 0, lng: 0 } : null
   );
-  const [fishSpecies, setFishSpecies] = useState(post.fish_species?.join(', ') || '');
-  const [gearUsed, setGearUsed] = useState(post.gear_used?.join(', ') || '');
+  const [selectedSpecies, setSelectedSpecies] = useState<string[]>(post.fish_species || []);
+  const [selectedTechniques, setSelectedTechniques] = useState<string[]>(post.fishing_technique || []);
+  const [selectedGear, setSelectedGear] = useState<string[]>(post.gear_used || []);
   const [loading, setLoading] = useState(false);
 
   const handleEdit = async () => {
@@ -43,8 +46,9 @@ const PostActionsMenu = ({ post, onUpdated }: PostActionsMenuProps) => {
       const { error } = await supabase.from('posts').update({
         caption: caption || null,
         location_tag: location?.name || null,
-        fish_species: fishSpecies ? fishSpecies.split(',').map(s => s.trim()) : null,
-        gear_used: gearUsed ? gearUsed.split(',').map(s => s.trim()) : null,
+        fish_species: selectedSpecies.length > 0 ? selectedSpecies : null,
+        fishing_technique: selectedTechniques.length > 0 ? selectedTechniques : null,
+        gear_used: selectedGear.length > 0 ? selectedGear : null,
       }).eq('id', post.id);
       if (error) throw error;
       toast.success('Post aggiornato!');
@@ -98,7 +102,7 @@ const PostActionsMenu = ({ post, onUpdated }: PostActionsMenuProps) => {
       </DropdownMenu>
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Modifica post</DialogTitle>
           </DialogHeader>
@@ -111,14 +115,9 @@ const PostActionsMenu = ({ post, onUpdated }: PostActionsMenuProps) => {
               <Label>Località</Label>
               <LocationPicker value={location} onChange={setLocation} placeholder="Cerca località..." />
             </div>
-            <div className="space-y-1">
-              <Label>Specie ittica</Label>
-              <Input value={fishSpecies} onChange={e => setFishSpecies(e.target.value)} placeholder="Trota, Luccio" />
-            </div>
-            <div className="space-y-1">
-              <Label>Attrezzatura</Label>
-              <Input value={gearUsed} onChange={e => setGearUsed(e.target.value)} placeholder="Canna 5wt" />
-            </div>
+            <TagChipSelector label="Specie ittica" options={FISH_SPECIES} selected={selectedSpecies} onChange={setSelectedSpecies} />
+            <TagChipSelector label="Tecnica di pesca" options={FISHING_TECHNIQUES} selected={selectedTechniques} onChange={setSelectedTechniques} />
+            <TagChipSelector label="Attrezzatura utilizzata" options={FISHING_GEAR} selected={selectedGear} onChange={setSelectedGear} />
             <Button onClick={handleEdit} className="w-full" disabled={loading}>
               {loading ? 'Salvataggio...' : 'Salva modifiche'}
             </Button>

@@ -15,6 +15,8 @@ import BottomNav from '@/components/BottomNav';
 import DesktopSidebar from '@/components/DesktopSidebar';
 import { toast } from 'sonner';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
+import TagChipSelector from '@/components/TagChipSelector';
+import { FISH_SPECIES } from '@/lib/fishing-constants';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -70,7 +72,7 @@ const SpotMap = () => {
   const [spotName, setSpotName] = useState('');
   const [spotType, setSpotType] = useState('river');
   const [spotDesc, setSpotDesc] = useState('');
-  const [spotFish, setSpotFish] = useState('');
+  const [selectedSpotFish, setSelectedSpotFish] = useState<string[]>([]);
   const [spotAccess, setSpotAccess] = useState('');
   const [spotLocation, setSpotLocation] = useState<LocationResult | null>(null);
   const [spotPhotos, setSpotPhotos] = useState<File[]>([]);
@@ -105,7 +107,6 @@ const SpotMap = () => {
     if (data) setSpots(data as Spot[]);
   };
 
-  // When spot location changes, center map
   useEffect(() => {
     if (spotLocation && mapRef.current) {
       mapRef.current.setView([spotLocation.lat, spotLocation.lng], 13, { animate: true });
@@ -165,7 +166,6 @@ const SpotMap = () => {
     if (!user || !spotLocation || !spotName) return;
     setLoading(true);
     try {
-      // Upload photos
       const photoUrls: string[] = [];
       for (const file of spotPhotos) {
         const ext = file.name.split('.').pop();
@@ -183,7 +183,7 @@ const SpotMap = () => {
         spot_type: spotType,
         latitude: spotLocation.lat,
         longitude: spotLocation.lng,
-        fish_species: spotFish ? spotFish.split(',').map(s => s.trim()) : null,
+        fish_species: selectedSpotFish.length > 0 ? selectedSpotFish : null,
         access_info: spotAccess || null,
         photos: photoUrls.length > 0 ? photoUrls : null,
       });
@@ -202,7 +202,7 @@ const SpotMap = () => {
   const resetForm = () => {
     setSpotName('');
     setSpotDesc('');
-    setSpotFish('');
+    setSelectedSpotFish([]);
     setSpotAccess('');
     setSpotType('river');
     setSpotLocation(null);
@@ -215,7 +215,6 @@ const SpotMap = () => {
       <SEOHead title="Mappa Spot | Flywaters" description="Esplora la mappa dei migliori spot di pesca a mosca in Italia." />
       <DesktopSidebar />
       <div className="flex-1 flex flex-col relative">
-        {/* Controls */}
         <div className="absolute top-4 left-4 right-4 z-[1000] flex gap-2">
           {user && (
             <Button
@@ -243,14 +242,12 @@ const SpotMap = () => {
 
         <div ref={mapContainerRef} className="flex-1 z-0" />
 
-        {/* Add spot dialog */}
         <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
           <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Aggiungi nuovo spot di pesca</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              {/* Location search */}
               <div className="space-y-1">
                 <Label>Posizione</Label>
                 <LocationPicker
@@ -281,16 +278,14 @@ const SpotMap = () => {
                 <Label>Descrizione</Label>
                 <Textarea value={spotDesc} onChange={e => setSpotDesc(e.target.value)} placeholder="Descrivi lo spot..." rows={2} />
               </div>
-              <div className="space-y-1">
-                <Label>Specie presenti (separate da virgola)</Label>
-                <Input value={spotFish} onChange={e => setSpotFish(e.target.value)} placeholder="Trota, Luccio, Persico" />
-              </div>
+
+              <TagChipSelector label="Specie presenti" options={FISH_SPECIES} selected={selectedSpotFish} onChange={setSelectedSpotFish} />
+
               <div className="space-y-1">
                 <Label>Informazioni di accesso</Label>
                 <Textarea value={spotAccess} onChange={e => setSpotAccess(e.target.value)} placeholder="Come raggiungere lo spot, parcheggio, permessi..." rows={2} />
               </div>
 
-              {/* Photo upload */}
               <div className="space-y-1">
                 <Label>Foto (opzionale)</Label>
                 <div className="flex gap-2 flex-wrap">

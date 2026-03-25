@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,9 +10,8 @@ import { ImagePlus, ArrowLeft, MapPin, X } from 'lucide-react';
 import { toast } from 'sonner';
 import AppLayout from '@/components/AppLayout';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
-
-const COMMON_SPECIES = ['Trota fario', 'Trota iridea', 'Temolo', 'Salmerino', 'Luccio', 'Persico', 'Carpa'];
-const COMMON_GEAR = ['Canna 3wt', 'Canna 5wt', 'Canna 7wt', 'Nymphing', 'Streamer', 'Secca', 'Spinning'];
+import TagChipSelector from '@/components/TagChipSelector';
+import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR } from '@/lib/fishing-constants';
 
 const Publish = () => {
   const { user } = useAuth();
@@ -21,6 +20,7 @@ const Publish = () => {
 
   const [caption, setCaption] = useState('');
   const [selectedSpecies, setSelectedSpecies] = useState<string[]>([]);
+  const [selectedTechniques, setSelectedTechniques] = useState<string[]>([]);
   const [selectedGear, setSelectedGear] = useState<string[]>([]);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -35,10 +35,6 @@ const Publish = () => {
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
-  };
-
-  const toggleItem = (item: string, list: string[], setList: (v: string[]) => void) => {
-    setList(list.includes(item) ? list.filter(i => i !== item) : [...list, item]);
   };
 
   const handleSubmit = async () => {
@@ -57,6 +53,7 @@ const Publish = () => {
         caption: caption || null,
         location_tag: location?.name || null,
         fish_species: selectedSpecies.length > 0 ? selectedSpecies : null,
+        fishing_technique: selectedTechniques.length > 0 ? selectedTechniques : null,
         gear_used: selectedGear.length > 0 ? selectedGear : null,
       });
 
@@ -82,7 +79,6 @@ const Publish = () => {
 
   return (
     <AppLayout>
-      {/* Header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <button onClick={() => navigate(-1)} className="text-foreground">
@@ -96,7 +92,6 @@ const Publish = () => {
       </header>
 
       <div className="max-w-lg mx-auto px-4 py-4 space-y-5">
-        {/* Image upload */}
         <div
           onClick={() => fileRef.current?.click()}
           className="aspect-[4/5] rounded-xl border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-primary/50 transition-colors overflow-hidden bg-muted"
@@ -112,7 +107,6 @@ const Publish = () => {
         </div>
         <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
 
-        {/* Location tagging */}
         <div>
           <Label className="text-sm font-medium">Posizione</Label>
           {location ? (
@@ -131,18 +125,12 @@ const Publish = () => {
               </button>
             </div>
           ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-1.5 gap-2"
-              onClick={() => setShowLocationPicker(true)}
-            >
+            <Button variant="outline" size="sm" className="mt-1.5 gap-2" onClick={() => setShowLocationPicker(true)}>
               <MapPin className="w-4 h-4" /> Aggiungi posizione
             </Button>
           )}
         </div>
 
-        {/* Caption */}
         <div>
           <Textarea
             value={caption}
@@ -154,47 +142,10 @@ const Publish = () => {
           <p className="text-xs text-muted-foreground mt-1 text-right">{caption.length}/300</p>
         </div>
 
-        {/* Fish species chips */}
-        <div>
-          <Label className="text-sm font-medium">Specie ittica</Label>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {COMMON_SPECIES.map(s => (
-              <button
-                key={s}
-                onClick={() => toggleItem(s, selectedSpecies, setSelectedSpecies)}
-                className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                  selectedSpecies.includes(s)
-                    ? 'bg-primary text-primary-foreground border-primary'
-                    : 'bg-background text-foreground border-border hover:border-primary/50'
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
+        <TagChipSelector label="Specie ittica" options={FISH_SPECIES} selected={selectedSpecies} onChange={setSelectedSpecies} />
+        <TagChipSelector label="Tecnica di pesca" options={FISHING_TECHNIQUES} selected={selectedTechniques} onChange={setSelectedTechniques} />
+        <TagChipSelector label="Attrezzatura utilizzata" options={FISHING_GEAR} selected={selectedGear} onChange={setSelectedGear} />
 
-        {/* Gear chips */}
-        <div>
-          <Label className="text-sm font-medium">Attrezzatura utilizzata</Label>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {COMMON_GEAR.map(g => (
-              <button
-                key={g}
-                onClick={() => toggleItem(g, selectedGear, setSelectedGear)}
-                className={`px-3 py-1 rounded-full text-xs border transition-colors ${
-                  selectedGear.includes(g)
-                    ? 'bg-primary text-primary-foreground border-primary'
-                    : 'bg-background text-foreground border-border hover:border-primary/50'
-                }`}
-              >
-                {g}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Privacy toggle */}
         <div className="flex items-center justify-between py-2">
           <div>
             <p className="text-sm font-medium text-foreground">Pubblico</p>
