@@ -289,6 +289,7 @@ const Landing = () => {
             src={editorialImg}
             alt="Pescatore in un torrente di montagna in autunno"
             className="w-full h-[50vh] md:h-[70vh] object-cover"
+            style={{ filter: 'saturate(0.8) contrast(1.05)' }}
             loading="lazy"
             width={1280}
             height={1600}
