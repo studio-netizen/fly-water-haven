@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import AuthModal from '@/components/AuthModal';
 import logoWhite from '@/assets/flywaters-logo-white.png';
 import logoDark from '@/assets/flywaters-logo-dark.png';
-import heroImg from '@/assets/hero-flyfishing.jpg';
+const heroImg = 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?auto=format&fit=crop&w=1920&q=80';
 import editorialImg from '@/assets/editorial-wideshot.jpg';
 import craftImg from '@/assets/craft-anglers.jpg';
 import seasonCold from '@/assets/season-winter.jpg';
@@ -107,7 +107,8 @@ const Landing = () => {
           <img
             src={heroImg}
             alt="Pescatore a mosca in un fiume alpino"
-            className="w-full h-full object-cover object-center"
+           className="w-full h-full object-cover object-center"
+            style={{ filter: 'saturate(0.8) contrast(1.05)' }}
             width={1920}
             height={1080}
           />
@@ -199,6 +200,7 @@ const Landing = () => {
                 src={seasons[activeSeason].img}
                 alt={seasons[activeSeason].label}
                 className="w-full aspect-[4/5] object-cover"
+                style={{ filter: 'saturate(0.8) contrast(1.05)' }}
                 loading="lazy"
                 width={800}
                 height={1000}
@@ -265,7 +267,8 @@ const Landing = () => {
             <img
               src={craftImg}
               alt="Costruzione di una mosca artigianale"
-              className="w-full h-[500px] md:h-[700px] object-cover"
+               className="w-full h-[500px] md:h-[700px] object-cover"
+              style={{ filter: 'saturate(0.8) contrast(1.05)' }}
               loading="lazy"
               width={1080}
               height={1920}
@@ -286,6 +289,7 @@ const Landing = () => {
             src={editorialImg}
             alt="Pescatore in un torrente di montagna in autunno"
             className="w-full h-[50vh] md:h-[70vh] object-cover"
+            style={{ filter: 'saturate(0.8) contrast(1.05)' }}
             loading="lazy"
             width={1280}
             height={1600}
@@ -331,6 +335,7 @@ const Landing = () => {
                     src={s.img}
                     alt={s.name}
                     className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
+                    style={{ filter: 'saturate(0.8) contrast(1.05)' }}
                     loading="lazy"
                     width={1200}
                     height={800}
