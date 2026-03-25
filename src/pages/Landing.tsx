@@ -8,16 +8,19 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import AuthModal from '@/components/AuthModal';
 import logoWhite from '@/assets/flywaters-logo-white.png';
 import logoDark from '@/assets/flywaters-logo-dark.png';
-import heroImg from '@/assets/hero-fullbleed.jpg';
-import editorialImg from '@/assets/landing-editorial.jpg';
-import craftImg from '@/assets/editorial-craft.jpg';
-import spotLake from '@/assets/spot-lake.jpg';
-import spotRiver from '@/assets/spot-river.jpg';
-import spotStream from '@/assets/spot-stream.jpg';
-import seasonCold from '@/assets/season-cold.jpg';
-import seasonTemperate from '@/assets/season-temperate.jpg';
-import seasonWarm from '@/assets/season-warm.jpg';
-import seasonSalt from '@/assets/season-salt.jpg';
+
+const heroImg = 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=1920&q=80&auto=format&fit=crop';
+const editorialImg = 'https://images.unsplash.com/photo-1500304624028-5b2641868610?w=1920&q=80&auto=format&fit=crop';
+const craftImg = 'https://images.unsplash.com/photo-1541123437800-1bb1317badc2?w=1080&q=80&auto=format&fit=crop';
+
+const seasonCold = 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=800&q=80&auto=format&fit=crop';
+const seasonTemperate = 'https://images.unsplash.com/photo-1500304624028-5b2641868610?w=800&q=80&auto=format&fit=crop';
+const seasonWarm = 'https://images.unsplash.com/photo-1574781359760-b2d1e5d6a4b0?w=800&q=80&auto=format&fit=crop';
+const seasonSalt = 'https://images.unsplash.com/photo-1541123437800-1bb1317badc2?w=800&q=80&auto=format&fit=crop';
+
+const spotLake = 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1200&q=80&auto=format&fit=crop';
+const spotRiver = 'https://images.unsplash.com/photo-1574781359760-b2d1e5d6a4b0?w=1200&q=80&auto=format&fit=crop';
+const spotStream = 'https://images.unsplash.com/photo-1541123437800-1bb1317badc2?w=1200&q=80&auto=format&fit=crop';
 
 const slow = (delay = 0) => ({
   hidden: { opacity: 0, y: 20 },
