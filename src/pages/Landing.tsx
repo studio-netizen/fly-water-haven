@@ -200,6 +200,7 @@ const Landing = () => {
                 src={seasons[activeSeason].img}
                 alt={seasons[activeSeason].label}
                 className="w-full aspect-[4/5] object-cover"
+                style={{ filter: 'saturate(0.8) contrast(1.05)' }}
                 loading="lazy"
                 width={800}
                 height={1000}
