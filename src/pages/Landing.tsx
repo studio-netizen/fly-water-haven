@@ -106,14 +106,15 @@ const Landing = () => {
 
       {/* ─── HERO: FULL-BLEED IMAGE ─── */}
       <section className="relative">
-        <div className="w-full h-[85vh]">
+        <div className="relative w-full h-[85vh]">
           <img
             src={heroImg}
             alt="Pescatore a mosca in un fiume alpino"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
             width={1920}
             height={1080}
           />
+          <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.25)' }} />
         </div>
 
         {/* Title below image — Patagonia style */}
