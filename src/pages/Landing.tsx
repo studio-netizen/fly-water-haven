@@ -32,7 +32,7 @@ const seasons = [
   { key: 'cold', label: 'Inverno', img: seasonCold, desc: 'Torrenti alpini innevati, trote fario e temoli in acque cristalline. Servono strati caldi e wader robusti.' },
   { key: 'temperate', label: 'Primavera', img: seasonTemperate, desc: 'La stagione delle schiuse. Fiumi in piena, prati verdi e le prime mosche secche dell\'anno.' },
   { key: 'warm', label: 'Estate', img: seasonWarm, desc: 'Laghi dorati al tramonto, sessioni lunghe con attrezzatura leggera. Il momento perfetto per esplorare.' },
-  { key: 'salt', label: 'Mare', img: seasonSalt, desc: 'Scogliere mediterranee, spigole e lecce. La pesca a mosca in saltwater è una sfida unica.' },
+  { key: 'salt', label: 'Autunno', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80', desc: 'Fogliame dorato lungo i torrenti, acque basse e trasparenti. La stagione dei salmerini in frega e delle ultime schiuse prima dell\'inverno.' },
 ];
 
 const spots = [
