@@ -15,9 +15,9 @@ import seasonCold from '@/assets/season-winter.jpg';
 import seasonTemperate from '@/assets/season-spring.jpg';
 import seasonWarm from '@/assets/season-summer.jpg';
 import seasonSalt from '@/assets/season-saltwater.jpg';
-import spotLake from '@/assets/spot-alpine-lake.jpg';
-import spotRiver from '@/assets/spot-mountain-river.jpg';
-import spotStream from '@/assets/spot-forest-stream.jpg';
+import spotTovel from '@/assets/spot-lago-tovel.jpg';
+import spotNatisone from '@/assets/spot-torrente-natisone.jpg';
+import spotMella from '@/assets/spot-torrente-mella.jpeg';
 
 const slow = (delay = 0) => ({
   hidden: { opacity: 0, y: 20 },
