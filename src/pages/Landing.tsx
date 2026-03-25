@@ -335,6 +335,7 @@ const Landing = () => {
                     src={s.img}
                     alt={s.name}
                     className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
+                    style={{ filter: 'saturate(0.8) contrast(1.05)' }}
                     loading="lazy"
                     width={1200}
                     height={800}
