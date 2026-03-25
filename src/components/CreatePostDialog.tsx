@@ -2,12 +2,13 @@ import { useState, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Plus, ImagePlus } from 'lucide-react';
 import { toast } from 'sonner';
+import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 
 interface Props {
   onPostCreated: () => void;
@@ -17,7 +18,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [caption, setCaption] = useState('');
-  const [locationTag, setLocationTag] = useState('');
+  const [location, setLocation] = useState<LocationResult | null>(null);
   const [fishSpecies, setFishSpecies] = useState('');
   const [gearUsed, setGearUsed] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -49,7 +50,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
         user_id: user.id,
         image_url: publicUrl,
         caption: caption || null,
-        location_tag: locationTag || null,
+        location_tag: location?.name || null,
         fish_species: fishSpecies ? fishSpecies.split(',').map(s => s.trim()) : null,
         gear_used: gearUsed ? gearUsed.split(',').map(s => s.trim()) : null,
       });
@@ -58,7 +59,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
       toast.success('Post condiviso!');
       setOpen(false);
       setCaption('');
-      setLocationTag('');
+      setLocation(null);
       setFishSpecies('');
       setGearUsed('');
       setImageFile(null);
@@ -106,7 +107,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
           </div>
           <div className="space-y-2">
             <Label>Località</Label>
-            <Input value={locationTag} onChange={(e) => setLocationTag(e.target.value)} placeholder="es. Lago di Como, Italia" />
+            <LocationPicker value={location} onChange={setLocation} placeholder="Cerca località..." />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
