@@ -10,6 +10,7 @@ import logoImg from '@/assets/flywaters-logo-dark.png';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import AppLayout from '@/components/AppLayout';
+import SEOHead from '@/components/SEOHead';
 
 interface Post {
   id: string;
