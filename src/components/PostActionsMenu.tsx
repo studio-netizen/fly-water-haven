@@ -9,6 +9,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 
 interface Post {
   id: string;
@@ -29,7 +30,9 @@ const PostActionsMenu = ({ post, onUpdated }: PostActionsMenuProps) => {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [caption, setCaption] = useState(post.caption || '');
-  const [locationTag, setLocationTag] = useState(post.location_tag || '');
+  const [location, setLocation] = useState<LocationResult | null>(
+    post.location_tag ? { name: post.location_tag, address: post.location_tag, lat: 0, lng: 0 } : null
+  );
   const [fishSpecies, setFishSpecies] = useState(post.fish_species?.join(', ') || '');
   const [gearUsed, setGearUsed] = useState(post.gear_used?.join(', ') || '');
   const [loading, setLoading] = useState(false);
@@ -39,7 +42,7 @@ const PostActionsMenu = ({ post, onUpdated }: PostActionsMenuProps) => {
     try {
       const { error } = await supabase.from('posts').update({
         caption: caption || null,
-        location_tag: locationTag || null,
+        location_tag: location?.name || null,
         fish_species: fishSpecies ? fishSpecies.split(',').map(s => s.trim()) : null,
         gear_used: gearUsed ? gearUsed.split(',').map(s => s.trim()) : null,
       }).eq('id', post.id);
@@ -57,17 +60,13 @@ const PostActionsMenu = ({ post, onUpdated }: PostActionsMenuProps) => {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      // Extract storage path from URL
       const url = new URL(post.image_url);
       const pathMatch = url.pathname.match(/\/storage\/v1\/object\/public\/posts\/(.+)/);
       if (pathMatch) {
         await supabase.storage.from('posts').remove([pathMatch[1]]);
       }
-
-      // Delete related data first
       await supabase.from('likes').delete().eq('post_id', post.id);
       await supabase.from('comments').delete().eq('post_id', post.id);
-      
       const { error } = await supabase.from('posts').delete().eq('id', post.id);
       if (error) throw error;
       toast.success('Post eliminato');
@@ -98,7 +97,6 @@ const PostActionsMenu = ({ post, onUpdated }: PostActionsMenuProps) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Edit dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
@@ -111,7 +109,7 @@ const PostActionsMenu = ({ post, onUpdated }: PostActionsMenuProps) => {
             </div>
             <div className="space-y-1">
               <Label>Località</Label>
-              <Input value={locationTag} onChange={e => setLocationTag(e.target.value)} />
+              <LocationPicker value={location} onChange={setLocation} placeholder="Cerca località..." />
             </div>
             <div className="space-y-1">
               <Label>Specie ittica</Label>
@@ -128,7 +126,6 @@ const PostActionsMenu = ({ post, onUpdated }: PostActionsMenuProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Delete confirmation */}
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

@@ -19,10 +19,10 @@ serve(async (req) => {
   }
 
   try {
-    const { action, input, placeId } = await req.json();
+    const { action, input, placeId, lat, lng } = await req.json();
 
     if (action === 'autocomplete') {
-      const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&types=geocode|establishment&components=country:it&language=it&key=${apiKey}`;
+      const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&types=geocode|establishment&language=it&key=${apiKey}`;
       const res = await fetch(url);
       const data = await res.json();
       return new Response(JSON.stringify(data), {
@@ -32,6 +32,15 @@ serve(async (req) => {
 
     if (action === 'details') {
       const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${encodeURIComponent(placeId)}&fields=geometry,formatted_address,name&language=it&key=${apiKey}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return new Response(JSON.stringify(data), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    if (action === 'reverse_geocode') {
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&language=it&key=${apiKey}`;
       const res = await fetch(url);
       const data = await res.json();
       return new Response(JSON.stringify(data), {
