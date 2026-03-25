@@ -15,9 +15,9 @@ import seasonCold from '@/assets/season-winter.jpg';
 import seasonTemperate from '@/assets/season-spring.jpg';
 import seasonWarm from '@/assets/season-summer.jpg';
 import seasonSalt from '@/assets/season-saltwater.jpg';
-import spotLake from '@/assets/spot-alpine-lake.jpg';
-import spotRiver from '@/assets/spot-mountain-river.jpg';
-import spotStream from '@/assets/spot-forest-stream.jpg';
+import spotTovel from '@/assets/spot-lago-tovel.jpg';
+import spotNatisone from '@/assets/spot-torrente-natisone.jpg';
+import spotMella from '@/assets/spot-torrente-mella.jpeg';
 
 const slow = (delay = 0) => ({
   hidden: { opacity: 0, y: 20 },
@@ -36,9 +36,9 @@ const seasons = [
 ];
 
 const spots = [
-  { img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80', region: 'TRENTINO-ALTO ADIGE', name: 'Lago di Tovel' },
-  { img: 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?auto=format&fit=crop&w=1200&q=80', region: 'FRIULI VENEZIA GIULIA', name: 'Torrente Natisone' },
-  { img: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=1200&q=80', region: 'LOMBARDIA', name: 'Torrente Mella' },
+  { img: spotTovel, region: 'TRENTINO-ALTO ADIGE', name: 'Lago di Tovel' },
+  { img: spotNatisone, region: 'FRIULI VENEZIA GIULIA', name: 'Torrente Natisone' },
+  { img: spotMella, region: 'LOMBARDIA', name: 'Torrente Mella' },
 ];
 
 const Landing = () => {
