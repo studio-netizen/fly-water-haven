@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import AuthModal from '@/components/AuthModal';
 import logoWhite from '@/assets/flywaters-logo-white.png';
 import logoDark from '@/assets/flywaters-logo-dark.png';
-import heroImg from '@/assets/spot-torrente-natisone.jpg';
+import heroImg from '@/assets/hero-mosca-club.jpg';
 import editorialImg from '@/assets/editorial-wideshot.jpg';
 import craftImg from '@/assets/craft-anglers.jpg';
 import seasonCold from '@/assets/season-winter.jpg';
