@@ -177,6 +177,7 @@ export type Database = {
           comment_count: number | null
           created_at: string
           fish_species: string[] | null
+          fishing_technique: string[] | null
           gear_used: string[] | null
           id: string
           image_url: string
@@ -190,6 +191,7 @@ export type Database = {
           comment_count?: number | null
           created_at?: string
           fish_species?: string[] | null
+          fishing_technique?: string[] | null
           gear_used?: string[] | null
           id?: string
           image_url: string
@@ -203,6 +205,7 @@ export type Database = {
           comment_count?: number | null
           created_at?: string
           fish_species?: string[] | null
+          fishing_technique?: string[] | null
           gear_used?: string[] | null
           id?: string
           image_url?: string
