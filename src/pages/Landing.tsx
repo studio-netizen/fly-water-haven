@@ -107,7 +107,8 @@ const Landing = () => {
           <img
             src={heroImg}
             alt="Pescatore a mosca in un fiume alpino"
-            className="w-full h-full object-cover object-center"
+           className="w-full h-full object-cover object-center"
+            style={{ filter: 'saturate(0.8) contrast(1.05)' }}
             width={1920}
             height={1080}
           />
