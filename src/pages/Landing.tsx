@@ -267,7 +267,8 @@ const Landing = () => {
             <img
               src={craftImg}
               alt="Costruzione di una mosca artigianale"
-              className="w-full h-[500px] md:h-[700px] object-cover"
+               className="w-full h-[500px] md:h-[700px] object-cover"
+              style={{ filter: 'saturate(0.8) contrast(1.05)' }}
               loading="lazy"
               width={1080}
               height={1920}
