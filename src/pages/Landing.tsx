@@ -9,18 +9,18 @@ import AuthModal from '@/components/AuthModal';
 import logoWhite from '@/assets/flywaters-logo-white.png';
 import logoDark from '@/assets/flywaters-logo-dark.png';
 
-const heroImg = 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=1920&q=80&auto=format&fit=crop';
-const editorialImg = 'https://images.unsplash.com/photo-1500304624028-5b2641868610?w=1920&q=80&auto=format&fit=crop';
-const craftImg = 'https://images.unsplash.com/photo-1541123437800-1bb1317badc2?w=1080&q=80&auto=format&fit=crop';
+const heroImg = 'https://images.unsplash.com/photo-OS-9PI6ZSd4?w=1920&q=80&auto=format&fit=crop';
+const editorialImg = 'https://images.unsplash.com/photo-Uh5dPAiMWcM?w=1920&q=80&auto=format&fit=crop';
+const craftImg = 'https://images.unsplash.com/photo-yJKb_4vjYwA?w=1080&q=80&auto=format&fit=crop';
 
-const seasonCold = 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=800&q=80&auto=format&fit=crop';
-const seasonTemperate = 'https://images.unsplash.com/photo-1500304624028-5b2641868610?w=800&q=80&auto=format&fit=crop';
-const seasonWarm = 'https://images.unsplash.com/photo-1574781359760-b2d1e5d6a4b0?w=800&q=80&auto=format&fit=crop';
-const seasonSalt = 'https://images.unsplash.com/photo-1541123437800-1bb1317badc2?w=800&q=80&auto=format&fit=crop';
+const seasonCold = 'https://images.unsplash.com/photo-ICJrlbyqb6A?w=800&q=80&auto=format&fit=crop';
+const seasonTemperate = 'https://images.unsplash.com/photo-C00vxe-S4lU?w=800&q=80&auto=format&fit=crop';
+const seasonWarm = 'https://images.unsplash.com/photo-aGgfrKZ1cM4?w=800&q=80&auto=format&fit=crop';
+const seasonSalt = 'https://images.unsplash.com/photo-LuuTp9Czo4A?w=800&q=80&auto=format&fit=crop';
 
-const spotLake = 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1200&q=80&auto=format&fit=crop';
-const spotRiver = 'https://images.unsplash.com/photo-1574781359760-b2d1e5d6a4b0?w=1200&q=80&auto=format&fit=crop';
-const spotStream = 'https://images.unsplash.com/photo-1541123437800-1bb1317badc2?w=1200&q=80&auto=format&fit=crop';
+const spotLake = 'https://images.unsplash.com/photo-S4Q2TH4z0os?w=1200&q=80&auto=format&fit=crop';
+const spotRiver = 'https://images.unsplash.com/photo-6k-oAk0_IPY?w=1200&q=80&auto=format&fit=crop';
+const spotStream = 'https://images.unsplash.com/photo-VvLueHbbbz8?w=1200&q=80&auto=format&fit=crop';
 
 const slow = (delay = 0) => ({
   hidden: { opacity: 0, y: 20 },
