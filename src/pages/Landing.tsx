@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import AuthModal from '@/components/AuthModal';
 import logoWhite from '@/assets/flywaters-logo-white.png';
 import logoDark from '@/assets/flywaters-logo-dark.png';
-import heroImg from '@/assets/hero-flyfishing.jpg';
+const heroImg = 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?auto=format&fit=crop&w=1920&q=80';
 import editorialImg from '@/assets/editorial-wideshot.jpg';
 import craftImg from '@/assets/craft-anglers.jpg';
 import seasonCold from '@/assets/season-winter.jpg';
