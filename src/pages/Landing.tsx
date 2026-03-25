@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SEOHead from '@/components/SEOHead';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -54,6 +55,7 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#f5f0e8', color: '#242242' }}>
+      <SEOHead title="Flywaters — La community italiana per la pesca a mosca" description="Scopri i migliori spot di pesca in Italia, condividi le tue catture e connettiti con altri pescatori a mosca." canonical="https://flywaters.app/" />
 
       {/* ─── MINIMAL NAVBAR ─── */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-5">

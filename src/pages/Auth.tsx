@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import SEOHead from '@/components/SEOHead';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable';
@@ -57,6 +58,7 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex">
+      <SEOHead title="Accedi | Flywaters" description="Accedi o registrati su Flywaters, la community italiana per la pesca a mosca." />
       {/* Left panel - branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-primary relative overflow-hidden items-center justify-center" style={{ backgroundImage: `url(${heroImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="absolute inset-0 bg-primary/60" />

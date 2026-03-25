@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -211,6 +212,7 @@ const SpotMap = () => {
 
   return (
     <div className="h-screen flex">
+      <SEOHead title="Mappa Spot | Flywaters" description="Esplora la mappa dei migliori spot di pesca a mosca in Italia." />
       <DesktopSidebar />
       <div className="flex-1 flex flex-col relative">
         {/* Controls */}

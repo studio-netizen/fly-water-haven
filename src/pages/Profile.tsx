@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import SEOHead from '@/components/SEOHead';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -102,6 +103,7 @@ const Profile = () => {
 
   return (
     <AppLayout>
+      <SEOHead title={`${profile?.display_name || profile?.username || 'Profilo'} | Flywaters`} description={`Profilo di ${profile?.display_name || profile?.username || 'utente'} su Flywaters`} />
       {/* Mobile header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">

@@ -10,6 +10,7 @@ import logoImg from '@/assets/flywaters-logo-dark.png';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import AppLayout from '@/components/AppLayout';
+import SEOHead from '@/components/SEOHead';
 
 interface Post {
   id: string;
@@ -165,6 +166,7 @@ const Feed = () => {
 
   return (
     <AppLayout>
+      <SEOHead title="Feed | Flywaters" description="Scopri le ultime catture e condividi le tue esperienze di pesca a mosca." />
       {/* Mobile header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
