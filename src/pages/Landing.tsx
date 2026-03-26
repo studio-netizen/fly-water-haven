@@ -278,7 +278,7 @@ const Landing = () => {
             </p>
             <button
               onClick={() => openAuth('register')}
-              className="px-8 py-4 text-sm tracking-widest uppercase font-medium bg-[#242242] text-[#f5f0e8] hover:bg-[#242242]/85 transition-colors"
+              className="px-8 py-4 rounded-full text-sm tracking-widest uppercase font-medium bg-[#242242] text-[#f5f0e8] hover:opacity-85 transition-opacity"
             >
               Unisciti alla community
             </button>
