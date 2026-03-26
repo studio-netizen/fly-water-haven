@@ -296,15 +296,15 @@ const Feed = () => {
                   )}
                 </div>
 
-                {/* Image – 4:5 ratio */}
-                <div className="aspect-[4/5] bg-muted">
+                {/* Image – 4:5 ratio, clickable */}
+                <button onClick={() => navigate(`/post/${post.id}`)} className="block w-full aspect-[4/5] bg-muted">
                   <img
                     src={post.image_url}
                     alt={post.caption || 'Post di pesca'}
                     className="w-full h-full object-cover rounded-t-card"
                     loading="lazy"
                   />
-                </div>
+                </button>
 
                 {/* Actions */}
                 <div className="px-4 pt-3 pb-1">
