@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
+import { toast } from 'sonner';
 
 interface Post {
   id: string;
