@@ -474,7 +474,7 @@ const Landing = () => {
                 onClick={() => navigate('/map')}
                 className="text-left group"
               >
-                <div className="overflow-hidden mb-4">
+              <div className="overflow-hidden mb-4 rounded-card">
                   <img
                     src={s.img}
                     alt={s.name}

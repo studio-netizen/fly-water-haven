@@ -432,8 +432,8 @@ const SuggestedUserCard = ({
     </div>
     <button
       onClick={onToggleFollow}
-      className={`text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors ${
-        isFollowing ? 'bg-muted text-foreground' : 'bg-primary text-primary-foreground'
+      className={`text-xs font-semibold px-4 py-1.5 rounded-full transition-opacity hover:opacity-85 ${
+        isFollowing ? 'bg-muted text-foreground' : 'bg-[#242242] text-white'
       }`}
     >
       {isFollowing ? 'Seguendo' : 'Segui'}
