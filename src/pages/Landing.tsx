@@ -90,7 +90,7 @@ const Landing = () => {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => openAuth('login')}
-                className="hidden sm:inline-block px-5 py-2 text-xs tracking-widest uppercase font-medium text-white hover:opacity-70 transition-opacity"
+                className="hidden sm:inline-block px-5 py-2 rounded-full text-xs tracking-widest uppercase font-medium text-white hover:opacity-85 transition-opacity"
               >
                 Accedi
               </button>
