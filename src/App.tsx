@@ -14,6 +14,9 @@ import Notifications from "./pages/Notifications";
 import EditProfile from "./pages/EditProfile";
 import Publish from "./pages/Publish";
 import NotFound from "./pages/NotFound";
+import Blog from "./pages/Blog";
+import BlogArticle from "./pages/BlogArticle";
+import Contatti from "./pages/Contatti";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +52,9 @@ const App = () => (
             <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
             <Route path="/publish" element={<ProtectedRoute><Publish /></ProtectedRoute>} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogArticle />} />
+            <Route path="/contatti" element={<Contatti />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

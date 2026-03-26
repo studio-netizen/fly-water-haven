@@ -46,6 +46,39 @@ export type Database = {
           },
         ]
       }
+      contact_submissions: {
+        Row: {
+          cellulare: string | null
+          cognome: string
+          created_at: string
+          email: string
+          id: string
+          messaggio: string
+          nome: string
+          provincia: string | null
+        }
+        Insert: {
+          cellulare?: string | null
+          cognome: string
+          created_at?: string
+          email: string
+          id?: string
+          messaggio: string
+          nome: string
+          provincia?: string | null
+        }
+        Update: {
+          cellulare?: string | null
+          cognome?: string
+          created_at?: string
+          email?: string
+          id?: string
+          messaggio?: string
+          nome?: string
+          provincia?: string | null
+        }
+        Relationships: []
+      }
       follows: {
         Row: {
           created_at: string
