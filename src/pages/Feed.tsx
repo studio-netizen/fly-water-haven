@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
+import { toast } from 'sonner';
 
 interface Post {
   id: string;
@@ -151,8 +152,12 @@ const Feed = () => {
   };
 
   const handleShare = async (post: Post) => {
+    const url = `${window.location.origin}/post/${post.id}`;
     if (navigator.share) {
-      await navigator.share({ title: 'Flywaters', text: post.caption || 'Guarda questo post!', url: window.location.origin });
+      await navigator.share({ title: 'Flywaters', text: post.caption || 'Guarda questo post!', url });
+    } else {
+      await navigator.clipboard.writeText(url);
+      toast('Link copiato!');
     }
   };
 
@@ -291,15 +296,15 @@ const Feed = () => {
                   )}
                 </div>
 
-                {/* Image – 4:5 ratio */}
-                <div className="aspect-[4/5] bg-muted">
+                {/* Image – 4:5 ratio, clickable */}
+                <button onClick={() => navigate(`/post/${post.id}`)} className="block w-full aspect-[4/5] bg-muted">
                   <img
                     src={post.image_url}
                     alt={post.caption || 'Post di pesca'}
                     className="w-full h-full object-cover rounded-t-card"
                     loading="lazy"
                   />
-                </div>
+                </button>
 
                 {/* Actions */}
                 <div className="px-4 pt-3 pb-1">
