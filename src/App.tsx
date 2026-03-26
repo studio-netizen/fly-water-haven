@@ -14,6 +14,9 @@ import Notifications from "./pages/Notifications";
 import EditProfile from "./pages/EditProfile";
 import Publish from "./pages/Publish";
 import NotFound from "./pages/NotFound";
+import Blog from "./pages/Blog";
+import BlogArticle from "./pages/BlogArticle";
+import Contatti from "./pages/Contatti";
 
 const queryClient = new QueryClient();
 
