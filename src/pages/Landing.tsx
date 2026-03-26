@@ -156,7 +156,7 @@ const Landing = () => {
       </section>
 
       {/* ─── HERO TAGLINE ─── */}
-      <section className="px-6 pb-20 md:pb-32">
+      <section className="px-6 pb-12 md:pb-20">
         <div className="max-w-7xl mx-auto">
           <motion.p
             variants={slow(0)}
