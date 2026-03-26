@@ -245,9 +245,9 @@ const Feed = () => {
             )}
           </div>
         ) : (
-          <>
+          <div className="flex flex-col gap-4 p-4">
             {posts.map((post, idx) => (
-              <article key={post.id} className="border-b border-border">
+              <article key={post.id} className="rounded-card border border-black/[0.08] bg-card shadow-card overflow-hidden">
                 {/* Post header */}
                 <div className="flex items-center gap-3 px-4 py-3">
                   <button onClick={() => navigate(`/profile/${post.user_id}`)}>
