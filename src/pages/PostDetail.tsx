@@ -166,6 +166,9 @@ const PostDetail = () => {
       <SEOHead
         title={`${post.profiles?.username || 'Pescatore'} su Flywaters`}
         description={post.caption || 'Scopri questa cattura su Flywaters.'}
+        ogImage={post.image_url}
+        ogType="article"
+        canonical={`https://flywaters.app/post/${post.id}`}
       />
 
       {/* Header */}
