@@ -514,7 +514,7 @@ const Landing = () => {
           >
             <button
               onClick={() => navigate('/map')}
-              className="px-8 py-4 text-sm tracking-widest uppercase font-medium border border-[#f5f0e8]/60 text-[#f5f0e8] hover:bg-[#f5f0e8]/10 transition-colors"
+              className="px-8 py-4 rounded-full text-sm tracking-widest uppercase font-medium border-[1.5px] border-[#f5f0e8]/60 text-[#f5f0e8] hover:opacity-85 transition-opacity"
             >
               Esplora gli spot
             </button>
