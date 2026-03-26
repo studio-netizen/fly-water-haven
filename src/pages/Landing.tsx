@@ -90,13 +90,13 @@ const Landing = () => {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => openAuth('login')}
-                className="hidden sm:inline-block px-5 py-2 text-xs tracking-widest uppercase font-medium text-white hover:opacity-70 transition-opacity"
+                className="hidden sm:inline-block px-5 py-2 rounded-full text-xs tracking-widest uppercase font-medium text-white hover:opacity-85 transition-opacity"
               >
                 Accedi
               </button>
               <button
                 onClick={() => openAuth('register')}
-                className="px-5 py-2 text-xs tracking-widest uppercase font-medium bg-white text-[#242242] hover:bg-white/90 transition-colors"
+                className="px-5 py-2 rounded-full text-xs tracking-widest uppercase font-medium bg-white text-[#242242] hover:opacity-85 transition-opacity"
               >
                 <span className="sm:hidden">Accedi</span>
                 <span className="hidden sm:inline">Registrati</span>
@@ -156,7 +156,7 @@ const Landing = () => {
       </section>
 
       {/* ─── HERO TAGLINE ─── */}
-      <section className="px-6 pb-20 md:pb-32">
+      <section className="px-6 pb-12 md:pb-20">
         <div className="max-w-7xl mx-auto">
           <motion.p
             variants={slow(0)}
@@ -173,14 +173,14 @@ const Landing = () => {
       </section>
 
       {/* ─── GEAR PER STAGIONE — Tab con immagini ─── */}
-      <section className="px-6 py-20 md:py-32 border-t border-[#242242]/10">
-        <div className="max-w-7xl mx-auto">
+      <section className="px-6 py-12 md:py-20 border-t border-[#242242]/10">
+        <div className="max-w-content mx-auto">
           <motion.p
             variants={slow(0)}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-3"
+            className="label-caps text-[#8c8c7a] mb-3"
           >
             Ogni acqua, ogni stagione
           </motion.p>
@@ -278,7 +278,7 @@ const Landing = () => {
             </p>
             <button
               onClick={() => openAuth('register')}
-              className="px-8 py-4 text-sm tracking-widest uppercase font-medium bg-[#242242] text-[#f5f0e8] hover:bg-[#242242]/85 transition-colors"
+              className="px-8 py-4 rounded-full text-sm tracking-widest uppercase font-medium bg-[#242242] text-[#f5f0e8] hover:opacity-85 transition-opacity"
             >
               Unisciti alla community
             </button>
@@ -474,7 +474,7 @@ const Landing = () => {
                 onClick={() => navigate('/map')}
                 className="text-left group"
               >
-                <div className="overflow-hidden mb-4">
+              <div className="overflow-hidden mb-4 rounded-card">
                   <img
                     src={s.img}
                     alt={s.name}
@@ -514,7 +514,7 @@ const Landing = () => {
           >
             <button
               onClick={() => navigate('/map')}
-              className="px-8 py-4 text-sm tracking-widest uppercase font-medium border border-[#f5f0e8]/60 text-[#f5f0e8] hover:bg-[#f5f0e8]/10 transition-colors"
+              className="px-8 py-4 rounded-full text-sm tracking-widest uppercase font-medium border-[1.5px] border-[#f5f0e8]/60 text-[#f5f0e8] hover:opacity-85 transition-opacity"
             >
               Esplora gli spot
             </button>

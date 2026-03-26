@@ -245,9 +245,9 @@ const Feed = () => {
             )}
           </div>
         ) : (
-          <>
+          <div className="flex flex-col gap-4 p-4">
             {posts.map((post, idx) => (
-              <article key={post.id} className="border-b border-border">
+              <article key={post.id} className="rounded-card border border-black/[0.08] bg-card shadow-card overflow-hidden">
                 {/* Post header */}
                 <div className="flex items-center gap-3 px-4 py-3">
                   <button onClick={() => navigate(`/profile/${post.user_id}`)}>
@@ -296,7 +296,7 @@ const Feed = () => {
                   <img
                     src={post.image_url}
                     alt={post.caption || 'Post di pesca'}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover rounded-t-card"
                     loading="lazy"
                   />
                 </div>
@@ -399,7 +399,7 @@ const Feed = () => {
                 </div>
               </div>
             )}
-          </>
+          </div>
         )}
       </div>
     </AppLayout>
@@ -432,8 +432,8 @@ const SuggestedUserCard = ({
     </div>
     <button
       onClick={onToggleFollow}
-      className={`text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors ${
-        isFollowing ? 'bg-muted text-foreground' : 'bg-primary text-primary-foreground'
+      className={`text-xs font-semibold px-4 py-1.5 rounded-full transition-opacity hover:opacity-85 ${
+        isFollowing ? 'bg-muted text-foreground' : 'bg-[#242242] text-white'
       }`}
     >
       {isFollowing ? 'Seguendo' : 'Segui'}

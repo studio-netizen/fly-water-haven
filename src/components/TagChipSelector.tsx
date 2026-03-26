@@ -16,17 +16,17 @@ const TagChipSelector = ({ label, options, selected, onChange }: TagChipSelector
 
   return (
     <div>
-      <p className="text-sm font-medium text-foreground mb-2">{label}</p>
+      <p className="label-caps text-muted-foreground mb-2">{label}</p>
       <div className="flex flex-wrap gap-2">
         {options.map(item => (
           <button
             key={item}
             type="button"
             onClick={() => toggle(item)}
-            className={`px-3 py-1 rounded-full text-xs border transition-colors ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-opacity ${
               selected.includes(item)
-                ? 'bg-primary text-primary-foreground border-primary'
-                : 'bg-background text-foreground border-border hover:border-primary/50'
+                ? 'bg-[#242242] text-white'
+                : 'bg-warm-white text-[#242242] hover:opacity-85'
             }`}
           >
             {item}

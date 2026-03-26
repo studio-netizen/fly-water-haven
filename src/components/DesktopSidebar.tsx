@@ -36,7 +36,7 @@ const DesktopSidebar = () => {
   ];
 
   return (
-    <aside className="hidden lg:flex flex-col w-60 h-screen sticky top-0 border-r border-border bg-background px-4 py-6">
+    <aside className="hidden lg:flex flex-col w-60 h-screen sticky top-0 border-r border-black/[0.08] bg-background px-4 py-6">
       <div className="mb-8 px-2">
         <img src={logoImg} alt="Flywaters" className="h-8" />
       </div>
@@ -48,9 +48,9 @@ const DesktopSidebar = () => {
             <NavLink
               key={to}
               to={to}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-full text-sm transition-all ${
                 isActive
-                  ? 'bg-muted text-foreground font-semibold'
+                  ? 'bg-[#242242] text-white font-semibold'
                   : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
               }`}
             >
@@ -69,7 +69,7 @@ const DesktopSidebar = () => {
       </nav>
 
       {user && profile && (
-        <div className="border-t border-border pt-4 mt-4">
+        <div className="border-t border-black/[0.08] pt-4 mt-4">
           <div className="flex items-center gap-3 px-2 mb-3">
             <Avatar className="h-9 w-9">
               <AvatarImage src={profile.avatar_url || ''} />
@@ -84,7 +84,7 @@ const DesktopSidebar = () => {
           </div>
           <button
             onClick={signOut}
-            className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors w-full"
+            className="flex items-center gap-3 px-3 py-2 rounded-full text-sm text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors w-full"
           >
             <LogOut className="w-5 h-5" />
             Esci

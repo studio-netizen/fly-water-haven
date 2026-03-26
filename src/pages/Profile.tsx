@@ -201,9 +201,9 @@ const Profile = () => {
 
         {/* Tab content */}
         {activeTab === 'posts' ? (
-          <div className="grid grid-cols-3 gap-0.5 pb-4">
+          <div className="grid grid-cols-3 gap-1 pb-4">
             {posts.map(post => (
-              <div key={post.id} className="aspect-square bg-muted">
+              <div key={post.id} className="aspect-square bg-muted rounded-lg overflow-hidden">
                 <img src={post.image_url} alt="" className="w-full h-full object-cover" loading="lazy" />
               </div>
             ))}
