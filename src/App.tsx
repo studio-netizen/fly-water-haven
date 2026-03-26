@@ -14,6 +14,7 @@ import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
 import EditProfile from "./pages/EditProfile";
 import Publish from "./pages/Publish";
+import PostDetail from "./pages/PostDetail";
 import NotFound from "./pages/NotFound";
 import Blog from "./pages/Blog";
 import BlogArticle from "./pages/BlogArticle";
