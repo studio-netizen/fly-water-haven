@@ -173,14 +173,14 @@ const Landing = () => {
       </section>
 
       {/* ─── GEAR PER STAGIONE — Tab con immagini ─── */}
-      <section className="px-6 py-20 md:py-32 border-t border-[#242242]/10">
-        <div className="max-w-7xl mx-auto">
+      <section className="px-6 py-12 md:py-20 border-t border-[#242242]/10">
+        <div className="max-w-content mx-auto">
           <motion.p
             variants={slow(0)}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-3"
+            className="label-caps text-[#8c8c7a] mb-3"
           >
             Ogni acqua, ogni stagione
           </motion.p>
