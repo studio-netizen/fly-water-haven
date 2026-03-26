@@ -296,7 +296,7 @@ const Feed = () => {
                   <img
                     src={post.image_url}
                     alt={post.caption || 'Post di pesca'}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover rounded-t-card"
                     loading="lazy"
                   />
                 </div>
