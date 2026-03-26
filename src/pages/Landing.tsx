@@ -96,7 +96,7 @@ const Landing = () => {
               </button>
               <button
                 onClick={() => openAuth('register')}
-                className="px-5 py-2 text-xs tracking-widest uppercase font-medium bg-white text-[#242242] hover:bg-white/90 transition-colors"
+                className="px-5 py-2 rounded-full text-xs tracking-widest uppercase font-medium bg-white text-[#242242] hover:opacity-85 transition-opacity"
               >
                 <span className="sm:hidden">Accedi</span>
                 <span className="hidden sm:inline">Registrati</span>
