@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AuthModal from '@/components/AuthModal';
+import { MapPin, Camera, Users } from 'lucide-react';
 import logoWhite from '@/assets/flywaters-logo-white.png';
 import logoDark from '@/assets/flywaters-logo-dark.png';
 import heroImg from '@/assets/hero-mosca-club.jpg';
@@ -39,6 +40,30 @@ const spots = [
   { img: spotTovel, region: 'TRENTINO-ALTO ADIGE', name: 'Lago di Tovel' },
   { img: spotNatisone, region: 'FRIULI VENEZIA GIULIA', name: 'Torrente Natisone' },
   { img: spotMella, region: 'LOMBARDIA', name: 'Torrente Mella' },
+];
+
+const features = [
+  {
+    icon: MapPin,
+    title: 'Scopri gli spot',
+    desc: 'Trova i migliori fiumi e torrenti italiani per la pesca a mosca. Leggi le recensioni di chi ha pescato lì, scopri le specie presenti, il periodo migliore e le condizioni dell\'acqua. Dalla trota marmorata del Sesia al temolo del Brenta, ogni spot ha la sua storia.',
+  },
+  {
+    icon: Camera,
+    title: 'Condividi le tue catture',
+    desc: 'Pubblica le tue foto di pesca, tagga lo spot, indica la tecnica e la mosca usata. Contribuisci alla conoscenza collettiva della community. Ogni cattura documentata è un dato prezioso per tutti i pescatori che verranno dopo di te.',
+  },
+  {
+    icon: Users,
+    title: 'Connettiti con la community',
+    desc: 'Entra in contatto con fly fisher di tutta Italia. Scambia consigli sui montaggi, sulle schiuse di effimere e tricotteri, sulle condizioni dei fiumi. Organizza uscite, trova compagni di pesca, impara dai più esperti.',
+  },
+];
+
+const steps = [
+  { num: '01', title: 'Registrati gratis', desc: 'Crea il tuo profilo in pochi secondi. Indica il tuo stile di pesca preferito — mosca secca, ninfa, streamer o tenkara — e inizia subito a esplorare.' },
+  { num: '02', title: 'Esplora la mappa', desc: 'Naviga la mappa interattiva degli spot italiani. Filtra per tipo di acqua, specie target e valutazione della community. Ogni spot ha foto, recensioni e informazioni di accesso.' },
+  { num: '03', title: 'Condividi e connettiti', desc: 'Pubblica le tue uscite, recensisci gli spot che hai visitato e messaggia con altri pescatori. La tua esperienza arricchisce tutta la community.' },
 ];
 
 const Landing = () => {
@@ -107,7 +132,7 @@ const Landing = () => {
           <img
             src={heroImg}
             alt="Pescatore a mosca in un fiume alpino"
-           className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-center"
             style={{ filter: 'saturate(0.8) contrast(1.05)' }}
             width={1920}
             height={1080}
@@ -115,7 +140,7 @@ const Landing = () => {
           <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.25)' }} />
         </div>
 
-        {/* Title below image — Patagonia style */}
+        {/* Title below image */}
         <div className="px-6 py-12 md:py-16">
           <div className="max-w-7xl mx-auto">
             <motion.h1
@@ -130,7 +155,7 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* ─── MANIFESTO QUOTE ─── */}
+      {/* ─── HERO TAGLINE ─── */}
       <section className="px-6 pb-20 md:pb-32">
         <div className="max-w-7xl mx-auto">
           <motion.p
@@ -140,10 +165,9 @@ const Landing = () => {
             viewport={{ once: true, margin: '-80px' }}
             className="text-xl sm:text-2xl md:text-3xl leading-relaxed font-serif max-w-4xl text-[#242242]/80"
           >
-            Non c'è niente sulla terra come il contatto con un pesce selvaggio.
-            Inseguire quel feeling — e quei pesci — ci ispira e ispira il nostro gear.
-            È il motivo per cui supportiamo e celebriamo i pescatori e i gruppi
-            che lottano per proteggere le acque che amiamo.
+            Pescare a mosca è molto più di uno sport. È leggere il fiume, interpretare le schiuse,
+            scegliere la mosca giusta. È entrare in sintonia con la natura — un'arte tramandata
+            da generazioni di pescatori appassionati.
           </motion.p>
         </div>
       </section>
@@ -245,9 +269,12 @@ const Landing = () => {
               Creato dai pescatori<br />a mosca, per i pescatori a mosca
             </h2>
             <p className="text-base leading-relaxed text-[#8c8c7a] mb-8">
-              Crediamo che le migliori storie di pesca inizino con lo spot giusto.
-              Flywaters è una community dove i pescatori italiani condividono le proprie conoscenze,
-              documentano le catture e proteggono le acque che amano.
+              La pesca a mosca ha una storia profonda in Italia. Dai torrenti alpini della Valtellina
+              ai fiumi di risorgiva del Friuli, dalla Val Camonica all'Appennino tosco-emiliano,
+              ogni fiume ha la sua anima e i suoi segreti. Flywaters nasce per raccogliere questa
+              conoscenza e metterla a disposizione di tutti i fly fisher italiani — dagli appassionati
+              alle prime armi ai costruttori esperti. Una community no-kill dove condividere spot,
+              tecniche, montaggi e catture nel rispetto del pesce e dell'ambiente.
             </p>
             <button
               onClick={() => openAuth('register')}
@@ -267,13 +294,90 @@ const Landing = () => {
             <img
               src={craftImg}
               alt="Costruzione di una mosca artigianale"
-               className="w-full h-[500px] md:h-[700px] object-cover"
+              className="w-full h-[500px] md:h-[700px] object-cover"
               style={{ filter: 'saturate(0.8) contrast(1.05)' }}
               loading="lazy"
               width={1080}
               height={1920}
             />
           </motion.div>
+        </div>
+      </section>
+
+      {/* ─── FEATURES ─── */}
+      <section className="px-6 py-20 md:py-32 border-t border-[#242242]/10">
+        <div className="max-w-7xl mx-auto">
+          <motion.p
+            variants={slow(0)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-3"
+          >
+            Cosa puoi fare
+          </motion.p>
+          <motion.h2
+            variants={slow(0.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-3xl md:text-5xl font-bold font-serif mb-14"
+          >
+            La tua compagna di pesca digitale
+          </motion.h2>
+
+          <div className="grid md:grid-cols-3 gap-10 md:gap-12">
+            {features.map((f, i) => (
+              <motion.div
+                key={f.title}
+                variants={slow(i * 0.15)}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-60px' }}
+              >
+                <f.icon className="w-7 h-7 text-[#4a7c59] mb-5" strokeWidth={1.5} />
+                <h3 className="text-xl font-bold font-serif mb-3">{f.title}</h3>
+                <p className="text-sm leading-relaxed text-[#8c8c7a]">{f.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── NO-KILL PHILOSOPHY ─── */}
+      <section className="bg-[#242242] text-[#f5f0e8] py-20 md:py-28 px-6">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.p
+            variants={slow(0)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-xs tracking-[0.3em] uppercase text-[#f5f0e8]/50 mb-4"
+          >
+            Il nostro valore
+          </motion.p>
+          <motion.h2
+            variants={slow(0.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-3xl md:text-5xl font-bold font-serif mb-8"
+          >
+            La filosofia no-kill
+          </motion.h2>
+          <motion.p
+            variants={slow(0.2)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-base md:text-lg leading-relaxed text-[#f5f0e8]/75"
+          >
+            Il no-kill non è solo una regola — è il rispetto per il pesce e per il fiume.
+            Ogni trota marmorata rilasciata è una trota che crescerà ancora, che tornerà a risalire
+            il fiume, che un altro pescatore potrà incontrare. Su Flywaters il no-kill è un valore
+            fondante: ogni cattura fotografata torna libera nell'acqua. Perché il vero trofeo
+            non è il pesce — è il momento.
+          </motion.p>
         </div>
       </section>
 
@@ -297,8 +401,48 @@ const Landing = () => {
         </motion.div>
       </section>
 
+      {/* ─── HOW IT WORKS ─── */}
+      <section className="px-6 py-20 md:py-32">
+        <div className="max-w-7xl mx-auto">
+          <motion.p
+            variants={slow(0)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-3"
+          >
+            Inizia in 3 passi
+          </motion.p>
+          <motion.h2
+            variants={slow(0.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-3xl md:text-5xl font-bold font-serif mb-14"
+          >
+            Come funziona
+          </motion.h2>
+
+          <div className="grid md:grid-cols-3 gap-10 md:gap-16">
+            {steps.map((s, i) => (
+              <motion.div
+                key={s.num}
+                variants={slow(i * 0.15)}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-60px' }}
+              >
+                <span className="text-5xl font-bold font-serif text-[#242242]/10 block mb-4">{s.num}</span>
+                <h3 className="text-xl font-bold font-serif mb-3">{s.title}</h3>
+                <p className="text-sm leading-relaxed text-[#8c8c7a]">{s.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ─── FEATURED SPOTS ─── */}
-      <section className="py-20 md:py-32 px-6">
+      <section className="py-20 md:py-32 px-6 border-t border-[#242242]/10">
         <div className="max-w-7xl mx-auto">
           <motion.p
             variants={slow(0)}
@@ -383,7 +527,7 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
           <img src={logoWhite} alt="Flywaters" className="h-6" />
           <p className="text-xs tracking-[0.2em] uppercase text-[#f5f0e8]/50">
-            Lancia. Connetti. Ripeti.
+            Lancia. Osserva. Rilascia. Rispetta.
           </p>
           <div className="flex gap-8 text-xs tracking-wide text-[#f5f0e8]/60">
             <a href="/blog" className="hover:text-[#f5f0e8] transition-colors">Blog</a>
