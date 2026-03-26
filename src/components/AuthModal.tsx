@@ -114,7 +114,7 @@ const AuthModal = ({ open, onOpenChange, defaultMode = 'login' }: AuthModalProps
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 text-sm tracking-widest uppercase font-medium bg-[#242242] text-[#f5f0e8] hover:bg-[#242242]/85 transition-colors disabled:opacity-50"
+            className="w-full py-3 rounded-full text-sm tracking-widest uppercase font-medium bg-[#242242] text-[#f5f0e8] hover:opacity-85 transition-opacity disabled:opacity-50"
           >
             {loading ? 'Caricamento...' : isLogin ? 'Accedi' : 'Crea account'}
           </button>
