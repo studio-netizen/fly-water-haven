@@ -170,7 +170,7 @@ const EditProfile = () => {
         {/* Fields */}
         <div className="space-y-4">
           <div>
-            <Label htmlFor="displayName">Nome visualizzato</Label>
+            <Label htmlFor="displayName">{t('profile.displayName')}</Label>
             <Input
               id="displayName"
               value={displayName}
