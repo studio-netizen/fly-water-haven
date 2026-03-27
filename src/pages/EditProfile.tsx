@@ -205,7 +205,7 @@ const EditProfile = () => {
           </div>
 
           <div>
-            <Label>Tipo di pesca</Label>
+            <Label>{t('profile.fishingType')}</Label>
             <div className="flex flex-wrap gap-2 mt-2">
               {FISHING_TYPES.map(ft => (
                 <button
