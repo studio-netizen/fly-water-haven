@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
 import { toast } from 'sonner';
+import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 
 interface Post {
   id: string;
@@ -49,14 +50,13 @@ const Feed = () => {
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [feedMode, setFeedMode] = useState<'forYou' | 'following'>('forYou');
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
-  const [unreadMessages, setUnreadMessages] = useState(0);
+  const unreadMessages = useUnreadMessages();
 
   useEffect(() => {
     if (!user) return;
     fetchFollowedUsers();
     fetchLikedPosts();
     fetchSuggestedUsers();
-    fetchUnreadMessages();
   }, [user]);
 
   useEffect(() => {
@@ -119,12 +119,6 @@ const Feed = () => {
     setSuggestedUsers(suggestions.slice(0, 5));
   };
 
-  const fetchUnreadMessages = async () => {
-    if (!user) return;
-    const { count } = await supabase.from('messages').select('id', { count: 'exact', head: true })
-      .eq('receiver_id', user.id).eq('read', false);
-    setUnreadMessages(count || 0);
-  };
 
   const toggleLike = async (postId: string) => {
     if (!user) return;

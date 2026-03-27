@@ -67,6 +67,7 @@ const App = () => (
               <Route path="/map" element={<SpotMap />} />
               <Route path="/spot/:spotId" element={<SpotDetail />} />
               <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+              <Route path="/messages/:userId" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
               <Route path="/publish" element={<ProtectedRoute><Publish /></ProtectedRoute>} />
               <Route path="/post/:postId" element={<PostDetail />} />
