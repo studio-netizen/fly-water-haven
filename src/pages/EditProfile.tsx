@@ -156,7 +156,7 @@ const EditProfile = () => {
             onClick={() => fileInputRef.current?.click()}
             className="text-sm text-primary font-medium"
           >
-            Cambia foto
+            {t('profile.changePhoto')}
           </button>
           <input
             ref={fileInputRef}
