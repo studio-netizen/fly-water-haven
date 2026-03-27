@@ -50,12 +50,12 @@ const Blog = () => {
               to={`/blog/${article.slug}`}
               className="group"
             >
-              <div className="overflow-hidden mb-4">
+              <div className="overflow-hidden rounded-xl mb-4">
                 <img
                   src={article.coverImage}
                   alt={article.title}
-                  className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
-                  style={{ filter: 'saturate(0.8) contrast(1.05)' }}
+                  className="w-full aspect-video object-cover transition-transform duration-700 group-hover:scale-105"
+                  style={{ filter: 'saturate(0.85)' }}
                   loading="lazy"
                 />
               </div>

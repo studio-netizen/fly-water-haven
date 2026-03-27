@@ -62,7 +62,7 @@ export const blogArticles: BlogArticle[] = [
     h1: 'Attrezzatura pesca a mosca: guida completa a canne, mulinelli e code',
     readingTime: '9 min',
     excerpt: 'Come scegliere canna, mulinello e coda per torrenti alpini e fiumi italiani. Consigli per principianti ed esperti.',
-    coverImage: 'https://images.unsplash.com/photo-1516962080544-eac695c93791?auto=format&fit=crop&w=1200&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800',
     sections: [
       { heading: 'Come scegliere la canna giusta', body: 'La canna è lo strumento più importante del fly fisher. La scelta dipende principalmente dal tipo di acqua e dalle specie target. Per i torrenti alpini italiani, una canna da 9 piedi in classe 4-5wt è la scelta più versatile. Per la marmorata e lo streamer si sale a 7-8wt, mentre per la pesca tecnica in acque piccole si scende a 2-3wt.' },
       { heading: 'I materiali delle canne moderne', body: 'Le canne in grafite ad alto modulo offrono il miglior rapporto tra leggerezza e potenza. I brand di riferimento sono Sage, Scott, Hardy e Orvis per il segmento premium, mentre Redington, Echo e Shakespeare offrono ottime opzioni per chi inizia. Una canna di qualità media da 200-400€ è più che sufficiente per pescare bene.' },
