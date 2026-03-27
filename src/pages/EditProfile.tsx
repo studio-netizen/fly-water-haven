@@ -175,7 +175,7 @@ const EditProfile = () => {
               id="displayName"
               value={displayName}
               onChange={e => setDisplayName(e.target.value)}
-              placeholder="Il tuo nome"
+              placeholder={t('profile.yourName')}
               maxLength={50}
             />
           </div>
