@@ -57,7 +57,6 @@ const Feed = () => {
     fetchFollowedUsers();
     fetchLikedPosts();
     fetchSuggestedUsers();
-    fetchUnreadMessages();
   }, [user]);
 
   useEffect(() => {
