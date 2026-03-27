@@ -101,7 +101,7 @@ const EditProfile = () => {
 
       if (error) throw error;
 
-      toast.success('Profilo aggiornato!');
+      toast.success(t('profile.profileUpdated'));
       navigate('/profile');
     } catch (err: any) {
       toast.error(err.message || 'Errore durante il salvataggio');
