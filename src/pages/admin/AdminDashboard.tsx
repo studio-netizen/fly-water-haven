@@ -5,7 +5,7 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
-import { Users, FileText, MapPin, MessageSquare, Star, TrendingUp } from 'lucide-react';
+import { Users, FileText, MapPin, MessageSquare, Star, TrendingUp, Mail } from 'lucide-react';
 
 interface Stats {
   totalUsers: number;
