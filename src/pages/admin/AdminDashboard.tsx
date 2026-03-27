@@ -21,6 +21,8 @@ interface Stats {
   registrationChart: { created_at: string }[];
   postsChart: { created_at: string }[];
   fishingTypes: { fishing_types: string[] | null }[];
+  welcomeEmailsSent: number;
+  welcomeEmailsFailed: number;
 }
 
 const COLORS = ['#242242', '#4f46e5', '#0891b2', '#059669', '#d97706', '#dc2626', '#7c3aed', '#db2777'];
