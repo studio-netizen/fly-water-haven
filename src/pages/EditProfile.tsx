@@ -126,11 +126,11 @@ const EditProfile = () => {
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <button onClick={() => navigate('/profile')} className="flex items-center gap-1 text-foreground">
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm">Indietro</span>
+            <span className="text-sm">{t('profile.back')}</span>
           </button>
-          <h1 className="text-lg font-semibold text-foreground">Modifica profilo</h1>
+          <h1 className="text-lg font-semibold text-foreground">{t('profile.editProfile')}</h1>
           <Button onClick={handleSave} disabled={saving} size="sm">
-            {saving ? 'Salvo...' : 'Salva'}
+            {saving ? t('profile.saving') : t('profile.save')}
           </Button>
         </div>
       </header>
