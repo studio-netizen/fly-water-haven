@@ -9,14 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Grid3X3, MapPin, Pencil, Star } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import FollowersModal from '@/components/FollowersModal';
-
-const FISHING_TYPES: Record<string, string> = {
-  'fly-fishing': '🎣 Pesca a mosca',
-  'spinning': '🔄 Spinning',
-  'baitcasting': '🎯 Baitcasting',
-  'surfcasting': '🌊 Surfcasting',
-  'ice-fishing': '🧊 Pesca sul ghiaccio',
-};
+import { useTranslation } from 'react-i18next';
 
 const Profile = () => {
   const { userId: paramUserId } = useParams<{ userId: string }>();
@@ -31,6 +24,7 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState<'posts' | 'spots'>('posts');
   const [modalType, setModalType] = useState<'followers' | 'following' | null>(null);
   const isOwnProfile = user?.id === userId;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (userId) {
@@ -105,8 +99,7 @@ const Profile = () => {
 
   return (
     <AppLayout>
-      <SEOHead title={`${profile?.display_name || profile?.username || 'Profilo'} | Flywaters`} description={`Profilo di ${profile?.display_name || profile?.username || 'utente'} su Flywaters`} />
-      {/* Mobile header */}
+      <SEOHead title={`${profile?.display_name || profile?.username || t('nav.profile')} | Flywaters`} description={`${profile?.display_name || profile?.username || ''}`} />
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <h1 className="text-base font-semibold text-foreground">{profile.username || 'pescatore'}</h1>
@@ -119,7 +112,6 @@ const Profile = () => {
       </header>
 
       <div className="max-w-lg mx-auto px-4">
-        {/* Profile header – Instagram style */}
         <div className="flex items-center gap-6 py-5">
           <Avatar className="h-20 w-20 lg:h-24 lg:w-24">
             <AvatarImage src={profile.avatar_url || ''} />
@@ -136,55 +128,42 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Name, bio, tags */}
         <div className="pb-3">
           <h2 className="font-semibold text-foreground text-sm">{profile.display_name}</h2>
           {profile.bio && <p className="text-sm text-foreground mt-0.5">{profile.bio}</p>}
           {profile.fishing_types && profile.fishing_types.length > 0 && (
             <div className="flex gap-1 mt-2 flex-wrap">
-              {profile.fishing_types.map((t: string) => (
-                <Badge key={t} variant={t === 'fly-fishing' ? 'default' : 'secondary'} className="text-xs">
-                  {FISHING_TYPES[t] || t}
+              {profile.fishing_types.map((ft: string) => (
+                <Badge key={ft} variant={ft === 'fly-fishing' ? 'default' : 'secondary'} className="text-xs">
+                  {t(`common.fishingTypes.${ft}` as any) || ft}
                 </Badge>
               ))}
             </div>
           )}
         </div>
 
-        {/* Action buttons */}
         <div className="flex gap-2 pb-4">
           {isOwnProfile ? (
             <Button variant="outline" className="flex-1 h-9 text-sm font-semibold" onClick={() => navigate('/profile/edit')}>
-              Modifica profilo
+              {t('profile.editProfile')}
             </Button>
           ) : user ? (
             <>
-              <Button
-                variant={isFollowing ? 'outline' : 'default'}
-                className="flex-1 h-9 text-sm font-semibold"
-                onClick={toggleFollow}
-              >
-                {isFollowing ? 'Seguendo' : 'Segui'}
+              <Button variant={isFollowing ? 'outline' : 'default'} className="flex-1 h-9 text-sm font-semibold" onClick={toggleFollow}>
+                {isFollowing ? t('feed.followingBtn') : t('feed.follow')}
               </Button>
-              <Button
-                variant="outline"
-                className="flex-1 h-9 text-sm font-semibold"
-                onClick={() => navigate(`/messages/${userId}`)}
-              >
-                Messaggio
+              <Button variant="outline" className="flex-1 h-9 text-sm font-semibold" onClick={() => navigate(`/messages/${userId}`)}>
+                {t('profile.message')}
               </Button>
             </>
           ) : null}
         </div>
 
-        {/* Tabs */}
         <div className="border-t border-border flex">
           <button
             onClick={() => setActiveTab('posts')}
             className={`flex-1 py-3 flex items-center justify-center gap-1.5 text-xs uppercase tracking-wide border-b-2 transition-colors ${
-              activeTab === 'posts'
-                ? 'border-foreground text-foreground font-semibold'
-                : 'border-transparent text-muted-foreground'
+              activeTab === 'posts' ? 'border-foreground text-foreground font-semibold' : 'border-transparent text-muted-foreground'
             }`}
           >
             <Grid3X3 className="w-4 h-4" /> Post
@@ -192,16 +171,13 @@ const Profile = () => {
           <button
             onClick={() => setActiveTab('spots')}
             className={`flex-1 py-3 flex items-center justify-center gap-1.5 text-xs uppercase tracking-wide border-b-2 transition-colors ${
-              activeTab === 'spots'
-                ? 'border-foreground text-foreground font-semibold'
-                : 'border-transparent text-muted-foreground'
+              activeTab === 'spots' ? 'border-foreground text-foreground font-semibold' : 'border-transparent text-muted-foreground'
             }`}
           >
-            <Star className="w-4 h-4" /> Spot recensiti
+            <Star className="w-4 h-4" /> {t('profile.reviewedSpots')}
           </button>
         </div>
 
-        {/* Tab content */}
         {activeTab === 'posts' ? (
           <div className="grid grid-cols-3 gap-1 pb-4">
             {posts.map(post => (
@@ -210,7 +186,7 @@ const Profile = () => {
               </div>
             ))}
             {posts.length === 0 && (
-              <p className="col-span-3 text-center py-14 text-muted-foreground text-sm">Nessun post ancora</p>
+              <p className="col-span-3 text-center py-14 text-muted-foreground text-sm">{t('profile.noPosts')}</p>
             )}
           </div>
         ) : (
@@ -223,10 +199,7 @@ const Profile = () => {
                   <p className="text-xs text-muted-foreground">{r.spots?.spot_type}</p>
                   <div className="flex items-center gap-1 mt-0.5">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-3 h-3 ${i < r.rating ? 'fill-yellow-500 text-yellow-500' : 'text-muted-foreground/30'}`}
-                      />
+                      <Star key={i} className={`w-3 h-3 ${i < r.rating ? 'fill-yellow-500 text-yellow-500' : 'text-muted-foreground/30'}`} />
                     ))}
                   </div>
                   {r.content && <p className="text-sm text-foreground mt-1">{r.content}</p>}
@@ -234,20 +207,14 @@ const Profile = () => {
               </div>
             ))}
             {reviews.length === 0 && (
-              <p className="text-center py-14 text-muted-foreground text-sm">Nessuna recensione ancora</p>
+              <p className="text-center py-14 text-muted-foreground text-sm">{t('profile.noReviews')}</p>
             )}
           </div>
         )}
       </div>
 
-      {/* Followers/Following modal */}
       {modalType && userId && (
-        <FollowersModal
-          open={!!modalType}
-          onClose={() => setModalType(null)}
-          userId={userId}
-          type={modalType}
-        />
+        <FollowersModal open={!!modalType} onClose={() => setModalType(null)} userId={userId} type={modalType} />
       )}
     </AppLayout>
   );

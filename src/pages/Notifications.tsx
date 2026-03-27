@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Heart, MessageCircle, Star, UserPlus, CheckCheck } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
+import { useTranslation } from 'react-i18next';
 
 const ICONS: Record<string, any> = {
   like: Heart,
@@ -20,6 +21,7 @@ const Notifications = () => {
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (user) fetchNotifications();
@@ -54,12 +56,12 @@ const Notifications = () => {
 
   const getMessage = (type: string) => {
     switch (type) {
-      case 'like': return 'ha messo Mi piace al tuo post';
-      case 'comment': return 'ha commentato il tuo post';
-      case 'follow': return 'ha iniziato a seguirti';
-      case 'review': return 'ha recensito uno spot che segui';
-      case 'message': return 'ti ha inviato un messaggio';
-      default: return 'ha interagito con te';
+      case 'like': return t('notifications.likedYourPost');
+      case 'comment': return t('notifications.commentedYourPost');
+      case 'follow': return t('notifications.startedFollowing');
+      case 'review': return t('notifications.reviewedSpot');
+      case 'message': return t('notifications.sentMessage');
+      default: return t('notifications.interacted');
     }
   };
 
@@ -67,7 +69,7 @@ const Notifications = () => {
     return (
       <AppLayout>
         <div className="flex items-center justify-center py-20">
-          <p className="text-muted-foreground">Accedi per vedere le notifiche</p>
+          <p className="text-muted-foreground">{t('auth.loginToSee')} {t('nav.notifications').toLowerCase()}</p>
         </div>
       </AppLayout>
     );
@@ -79,21 +81,20 @@ const Notifications = () => {
     <AppLayout>
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <h1 className="text-base font-semibold text-foreground">Notifiche</h1>
+          <h1 className="text-base font-semibold text-foreground">{t('notifications.title')}</h1>
           {hasUnread && (
             <Button variant="ghost" size="sm" onClick={markAllRead} className="text-xs text-primary gap-1">
-              <CheckCheck className="w-4 h-4" /> Segna lette
+              <CheckCheck className="w-4 h-4" /> {t('notifications.markRead')}
             </Button>
           )}
         </div>
       </header>
 
       <div className="max-w-lg mx-auto">
-        {/* Desktop mark all read */}
         {hasUnread && (
           <div className="hidden lg:flex justify-end px-4 py-2 border-b border-border">
             <Button variant="ghost" size="sm" onClick={markAllRead} className="text-xs text-primary gap-1">
-              <CheckCheck className="w-4 h-4" /> Segna tutte come lette
+              <CheckCheck className="w-4 h-4" /> {t('notifications.markAllRead')}
             </Button>
           </div>
         )}
@@ -105,8 +106,8 @@ const Notifications = () => {
         ) : notifications.length === 0 ? (
           <div className="text-center py-20 px-4">
             <Heart className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-foreground font-semibold">Nessuna notifica ancora</p>
-            <p className="text-sm text-muted-foreground mt-1">Le notifiche appariranno qui</p>
+            <p className="text-foreground font-semibold">{t('notifications.noNotifications')}</p>
+            <p className="text-sm text-muted-foreground mt-1">{t('notifications.willAppearHere')}</p>
           </div>
         ) : (
           notifications.map(n => {
@@ -118,9 +119,7 @@ const Notifications = () => {
                 onClick={() => {
                   if (n.type === 'follow' && profile?.user_id) navigate(`/profile/${profile.user_id}`);
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 border-b border-border text-left transition-colors hover:bg-muted/30 ${
-                  !n.read ? 'bg-primary/5' : ''
-                }`}
+                className={`w-full flex items-center gap-3 px-4 py-3 border-b border-border text-left transition-colors hover:bg-muted/30 ${!n.read ? 'bg-primary/5' : ''}`}
               >
                 <Avatar className="h-11 w-11 flex-shrink-0">
                   <AvatarImage src={profile?.avatar_url || ''} />
@@ -130,7 +129,7 @@ const Notifications = () => {
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-foreground">
-                    <span className="font-semibold">{profile?.display_name || profile?.username || 'Qualcuno'}</span>{' '}
+                    <span className="font-semibold">{profile?.display_name || profile?.username || t('notifications.someone')}</span>{' '}
                     {getMessage(n.type)}
                   </p>
                   <p className="text-xs text-muted-foreground mt-0.5">{formatTime(n.created_at)}</p>
