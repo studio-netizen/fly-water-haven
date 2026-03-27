@@ -82,6 +82,11 @@ export default function AdminDashboard() {
     { label: 'Recensioni totali', value: stats.totalReviews, icon: Star },
   ];
 
+  const kpis3 = [
+    { label: 'Welcome email inviate', value: stats.welcomeEmailsSent, icon: Mail },
+    { label: 'Welcome email fallite', value: stats.welcomeEmailsFailed, icon: Mail },
+  ];
+
   const regData = groupByDay(stats.registrationChart);
   const postData = groupByDay(stats.postsChart);
   const fishData = countFishingTypes(stats.fishingTypes);
