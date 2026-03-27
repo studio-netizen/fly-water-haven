@@ -119,12 +119,6 @@ const Feed = () => {
     setSuggestedUsers(suggestions.slice(0, 5));
   };
 
-  const fetchUnreadMessages = async () => {
-    if (!user) return;
-    const { count } = await supabase.from('messages').select('id', { count: 'exact', head: true })
-      .eq('receiver_id', user.id).eq('read', false);
-    setUnreadMessages(count || 0);
-  };
 
   const toggleLike = async (postId: string) => {
     if (!user) return;
