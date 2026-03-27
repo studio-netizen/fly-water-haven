@@ -197,7 +197,7 @@ const EditProfile = () => {
               id="bio"
               value={bio}
               onChange={e => setBio(e.target.value)}
-              placeholder="Racconta qualcosa di te..."
+              placeholder={t('profile.bioPlaceholder')}
               maxLength={160}
               rows={3}
             />
