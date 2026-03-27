@@ -410,6 +410,33 @@ export type Database = {
         }
         Relationships: []
       }
+      welcome_emails: {
+        Row: {
+          created_at: string
+          email: string
+          error_message: string | null
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          error_message?: string | null
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          error_message?: string | null
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
