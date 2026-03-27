@@ -5,7 +5,7 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
-import { Users, FileText, MapPin, MessageSquare, Star, TrendingUp } from 'lucide-react';
+import { Users, FileText, MapPin, MessageSquare, Star, TrendingUp, Mail } from 'lucide-react';
 
 interface Stats {
   totalUsers: number;
@@ -21,6 +21,8 @@ interface Stats {
   registrationChart: { created_at: string }[];
   postsChart: { created_at: string }[];
   fishingTypes: { fishing_types: string[] | null }[];
+  welcomeEmailsSent: number;
+  welcomeEmailsFailed: number;
 }
 
 const COLORS = ['#242242', '#4f46e5', '#0891b2', '#059669', '#d97706', '#dc2626', '#7c3aed', '#db2777'];
@@ -80,6 +82,11 @@ export default function AdminDashboard() {
     { label: 'Recensioni totali', value: stats.totalReviews, icon: Star },
   ];
 
+  const kpis3 = [
+    { label: 'Welcome email inviate', value: stats.welcomeEmailsSent, icon: Mail },
+    { label: 'Welcome email fallite', value: stats.welcomeEmailsFailed, icon: Mail },
+  ];
+
   const regData = groupByDay(stats.registrationChart);
   const postData = groupByDay(stats.postsChart);
   const fishData = countFishingTypes(stats.fishingTypes);
@@ -104,6 +111,20 @@ export default function AdminDashboard() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis2.map((k) => (
+          <Card key={k.label}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <k.icon className="h-8 w-8 text-muted-foreground" />
+              <div>
+                <p className="text-2xl font-bold">{k.value}</p>
+                <p className="text-xs text-muted-foreground">{k.label}</p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {kpis3.map((k) => (
           <Card key={k.label}>
             <CardContent className="p-4 flex items-center gap-3">
               <k.icon className="h-8 w-8 text-muted-foreground" />

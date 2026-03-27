@@ -24,10 +24,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Send welcome email on first sign up
+      if (event === 'SIGNED_IN' && session?.user) {
+        const isNewUser = session.user.created_at && 
+          (Date.now() - new Date(session.user.created_at).getTime()) < 60000;
+        if (isNewUser) {
+          supabase.functions.invoke('send-welcome-email', {
+            body: {
+              user_id: session.user.id,
+              display_name: session.user.user_metadata?.full_name,
+            },
+          }).catch((err) => console.error('Welcome email error:', err));
+        }
+      }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
