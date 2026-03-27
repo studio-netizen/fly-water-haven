@@ -5,12 +5,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import logoImg from '@/assets/flywaters-logo-dark.png';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 
 const DesktopSidebar = () => {
   const { user, signOut } = useAuth();
   const location = useLocation();
   const [profile, setProfile] = useState<any>(null);
-  const [unreadMessages, setUnreadMessages] = useState(0);
+  const unreadMessages = useUnreadMessages();
   const [unreadNotifs, setUnreadNotifs] = useState(0);
 
   useEffect(() => {
@@ -18,9 +19,6 @@ const DesktopSidebar = () => {
     supabase.from('profiles').select('*').eq('user_id', user.id).single().then(({ data }) => {
       if (data) setProfile(data);
     });
-    supabase.from('messages').select('id', { count: 'exact', head: true })
-      .eq('receiver_id', user.id).eq('read', false)
-      .then(({ count }) => setUnreadMessages(count || 0));
     supabase.from('notifications').select('id', { count: 'exact', head: true })
       .eq('user_id', user.id).eq('read', false)
       .then(({ count }) => setUnreadNotifs(count || 0));

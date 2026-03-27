@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Grid3X3, MapPin, Pencil, Star } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
+import FollowersModal from '@/components/FollowersModal';
 
 const FISHING_TYPES: Record<string, string> = {
   'fly-fishing': '🎣 Pesca a mosca',
@@ -28,6 +29,7 @@ const Profile = () => {
   const [stats, setStats] = useState({ posts: 0, followers: 0, following: 0 });
   const [isFollowing, setIsFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState<'posts' | 'spots'>('posts');
+  const [modalType, setModalType] = useState<'followers' | 'following' | null>(null);
   const isOwnProfile = user?.id === userId;
 
   useEffect(() => {
@@ -128,8 +130,8 @@ const Profile = () => {
           <div className="flex-1">
             <div className="flex items-center gap-4">
               <StatItem value={stats.posts} label="Posts" />
-              <StatItem value={stats.followers} label="Followers" />
-              <StatItem value={stats.following} label="Following" />
+              <StatItem value={stats.followers} label="Followers" onClick={() => setModalType('followers')} />
+              <StatItem value={stats.following} label="Following" onClick={() => setModalType('following')} />
             </div>
           </div>
         </div>
@@ -167,7 +169,7 @@ const Profile = () => {
               <Button
                 variant="outline"
                 className="flex-1 h-9 text-sm font-semibold"
-                onClick={() => navigate('/messages')}
+                onClick={() => navigate(`/messages/${userId}`)}
               >
                 Messaggio
               </Button>
@@ -203,7 +205,7 @@ const Profile = () => {
         {activeTab === 'posts' ? (
           <div className="grid grid-cols-3 gap-1 pb-4">
             {posts.map(post => (
-              <div key={post.id} className="aspect-square bg-muted rounded-lg overflow-hidden">
+              <div key={post.id} className="aspect-square bg-muted rounded-lg overflow-hidden cursor-pointer" onClick={() => navigate(`/post/${post.id}`)}>
                 <img src={post.image_url} alt="" className="w-full h-full object-cover" loading="lazy" />
               </div>
             ))}
@@ -237,15 +239,25 @@ const Profile = () => {
           </div>
         )}
       </div>
+
+      {/* Followers/Following modal */}
+      {modalType && userId && (
+        <FollowersModal
+          open={!!modalType}
+          onClose={() => setModalType(null)}
+          userId={userId}
+          type={modalType}
+        />
+      )}
     </AppLayout>
   );
 };
 
-const StatItem = ({ value, label }: { value: number; label: string }) => (
-  <div className="text-center flex-1">
+const StatItem = ({ value, label, onClick }: { value: number; label: string; onClick?: () => void }) => (
+  <button onClick={onClick} className="text-center flex-1" disabled={!onClick}>
     <p className="text-lg font-bold text-foreground">{value}</p>
     <p className="text-xs text-muted-foreground">{label}</p>
-  </div>
+  </button>
 );
 
 export default Profile;
