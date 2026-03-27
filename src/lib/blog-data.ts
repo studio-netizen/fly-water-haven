@@ -19,7 +19,7 @@ export const blogArticles: BlogArticle[] = [
     h1: 'I 10 migliori spot di pesca a mosca in Italia',
     readingTime: '8 min',
     excerpt: 'Dalla Valtellina al Friuli, scopri i migliori fiumi e torrenti italiani per la pesca a mosca.',
-    coverImage: 'https://images.unsplash.com/photo-1504309092620-4d0ec726efa4?auto=format&fit=crop&w=1200&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1494564605686-2e931f77a8e2?w=800',
     sections: [
       { heading: 'Perché l\'Italia è un paradiso per il fly fishing', body: 'L\'Italia offre alcune delle acque più ricche d\'Europa per la pesca a mosca. Torrenti alpini cristallini, fiumi di risorgiva nelle pianure venete e corsi d\'acqua appenninici ospitano popolazioni straordinarie di trota fario, marmorata e temolo. Ecco i 10 spot imperdibili per ogni fly fisher.' },
       { heading: '1. Torrente Sesia — Piemonte', body: 'Il Sesia è considerato da molti il fiume più bello d\'Italia per la pesca a mosca. Le sue acque fredde e ossigenate ospitano dense popolazioni di trota marmorata, la regina dei fiumi alpini. La zona di tutela ittica tra Varallo e Borgosesia offre tratti no-kill di altissima qualità. Periodo migliore: maggio-settembre.' },
@@ -43,7 +43,7 @@ export const blogArticles: BlogArticle[] = [
     h1: 'Trota Marmorata e Temolo: guida completa alla pesca a mosca',
     readingTime: '7 min',
     excerpt: 'Scopri tutto su trota marmorata e temolo: habitat, comportamento, tecniche di pesca a mosca e spot migliori.',
-    coverImage: 'https://images.unsplash.com/photo-1545816250-e12bedba42ba?auto=format&fit=crop&w=1200&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
     sections: [
       { heading: 'La trota marmorata: la regina dei fiumi alpini', body: 'La trota marmorata (Salmo marmoratus) è endemica del bacino del Po e dei fiumi del Friuli. Riconoscibile per la livrea marmorizzata grigio-verde, può superare i 10 kg nei tratti più produttivi. È considerata la preda più ambita dai fly fisher italiani per la sua diffidenza e potenza in combattimento.' },
       { heading: 'Dove trovare la marmorata', body: 'Predilige acque fredde, correnti e ben ossigenate con fondali rocciosi dove appostarsi in attesa delle prede. I fiumi più vocati sono Sesia, Tagliamento, Isonzo e i principali affluenti del Po piemontesi. Si posiziona spesso sotto le rapide o ai bordi delle correnti principali.' },
@@ -62,7 +62,7 @@ export const blogArticles: BlogArticle[] = [
     h1: 'Attrezzatura pesca a mosca: guida completa a canne, mulinelli e code',
     readingTime: '9 min',
     excerpt: 'Come scegliere canna, mulinello e coda per torrenti alpini e fiumi italiani. Consigli per principianti ed esperti.',
-    coverImage: 'https://images.unsplash.com/photo-1516962080544-eac695c93791?auto=format&fit=crop&w=1200&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800',
     sections: [
       { heading: 'Come scegliere la canna giusta', body: 'La canna è lo strumento più importante del fly fisher. La scelta dipende principalmente dal tipo di acqua e dalle specie target. Per i torrenti alpini italiani, una canna da 9 piedi in classe 4-5wt è la scelta più versatile. Per la marmorata e lo streamer si sale a 7-8wt, mentre per la pesca tecnica in acque piccole si scende a 2-3wt.' },
       { heading: 'I materiali delle canne moderne', body: 'Le canne in grafite ad alto modulo offrono il miglior rapporto tra leggerezza e potenza. I brand di riferimento sono Sage, Scott, Hardy e Orvis per il segmento premium, mentre Redington, Echo e Shakespeare offrono ottime opzioni per chi inizia. Una canna di qualità media da 200-400€ è più che sufficiente per pescare bene.' },
