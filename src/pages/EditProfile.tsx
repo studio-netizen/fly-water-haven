@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, Camera } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 const FISHING_TYPES = [
   { value: 'fly-fishing', label: '🎣 Pesca a mosca' },
@@ -21,6 +22,7 @@ const FISHING_TYPES = [
 const EditProfile = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [loading, setLoading] = useState(true);
@@ -53,7 +55,7 @@ const EditProfile = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('L\'immagine deve essere inferiore a 5MB');
+      toast.error(t('profile.imageTooLarge'));
       return;
     }
     setAvatarFile(file);
@@ -99,7 +101,7 @@ const EditProfile = () => {
 
       if (error) throw error;
 
-      toast.success('Profilo aggiornato!');
+      toast.success(t('profile.profileUpdated'));
       navigate('/profile');
     } catch (err: any) {
       toast.error(err.message || 'Errore durante il salvataggio');
@@ -124,11 +126,11 @@ const EditProfile = () => {
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <button onClick={() => navigate('/profile')} className="flex items-center gap-1 text-foreground">
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm">Indietro</span>
+            <span className="text-sm">{t('profile.back')}</span>
           </button>
-          <h1 className="text-lg font-semibold text-foreground">Modifica profilo</h1>
+          <h1 className="text-lg font-semibold text-foreground">{t('profile.editProfile')}</h1>
           <Button onClick={handleSave} disabled={saving} size="sm">
-            {saving ? 'Salvo...' : 'Salva'}
+            {saving ? t('profile.saving') : t('profile.save')}
           </Button>
         </div>
       </header>
@@ -154,7 +156,7 @@ const EditProfile = () => {
             onClick={() => fileInputRef.current?.click()}
             className="text-sm text-primary font-medium"
           >
-            Cambia foto
+            {t('profile.changePhoto')}
           </button>
           <input
             ref={fileInputRef}
@@ -168,12 +170,12 @@ const EditProfile = () => {
         {/* Fields */}
         <div className="space-y-4">
           <div>
-            <Label htmlFor="displayName">Nome visualizzato</Label>
+            <Label htmlFor="displayName">{t('profile.displayName')}</Label>
             <Input
               id="displayName"
               value={displayName}
               onChange={e => setDisplayName(e.target.value)}
-              placeholder="Il tuo nome"
+              placeholder={t('profile.yourName')}
               maxLength={50}
             />
           </div>
@@ -190,12 +192,12 @@ const EditProfile = () => {
           </div>
 
           <div>
-            <Label htmlFor="bio">Bio</Label>
+            <Label htmlFor="bio">{t('profile.bio')}</Label>
             <Textarea
               id="bio"
               value={bio}
               onChange={e => setBio(e.target.value)}
-              placeholder="Racconta qualcosa di te..."
+              placeholder={t('profile.bioPlaceholder')}
               maxLength={160}
               rows={3}
             />
@@ -203,7 +205,7 @@ const EditProfile = () => {
           </div>
 
           <div>
-            <Label>Tipo di pesca</Label>
+            <Label>{t('profile.fishingType')}</Label>
             <div className="flex flex-wrap gap-2 mt-2">
               {FISHING_TYPES.map(ft => (
                 <button

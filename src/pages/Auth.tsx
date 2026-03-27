@@ -8,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import logoDark from '@/assets/flywaters-logo-dark.png';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
@@ -21,6 +23,7 @@ const Auth = () => {
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const passwordsMatch = password === confirmPassword;
   const canRegister = firstName && lastName && email && password && confirmPassword && passwordsMatch && privacyAccepted;
@@ -33,11 +36,11 @@ const Auth = () => {
       if (activeTab === 'login') {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        toast.success('Bentornato!');
+        toast.success(t('auth.welcome'));
         navigate('/');
       } else {
         if (!passwordsMatch) {
-          toast.error('Le password non corrispondono');
+          toast.error(t('auth.passwordsDontMatch'));
           setLoading(false);
           return;
         }
@@ -50,7 +53,7 @@ const Auth = () => {
           },
         });
         if (error) throw error;
-        toast.success("Controlla la tua email per confermare l'account!");
+        toast.success(t('auth.checkEmail'));
       }
     } catch (err: any) {
       toast.error(err.message);
@@ -72,14 +75,15 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#f5f0e8' }}>
       <SEOHead
-        title="Accedi | Flywaters"
-        description="Accedi o registrati su Flywaters, la community italiana per la pesca a mosca."
+        title={`${t('auth.login')} | Flywaters`}
+        description={t('seo.defaultDescription')}
       />
 
       <div className="w-full max-w-[420px] bg-white rounded-[20px] shadow-lg p-8 animate-fade-in">
-        {/* Logo */}
-        <div className="flex justify-center mb-8">
+        {/* Logo + Language */}
+        <div className="flex justify-center items-center gap-3 mb-8">
           <img src={logoDark} alt="Flywaters" className="h-9" />
+          <LanguageSwitcher />
         </div>
 
         {/* Tab Switcher */}
@@ -93,7 +97,7 @@ const Auth = () => {
                 : 'text-[#8c8c7a] hover:text-[#242242]'
             }`}
           >
-            Accedi
+            {t('auth.login')}
           </button>
           <button
             type="button"
@@ -104,213 +108,110 @@ const Auth = () => {
                 : 'text-[#8c8c7a] hover:text-[#242242]'
             }`}
           >
-            Registrati
+            {t('auth.register')}
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* ── LOGIN TAB ── */}
           {activeTab === 'login' && (
             <>
               <div className="space-y-1.5">
                 <Label htmlFor="login-email" className="text-xs uppercase tracking-wider text-[#8c8c7a]">
-                  Email
+                  {t('auth.email')}
                 </Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8c8c7a]" />
-                  <Input
-                    id="login-email"
-                    type="email"
-                    placeholder="tu@esempio.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={inputClass}
-                    required
-                  />
+                  <Input id="login-email" type="email" placeholder="tu@esempio.com" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} required />
                 </div>
               </div>
-
               <div className="space-y-1.5">
                 <Label htmlFor="login-password" className="text-xs uppercase tracking-wider text-[#8c8c7a]">
-                  Password
+                  {t('auth.password')}
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8c8c7a]" />
-                  <Input
-                    id="login-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={inputClass}
-                    required
-                    minLength={6}
-                  />
+                  <Input id="login-password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className={inputClass} required minLength={6} />
                 </div>
               </div>
-
               <button type="button" className="text-xs text-[#8c8c7a] hover:text-[#242242] transition-colors">
-                Password dimenticata?
+                {t('auth.forgotPassword')}
               </button>
             </>
           )}
 
-          {/* ── REGISTER TAB ── */}
           {activeTab === 'register' && (
             <>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="reg-first" className="text-xs uppercase tracking-wider text-[#8c8c7a]">
-                    Nome
-                  </Label>
+                  <Label htmlFor="reg-first" className="text-xs uppercase tracking-wider text-[#8c8c7a]">{t('auth.firstName')}</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8c8c7a]" />
-                    <Input
-                      id="reg-first"
-                      placeholder="Mario"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className={inputClass}
-                      required
-                    />
+                    <Input id="reg-first" placeholder="Mario" value={firstName} onChange={(e) => setFirstName(e.target.value)} className={inputClass} required />
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="reg-last" className="text-xs uppercase tracking-wider text-[#8c8c7a]">
-                    Cognome
-                  </Label>
+                  <Label htmlFor="reg-last" className="text-xs uppercase tracking-wider text-[#8c8c7a]">{t('auth.lastName')}</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8c8c7a]" />
-                    <Input
-                      id="reg-last"
-                      placeholder="Rossi"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className={inputClass}
-                      required
-                    />
+                    <Input id="reg-last" placeholder="Rossi" value={lastName} onChange={(e) => setLastName(e.target.value)} className={inputClass} required />
                   </div>
                 </div>
               </div>
-
               <div className="space-y-1.5">
-                <Label htmlFor="reg-email" className="text-xs uppercase tracking-wider text-[#8c8c7a]">
-                  Email
-                </Label>
+                <Label htmlFor="reg-email" className="text-xs uppercase tracking-wider text-[#8c8c7a]">{t('auth.email')}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8c8c7a]" />
-                  <Input
-                    id="reg-email"
-                    type="email"
-                    placeholder="tu@esempio.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={inputClass}
-                    required
-                  />
+                  <Input id="reg-email" type="email" placeholder="tu@esempio.com" value={email} onChange={(e) => setEmail(e.target.value)} className={inputClass} required />
                 </div>
               </div>
-
               <div className="space-y-1.5">
-                <Label htmlFor="reg-password" className="text-xs uppercase tracking-wider text-[#8c8c7a]">
-                  Password
-                </Label>
+                <Label htmlFor="reg-password" className="text-xs uppercase tracking-wider text-[#8c8c7a]">{t('auth.password')}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8c8c7a]" />
-                  <Input
-                    id="reg-password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={`${inputClass} pr-10`}
-                    required
-                    minLength={6}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8c8c7a] hover:text-[#242242] transition-colors"
-                  >
+                  <Input id="reg-password" type={showPassword ? 'text' : 'password'} placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className={`${inputClass} pr-10`} required minLength={6} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8c8c7a] hover:text-[#242242] transition-colors">
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
-
               <div className="space-y-1.5">
-                <Label htmlFor="reg-confirm" className="text-xs uppercase tracking-wider text-[#8c8c7a]">
-                  Conferma password
-                </Label>
+                <Label htmlFor="reg-confirm" className="text-xs uppercase tracking-wider text-[#8c8c7a]">{t('auth.confirmPassword')}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8c8c7a]" />
-                  <Input
-                    id="reg-confirm"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={`${inputClass} pr-10 ${
-                      confirmPassword && !passwordsMatch ? 'border-red-400 focus-visible:ring-red-300' : ''
-                    }`}
-                    required
-                    minLength={6}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8c8c7a] hover:text-[#242242] transition-colors"
-                  >
+                  <Input id="reg-confirm" type={showConfirmPassword ? 'text' : 'password'} placeholder="••••••••" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className={`${inputClass} pr-10 ${confirmPassword && !passwordsMatch ? 'border-red-400 focus-visible:ring-red-300' : ''}`} required minLength={6} />
+                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8c8c7a] hover:text-[#242242] transition-colors">
                     {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
                 {confirmPassword && !passwordsMatch && (
-                  <p className="text-xs text-red-500 mt-1">Le password non corrispondono</p>
+                  <p className="text-xs text-red-500 mt-1">{t('auth.passwordsDontMatch')}</p>
                 )}
               </div>
-
               <label className="flex items-start gap-2.5 cursor-pointer pt-1">
-                <input
-                  type="checkbox"
-                  checked={privacyAccepted}
-                  onChange={(e) => setPrivacyAccepted(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 rounded border-[#242242]/20 text-[#242242] focus:ring-[#242242]/30 accent-[#242242]"
-                />
+                <input type="checkbox" checked={privacyAccepted} onChange={(e) => setPrivacyAccepted(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-[#242242]/20 text-[#242242] focus:ring-[#242242]/30 accent-[#242242]" />
                 <span className="text-xs text-[#8c8c7a] leading-relaxed">
-                  Ho letto e accetto la{' '}
-                  <a href="/privacy" className="text-[#242242] underline hover:no-underline">
-                    Privacy Policy
-                  </a>
+                  {t('auth.privacyAccept')}{' '}
+                  <a href="/privacy" className="text-[#242242] underline hover:no-underline">{t('auth.privacyPolicy')}</a>
                 </span>
               </label>
             </>
           )}
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading || (activeTab === 'register' && !canRegister)}
             className="w-full py-3 rounded-full text-sm tracking-widest uppercase font-medium bg-[#242242] text-white hover:opacity-90 transition-opacity disabled:opacity-40 flex items-center justify-center gap-2 mt-2"
           >
-            {loading
-              ? 'Caricamento...'
-              : activeTab === 'login'
-                ? 'Accedi'
-                : 'Crea account'}
+            {loading ? t('auth.loading') : activeTab === 'login' ? t('auth.login') : t('auth.createAccount')}
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
-        {/* Divider */}
         <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-[#242242]/10" />
-          </div>
-          <div className="relative flex justify-center text-xs">
-            <span className="px-3 bg-white text-[#8c8c7a]">oppure</span>
-          </div>
+          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[#242242]/10" /></div>
+          <div className="relative flex justify-center text-xs"><span className="px-3 bg-white text-[#8c8c7a]">{t('auth.or')}</span></div>
         </div>
 
-        {/* Google */}
         <button
           onClick={handleGoogleLogin}
           className="w-full py-3 rounded-full text-sm font-medium border-[1.5px] border-[#242242]/15 bg-white text-[#242242] hover:bg-[#f5f0e8]/50 transition-colors flex items-center justify-center gap-2"
@@ -321,7 +222,7 @@ const Auth = () => {
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
           </svg>
-          {activeTab === 'login' ? 'Continua con Google' : 'Registrati con Google'}
+          {activeTab === 'login' ? t('auth.continueWithGoogle') : t('auth.registerWithGoogle')}
         </button>
       </div>
     </div>

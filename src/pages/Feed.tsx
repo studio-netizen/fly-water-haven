@@ -13,6 +13,7 @@ import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
 import { toast } from 'sonner';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
+import { useTranslation } from 'react-i18next';
 
 interface Post {
   id: string;
@@ -51,6 +52,7 @@ const Feed = () => {
   const [feedMode, setFeedMode] = useState<'forYou' | 'following'>('forYou');
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
   const unreadMessages = useUnreadMessages();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!user) return;
@@ -109,7 +111,6 @@ const Feed = () => {
 
     if (!profiles) return;
 
-    // Get post counts for these users
     const suggestions: SuggestedUser[] = [];
     for (const p of profiles) {
       const { count } = await supabase.from('posts').select('id', { count: 'exact', head: true }).eq('user_id', p.user_id);
@@ -118,7 +119,6 @@ const Feed = () => {
     suggestions.sort((a, b) => b.post_count - a.post_count);
     setSuggestedUsers(suggestions.slice(0, 5));
   };
-
 
   const toggleLike = async (postId: string) => {
     if (!user) return;
@@ -148,10 +148,10 @@ const Feed = () => {
   const handleShare = async (post: Post) => {
     const url = `${window.location.origin}/post/${post.id}`;
     if (navigator.share) {
-      await navigator.share({ title: 'Flywaters', text: post.caption || 'Guarda questo post!', url });
+      await navigator.share({ title: 'Flywaters', text: post.caption || t('feed.checkThisPost'), url });
     } else {
       await navigator.clipboard.writeText(url);
-      toast('Link copiato!');
+      toast(t('feed.linkCopied'));
     }
   };
 
@@ -166,7 +166,7 @@ const Feed = () => {
 
   return (
     <AppLayout>
-      <SEOHead title="Feed | Flywaters" description="Scopri le ultime catture e condividi le tue esperienze di pesca a mosca." />
+      <SEOHead title={`Feed | Flywaters`} description={t('seo.defaultDescription')} />
       {/* Mobile header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
@@ -193,7 +193,7 @@ const Feed = () => {
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
-            Per te
+            {t('feed.forYou')}
           </button>
           <button
             onClick={() => setFeedMode('following')}
@@ -203,7 +203,7 @@ const Feed = () => {
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >
-            Seguiti
+            {t('feed.following')}
           </button>
         </div>
       </div>
@@ -217,18 +217,17 @@ const Feed = () => {
         ) : posts.length === 0 ? (
           <div className="text-center py-16 px-4">
             <p className="text-lg font-semibold text-foreground mb-1">
-              {feedMode === 'following' ? 'Nessun post dai tuoi seguiti' : 'Nessuna cattura ancora'}
+              {feedMode === 'following' ? t('feed.noFollowingPosts') : t('feed.noCatches')}
             </p>
             <p className="text-sm text-muted-foreground mb-6">
               {feedMode === 'following'
-                ? 'Segui altri pescatori per vedere i loro post qui'
-                : 'Sii il primo a condividere la tua avventura di pesca!'}
+                ? t('feed.followOthers')
+                : t('feed.beFirst')}
             </p>
 
-            {/* Suggested users */}
             {suggestedUsers.length > 0 && (
               <div className="mt-4">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">Pescatori suggeriti</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">{t('feed.suggestedAnglers')}</p>
                 <div className="space-y-3">
                   {suggestedUsers.map(su => (
                     <SuggestedUserCard
@@ -272,7 +271,7 @@ const Feed = () => {
                             onClick={() => toggleFollow(post.user_id)}
                             className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
                           >
-                            Segui
+                            {t('feed.follow')}
                           </button>
                         </>
                       )}
@@ -290,27 +289,19 @@ const Feed = () => {
                   )}
                 </div>
 
-                {/* Image – 4:5 ratio, clickable */}
                 <button onClick={() => navigate(`/post/${post.id}`)} className="block w-full aspect-[4/5] bg-muted">
                   <img
                     src={post.image_url}
-                    alt={post.caption || 'Post di pesca'}
+                    alt={post.caption || t('posts.fishingPost')}
                     className="w-full h-full object-cover rounded-t-card"
                     loading="lazy"
                   />
                 </button>
 
-                {/* Actions */}
                 <div className="px-4 pt-3 pb-1">
                   <div className="flex items-center gap-4 mb-2">
                     <button onClick={() => toggleLike(post.id)} className="transition-transform active:scale-125">
-                      <Heart
-                        className={`w-6 h-6 ${
-                          likedPosts.has(post.id)
-                            ? 'fill-destructive text-destructive'
-                            : 'text-foreground hover:text-muted-foreground'
-                        }`}
-                      />
+                      <Heart className={`w-6 h-6 ${likedPosts.has(post.id) ? 'fill-destructive text-destructive' : 'text-foreground hover:text-muted-foreground'}`} />
                     </button>
                     <button className="text-foreground hover:text-muted-foreground">
                       <MessageCircle className="w-6 h-6" />
@@ -320,12 +311,10 @@ const Feed = () => {
                     </button>
                   </div>
 
-                  {/* Like count */}
                   <p className="text-sm font-semibold text-foreground mb-1">
-                    {post.like_count} {post.like_count === 1 ? 'Mi piace' : 'Mi piace'}
+                    {post.like_count} {t('feed.likes')}
                   </p>
 
-                  {/* Caption */}
                   {post.caption && (
                     <p className="text-sm text-foreground">
                       <span className="font-semibold mr-1">{post.profiles?.username || 'pescatore'}</span>
@@ -333,12 +322,10 @@ const Feed = () => {
                     </p>
                   )}
 
-                {/* No-Kill badge */}
                   <div className="mt-1.5">
                     <Badge variant="secondary" className="text-[11px] py-0.5 px-2 bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800">🐟 No-Kill</Badge>
                   </div>
 
-                  {/* Tags */}
                   {((post.fish_species && post.fish_species.length > 0) || (post.fishing_technique && post.fishing_technique.length > 0) || (post.gear_used && post.gear_used.length > 0)) && (
                     <div className="flex gap-1 mt-1.5 flex-wrap">
                       {post.fish_species?.map(s => (
@@ -362,10 +349,9 @@ const Feed = () => {
               </article>
             ))}
 
-            {/* Suggested users after a few posts */}
             {suggestedUsers.length > 0 && posts.length >= 3 && (
               <div className="border-b border-border py-6 px-4">
-                <p className="text-sm font-semibold text-foreground mb-4">Suggeriti per te</p>
+                <p className="text-sm font-semibold text-foreground mb-4">{t('feed.suggestedForYou')}</p>
                 <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
                   {suggestedUsers.map(su => (
                     <div
@@ -391,7 +377,7 @@ const Feed = () => {
                             : 'bg-primary text-primary-foreground'
                         }`}
                       >
-                        {followedUsers.has(su.user_id) ? 'Seguendo' : 'Segui'}
+                        {followedUsers.has(su.user_id) ? t('feed.followingBtn') : t('feed.follow')}
                       </button>
                     </div>
                   ))}
@@ -415,29 +401,34 @@ const SuggestedUserCard = ({
   isFollowing: boolean;
   onToggleFollow: () => void;
   onNavigate: () => void;
-}) => (
-  <div className="flex items-center gap-3 text-left">
-    <button onClick={onNavigate}>
-      <Avatar className="h-11 w-11">
-        <AvatarImage src={su.avatar_url || ''} />
-        <AvatarFallback className="bg-muted text-muted-foreground">
-          {(su.display_name || 'U')[0].toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
-    </button>
-    <div className="flex-1 min-w-0">
-      <p className="text-sm font-semibold text-foreground truncate">{su.display_name || su.username}</p>
-      <p className="text-xs text-muted-foreground">{su.post_count} post</p>
+}) => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center gap-3 text-left">
+      <button onClick={onNavigate}>
+        <Avatar className="h-11 w-11">
+          <AvatarImage src={su.avatar_url || ''} />
+          <AvatarFallback className="bg-muted text-muted-foreground">
+            {(su.display_name || 'U')[0].toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </button>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-foreground truncate">{su.display_name || su.username}</p>
+        <p className="text-xs text-muted-foreground">{su.post_count} posts</p>
+      </div>
+      <button
+        onClick={onToggleFollow}
+        className={`text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors ${
+          isFollowing
+            ? 'bg-muted text-foreground'
+            : 'bg-primary text-primary-foreground'
+        }`}
+      >
+        {isFollowing ? t('feed.followingBtn') : t('feed.follow')}
+      </button>
     </div>
-    <button
-      onClick={onToggleFollow}
-      className={`text-xs font-semibold px-4 py-1.5 rounded-full transition-opacity hover:opacity-85 ${
-        isFollowing ? 'bg-muted text-foreground' : 'bg-[#242242] text-white'
-      }`}
-    >
-      {isFollowing ? 'Seguendo' : 'Segui'}
-    </button>
-  </div>
-);
+  );
+};
 
 export default Feed;

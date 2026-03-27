@@ -1,17 +1,19 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { Home, Map, PlusSquare, Bell, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const BottomNav = () => {
   const { user } = useAuth();
   const location = useLocation();
+  const { t } = useTranslation();
 
   const links = [
-    { to: '/', icon: Home, label: 'Feed' },
-    { to: '/map', icon: Map, label: 'Mappa' },
-    { to: '/publish', icon: PlusSquare, label: 'Pubblica', isCenter: true },
-    { to: '/notifications', icon: Bell, label: 'Notifiche' },
-    { to: user ? `/profile/${user.id}` : '/auth', icon: User, label: 'Profilo' },
+    { to: '/', icon: Home, label: t('nav.feed') },
+    { to: '/map', icon: Map, label: t('nav.map') },
+    { to: '/publish', icon: PlusSquare, label: t('nav.publish'), isCenter: true },
+    { to: '/notifications', icon: Bell, label: t('nav.notifications') },
+    { to: user ? `/profile/${user.id}` : '/auth', icon: User, label: t('nav.profile') },
   ];
 
   return (

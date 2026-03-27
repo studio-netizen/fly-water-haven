@@ -6,6 +6,8 @@ import logoImg from '@/assets/flywaters-logo-dark.png';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const DesktopSidebar = () => {
   const { user, signOut } = useAuth();
@@ -13,6 +15,7 @@ const DesktopSidebar = () => {
   const [profile, setProfile] = useState<any>(null);
   const unreadMessages = useUnreadMessages();
   const [unreadNotifs, setUnreadNotifs] = useState(0);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!user) return;
@@ -25,18 +28,19 @@ const DesktopSidebar = () => {
   }, [user]);
 
   const links = [
-    { to: '/', icon: Home, label: 'Feed' },
-    { to: '/map', icon: Map, label: 'Mappa' },
-    { to: '/publish', icon: PlusSquare, label: 'Pubblica' },
-    { to: '/messages', icon: Send, label: 'Messaggi', badge: unreadMessages },
-    { to: '/notifications', icon: Bell, label: 'Notifiche', badge: unreadNotifs },
-    { to: user ? `/profile/${user.id}` : '/auth', icon: User, label: 'Profilo' },
+    { to: '/', icon: Home, label: t('nav.feed') },
+    { to: '/map', icon: Map, label: t('nav.map') },
+    { to: '/publish', icon: PlusSquare, label: t('nav.publish') },
+    { to: '/messages', icon: Send, label: t('nav.messages'), badge: unreadMessages },
+    { to: '/notifications', icon: Bell, label: t('nav.notifications'), badge: unreadNotifs },
+    { to: user ? `/profile/${user.id}` : '/auth', icon: User, label: t('nav.profile') },
   ];
 
   return (
     <aside className="hidden lg:flex flex-col w-60 h-screen sticky top-0 border-r border-black/[0.08] bg-background px-4 py-6">
-      <div className="mb-8 px-2">
+      <div className="mb-8 px-2 flex items-center justify-between">
         <img src={logoImg} alt="Flywaters" className="h-8" />
+        <LanguageSwitcher />
       </div>
 
       <nav className="flex-1 space-y-1">
@@ -85,7 +89,7 @@ const DesktopSidebar = () => {
             className="flex items-center gap-3 px-3 py-2 rounded-full text-sm text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors w-full"
           >
             <LogOut className="w-5 h-5" />
-            Esci
+            {t('nav.logout')}
           </button>
         </div>
       )}
