@@ -19,7 +19,7 @@ export const blogArticles: BlogArticle[] = [
     h1: 'I 10 migliori spot di pesca a mosca in Italia',
     readingTime: '8 min',
     excerpt: 'Dalla Valtellina al Friuli, scopri i migliori fiumi e torrenti italiani per la pesca a mosca.',
-    coverImage: 'https://images.unsplash.com/photo-1504309092620-4d0ec726efa4?auto=format&fit=crop&w=1200&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1494564605686-2e931f77a8e2?w=800',
     sections: [
       { heading: 'Perché l\'Italia è un paradiso per il fly fishing', body: 'L\'Italia offre alcune delle acque più ricche d\'Europa per la pesca a mosca. Torrenti alpini cristallini, fiumi di risorgiva nelle pianure venete e corsi d\'acqua appenninici ospitano popolazioni straordinarie di trota fario, marmorata e temolo. Ecco i 10 spot imperdibili per ogni fly fisher.' },
       { heading: '1. Torrente Sesia — Piemonte', body: 'Il Sesia è considerato da molti il fiume più bello d\'Italia per la pesca a mosca. Le sue acque fredde e ossigenate ospitano dense popolazioni di trota marmorata, la regina dei fiumi alpini. La zona di tutela ittica tra Varallo e Borgosesia offre tratti no-kill di altissima qualità. Periodo migliore: maggio-settembre.' },
