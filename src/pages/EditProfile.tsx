@@ -192,7 +192,7 @@ const EditProfile = () => {
           </div>
 
           <div>
-            <Label htmlFor="bio">Bio</Label>
+            <Label htmlFor="bio">{t('profile.bio')}</Label>
             <Textarea
               id="bio"
               value={bio}
