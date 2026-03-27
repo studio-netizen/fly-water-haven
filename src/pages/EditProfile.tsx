@@ -55,7 +55,7 @@ const EditProfile = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('L\'immagine deve essere inferiore a 5MB');
+      toast.error(t('profile.imageTooLarge'));
       return;
     }
     setAvatarFile(file);
