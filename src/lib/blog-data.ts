@@ -43,7 +43,7 @@ export const blogArticles: BlogArticle[] = [
     h1: 'Trota Marmorata e Temolo: guida completa alla pesca a mosca',
     readingTime: '7 min',
     excerpt: 'Scopri tutto su trota marmorata e temolo: habitat, comportamento, tecniche di pesca a mosca e spot migliori.',
-    coverImage: 'https://images.unsplash.com/photo-1545816250-e12bedba42ba?auto=format&fit=crop&w=1200&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
     sections: [
       { heading: 'La trota marmorata: la regina dei fiumi alpini', body: 'La trota marmorata (Salmo marmoratus) è endemica del bacino del Po e dei fiumi del Friuli. Riconoscibile per la livrea marmorizzata grigio-verde, può superare i 10 kg nei tratti più produttivi. È considerata la preda più ambita dai fly fisher italiani per la sua diffidenza e potenza in combattimento.' },
       { heading: 'Dove trovare la marmorata', body: 'Predilige acque fredde, correnti e ben ossigenate con fondali rocciosi dove appostarsi in attesa delle prede. I fiumi più vocati sono Sesia, Tagliamento, Isonzo e i principali affluenti del Po piemontesi. Si posiziona spesso sotto le rapide o ai bordi delle correnti principali.' },
