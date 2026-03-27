@@ -112,6 +112,14 @@ serve(async (req) => {
 
         const { data: allProfiles } = await supabase.from("profiles").select("fishing_types");
 
+        const [
+          { count: welcomeSent },
+          { count: welcomeFailed },
+        ] = await Promise.all([
+          supabase.from("welcome_emails").select("*", { count: "exact", head: true }).eq("status", "sent"),
+          supabase.from("welcome_emails").select("*", { count: "exact", head: true }).eq("status", "failed"),
+        ]);
+
         return json({
           totalUsers: totalUsers || 0,
           totalPosts: totalPosts || 0,
@@ -126,6 +134,8 @@ serve(async (req) => {
           registrationChart: recentProfiles || [],
           postsChart: recentPosts || [],
           fishingTypes: allProfiles || [],
+          welcomeEmailsSent: welcomeSent || 0,
+          welcomeEmailsFailed: welcomeFailed || 0,
         });
       }
 
