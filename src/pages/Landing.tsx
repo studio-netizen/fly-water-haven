@@ -132,46 +132,62 @@ const Landing = () => {
 
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultMode={authMode} />
 
-      {/* ─── HERO: FULL-BLEED IMAGE ─── */}
-      <section className="relative">
-        <div className="relative w-full h-[85vh]">
-          <img
-            src={heroImg}
-            alt="Pescatore a mosca in un fiume alpino"
-            className="w-full h-full object-cover object-center"
-            style={{ filter: 'saturate(0.8) contrast(1.05)' }}
-            width={1920}
-            height={1080}
-          />
-          <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.25)' }} />
-        </div>
+      {/* ─── HERO: FULL-BLEED IMAGE WITH OVERLAY ─── */}
+      <section className="relative w-full h-[85vh]">
+        <img
+          src={heroImg}
+          alt="Pescatore a mosca in un fiume alpino"
+          className="w-full h-full object-cover object-center"
+          style={{ filter: 'saturate(0.8) contrast(1.05)' }}
+          width={1920}
+          height={1080}
+        />
+        <div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 60%, transparent 100%)' }}
+        />
 
-        <div className="px-6 py-12 md:py-16">
-          <div className="max-w-7xl mx-auto">
+        <div className="absolute inset-0 flex items-end">
+          <div className="px-6 md:px-12 pb-12 md:pb-12 max-w-7xl w-full mx-auto">
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-              className="text-5xl sm:text-6xl md:text-8xl font-bold leading-[0.95] tracking-tight font-serif"
+              className="text-[40px] md:text-[64px] font-bold leading-[1.1] tracking-tight text-white whitespace-pre-line"
             >
-              Fly Fishing
+              {`Ogni fiume\nha la sua storia.`}
             </motion.h1>
-          </div>
-        </div>
-      </section>
 
-      {/* ─── HERO TAGLINE ─── */}
-      <section className="px-6 pb-12 md:pb-20">
-        <div className="max-w-7xl mx-auto">
-          <motion.p
-            variants={slow(0)}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            className="text-xl sm:text-2xl md:text-3xl leading-relaxed font-serif max-w-4xl text-[#242242]/80"
-          >
-            {t('landing.heroTagline')}
-          </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+              className="mt-5 text-white text-lg font-normal leading-[1.6] max-w-[520px]"
+              style={{ opacity: 0.92 }}
+            >
+              Flywaters è la community italiana per la pesca a mosca. Fotografa le tue catture, scopri gli spot migliori, connettiti con altri appassionati e custodisci ogni momento sul fiume.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
+              className="mt-8 flex flex-col sm:flex-row gap-3"
+            >
+              <button
+                onClick={() => openAuth('register')}
+                className="w-full sm:w-auto px-7 py-3.5 rounded-full text-sm font-semibold bg-white text-[#242242] hover:opacity-85 transition-opacity"
+              >
+                Registrati gratis
+              </button>
+              <button
+                onClick={() => openAuth('login')}
+                className="w-full sm:w-auto px-7 py-3.5 rounded-full text-sm font-semibold bg-transparent border-[1.5px] border-white text-white hover:opacity-85 transition-opacity"
+              >
+                Accedi
+              </button>
+            </motion.div>
+          </div>
         </div>
       </section>
 
