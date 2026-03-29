@@ -102,11 +102,16 @@
     "title": "Messages",
     "typeMessage": "Type a message...",
     "noMessages": "No messages yet",
-    "startConversation": "Start a conversation by searching for a user",
+    "startConversation": "Start a conversation!",
     "newMessage": "New message",
-    "searchUser": "Search user...",
+    "searchUser": "Search for a user...",
     "noUserFound": "No user found",
-    "send": "Send"
+    "send": "Send",
+    "findAnglers": "Find anglers →",
+    "seen": "Seen",
+    "sent": "Sent",
+    "now": "now",
+    "yesterday": "yesterday"
   },
   "notifications": {
     "title": "Notifications",
