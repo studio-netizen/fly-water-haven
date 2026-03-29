@@ -5,8 +5,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Send, ArrowLeft, Plus, Search, X } from 'lucide-react';
+import { Send, ArrowLeft, PenSquare, Search, Users } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
+import { Badge } from '@/components/ui/badge';
 import { useTranslation } from 'react-i18next';
 
 interface Conversation {
@@ -57,6 +58,7 @@ const Messages = () => {
     const channel = supabase
       .channel('inbox-realtime')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `receiver_id=eq.${user.id}` }, () => fetchConversations())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `sender_id=eq.${user.id}` }, () => fetchConversations())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [user]);
@@ -64,6 +66,7 @@ const Messages = () => {
   useEffect(() => {
     if (!selectedUser || !user) return;
     fetchMessages(selectedUser.user_id);
+    markAsRead(selectedUser.user_id);
     const channel = supabase
       .channel('chat-realtime')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload: any) => {
@@ -84,6 +87,13 @@ const Messages = () => {
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [selectedUser, user]);
+
+  const markAsRead = async (partnerId: string) => {
+    if (!user) return;
+    await supabase.from('messages').update({ read: true })
+      .eq('sender_id', partnerId).eq('receiver_id', user.id).eq('read', false);
+    fetchConversations();
+  };
 
   const openConversationWithUser = async (targetUserId: string) => {
     const { data: profile } = await supabase.from('profiles').select('user_id, username, display_name, avatar_url').eq('user_id', targetUserId).single();
@@ -123,7 +133,6 @@ const Messages = () => {
     if (data) {
       setMessages(data);
       scrollToBottom();
-      await supabase.from('messages').update({ read: true }).eq('sender_id', partnerId).eq('receiver_id', user.id).eq('read', false);
     }
   };
 
@@ -131,7 +140,7 @@ const Messages = () => {
     if (!user || !selectedUser || !newMessage.trim()) return;
     const content = newMessage.trim();
     setNewMessage('');
-    const optimistic: Message = { sender_id: user.id, receiver_id: selectedUser.user_id, content, created_at: new Date().toISOString() };
+    const optimistic: Message = { sender_id: user.id, receiver_id: selectedUser.user_id, content, created_at: new Date().toISOString(), read: false };
     setMessages(prev => [...prev, optimistic]);
     scrollToBottom();
     await supabase.from('messages').insert({ sender_id: user.id, receiver_id: selectedUser.user_id, content });
@@ -141,7 +150,7 @@ const Messages = () => {
     setSearchQuery(query);
     if (query.length < 2) { setSearchResults([]); return; }
     setSearchLoading(true);
-    const { data } = await supabase.from('profiles').select('user_id, username, display_name, avatar_url').neq('user_id', user!.id).or(`username.ilike.%${query}%,display_name.ilike.%${query}%`).limit(10);
+    const { data } = await supabase.from('profiles').select('user_id, username, display_name, avatar_url, fishing_types').neq('user_id', user!.id).or(`username.ilike.%${query}%,display_name.ilike.%${query}%`).limit(10);
     setSearchResults(data || []);
     setSearchLoading(false);
   };
@@ -156,8 +165,28 @@ const Messages = () => {
   const formatTime = (date: string) => {
     const d = new Date(date);
     const now = new Date();
-    if (d.toDateString() === now.toDateString()) return d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+    const diffMs = now.getTime() - d.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    if (diffMins < 1) return t('messages.now');
+    if (diffMins < 60) return `${diffMins} min`;
+    const diffHrs = Math.floor(diffMins / 60);
+    if (diffHrs < 24) return `${diffHrs}h`;
+    if (d.toDateString() === new Date(now.getTime() - 86400000).toDateString()) return t('messages.yesterday');
+    const days = ['dom', 'lun', 'mar', 'mer', 'gio', 'ven', 'sab'];
+    if (diffHrs < 168) return days[d.getDay()];
     return d.toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+  };
+
+  const shouldShowTimestamp = (msgs: Message[], index: number) => {
+    if (index === 0) return true;
+    const prev = new Date(msgs[index - 1].created_at);
+    const curr = new Date(msgs[index].created_at);
+    return (curr.getTime() - prev.getTime()) > 300000; // 5 min gap
+  };
+
+  const formatMessageTime = (date: string) => {
+    const d = new Date(date);
+    return d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
   };
 
   const goBack = () => { setSelectedUser(null); if (paramUserId) navigate('/messages', { replace: true }); };
@@ -172,47 +201,106 @@ const Messages = () => {
     );
   }
 
+  // Conversation view
   if (selectedUser) {
+    const lastSentMsg = [...messages].reverse().find(m => m.sender_id === user.id);
+
     return (
       <div className="h-screen flex flex-col bg-background">
+        {/* Chat header */}
         <header className="bg-background border-b border-border px-4 py-3 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={goBack}><ArrowLeft className="w-5 h-5" /></Button>
-          <button onClick={() => navigate(`/profile/${selectedUser.user_id}`)} className="flex items-center gap-3">
-            <Avatar className="h-8 w-8">
+          <Button variant="ghost" size="icon" onClick={goBack} className="shrink-0">
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+          <button onClick={() => navigate(`/profile/${selectedUser.user_id}`)} className="flex items-center gap-3 min-w-0">
+            <Avatar className="h-9 w-9 shrink-0">
               <AvatarImage src={selectedUser.avatar_url || ''} />
-              <AvatarFallback className="bg-muted text-muted-foreground text-xs">{(selectedUser.display_name || 'U')[0].toUpperCase()}</AvatarFallback>
+              <AvatarFallback className="bg-muted text-muted-foreground text-xs">
+                {(selectedUser.display_name || 'U')[0].toUpperCase()}
+              </AvatarFallback>
             </Avatar>
-            <span className="font-semibold text-foreground text-sm">{selectedUser.display_name || selectedUser.username}</span>
+            <div className="min-w-0">
+              <span className="font-semibold text-foreground text-sm block truncate">{selectedUser.display_name || selectedUser.username}</span>
+              {selectedUser.username && <span className="text-xs text-muted-foreground block truncate">@{selectedUser.username}</span>}
+            </div>
           </button>
         </header>
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1.5">
+
+        {/* Messages area */}
+        <div className="flex-1 overflow-y-auto px-4 py-4">
           {messages.map((msg, i) => {
             const isMine = msg.sender_id === user.id;
+            const showTs = shouldShowTimestamp(messages, i);
+            const isLastSent = lastSentMsg && msg === lastSentMsg;
+
             return (
-              <div key={msg.id || `opt-${i}`} className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[75%] px-3.5 py-2.5 text-sm leading-relaxed ${isMine ? 'bg-[#242242] text-white' : 'bg-[#f0f0eb] text-foreground'}`} style={{ borderRadius: isMine ? '18px 18px 4px 18px' : '18px 18px 18px 4px' }}>
-                  {msg.content}
+              <div key={msg.id || `opt-${i}`}>
+                {showTs && (
+                  <p className="text-center text-[11px] text-muted-foreground my-3">
+                    {formatMessageTime(msg.created_at)}
+                  </p>
+                )}
+                <div className={`flex items-end gap-2 mb-1.5 ${isMine ? 'justify-end' : 'justify-start'}`}>
+                  {!isMine && (
+                    <Avatar className="h-7 w-7 shrink-0 mb-0.5">
+                      <AvatarImage src={selectedUser.avatar_url || ''} />
+                      <AvatarFallback className="bg-muted text-muted-foreground text-[10px]">
+                        {(selectedUser.display_name || 'U')[0].toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                  <div
+                    className={`max-w-[75%] px-3.5 py-2.5 text-sm leading-relaxed ${
+                      isMine ? 'bg-[#242242] text-white' : 'bg-[#f0f0eb] text-foreground'
+                    }`}
+                    style={{ borderRadius: isMine ? '18px 18px 4px 18px' : '18px 18px 18px 4px' }}
+                  >
+                    {msg.content}
+                  </div>
                 </div>
+                {isLastSent && (
+                  <p className="text-right text-[11px] text-muted-foreground mr-1 mb-2">
+                    {msg.read ? t('messages.seen') : t('messages.sent')}
+                  </p>
+                )}
               </div>
             );
           })}
           <div ref={messagesEndRef} />
         </div>
+
+        {/* Input bar */}
         <div className="border-t border-border px-4 py-3 bg-background" style={{ paddingBottom: 'max(12px, env(safe-area-inset-bottom))' }}>
-          <div className="flex gap-2">
-            <Input value={newMessage} onChange={e => setNewMessage(e.target.value)} placeholder={t('messages.typeMessage')} onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()} className="rounded-full" />
-            <Button size="sm" onClick={sendMessage} disabled={!newMessage.trim()} className="rounded-full px-5"><Send className="w-4 h-4" /></Button>
+          <div className="flex items-center gap-2">
+            <Input
+              value={newMessage}
+              onChange={e => setNewMessage(e.target.value)}
+              placeholder={t('messages.typeMessage')}
+              onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+              className="rounded-full flex-1"
+            />
+            {newMessage.trim() && (
+              <button
+                onClick={sendMessage}
+                className="shrink-0 w-9 h-9 rounded-full bg-[#242242] text-white flex items-center justify-center hover:opacity-90 transition-opacity"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
       </div>
     );
   }
 
+  // Search / new conversation
   if (showSearch) {
     return (
       <div className="h-screen flex flex-col bg-background">
         <header className="bg-background border-b border-border px-4 py-3 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => { setShowSearch(false); setSearchQuery(''); setSearchResults([]); }}><ArrowLeft className="w-5 h-5" /></Button>
+          <Button variant="ghost" size="icon" onClick={() => { setShowSearch(false); setSearchQuery(''); setSearchResults([]); }}>
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input value={searchQuery} onChange={e => searchUsers(e.target.value)} placeholder={t('messages.searchUser')} className="rounded-full pl-9" autoFocus />
@@ -222,8 +310,19 @@ const Messages = () => {
           {searchLoading && <div className="flex items-center justify-center py-10"><div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" /></div>}
           {searchResults.map(p => (
             <button key={p.user_id} onClick={() => startConversation(p)} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors border-b border-border/50 text-left">
-              <Avatar className="h-11 w-11"><AvatarImage src={p.avatar_url || ''} /><AvatarFallback className="bg-muted text-muted-foreground text-sm">{(p.display_name || 'U')[0].toUpperCase()}</AvatarFallback></Avatar>
-              <div><p className="text-sm font-semibold text-foreground">{p.display_name || p.username}</p>{p.username && <p className="text-xs text-muted-foreground">@{p.username}</p>}</div>
+              <Avatar className="h-12 w-12">
+                <AvatarImage src={p.avatar_url || ''} />
+                <AvatarFallback className="bg-muted text-muted-foreground text-sm">{(p.display_name || 'U')[0].toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-foreground">{p.display_name || p.username}</p>
+                {p.username && <p className="text-xs text-muted-foreground">@{p.username}</p>}
+              </div>
+              {p.fishing_types && p.fishing_types.length > 0 && (
+                <Badge variant="secondary" className="text-[10px] shrink-0">
+                  {t(`common.fishingTypes.${p.fishing_types[0]}` as any) || p.fishing_types[0]}
+                </Badge>
+              )}
             </button>
           ))}
           {searchQuery.length >= 2 && !searchLoading && searchResults.length === 0 && (
@@ -234,17 +333,22 @@ const Messages = () => {
     );
   }
 
+  // Inbox
   return (
     <AppLayout>
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <h1 className="text-base font-semibold text-foreground">{t('messages.title')}</h1>
-          <button onClick={() => setShowSearch(true)} className="p-2 hover:bg-muted rounded-full transition-colors"><Plus className="w-5 h-5 text-foreground" /></button>
+          <button onClick={() => setShowSearch(true)} className="p-2 hover:bg-muted rounded-full transition-colors">
+            <PenSquare className="w-5 h-5 text-foreground" />
+          </button>
         </div>
       </header>
       <div className="hidden lg:flex max-w-lg mx-auto px-4 pt-4 justify-between items-center">
         <h1 className="text-lg font-semibold text-foreground">{t('messages.title')}</h1>
-        <button onClick={() => setShowSearch(true)} className="p-2 hover:bg-muted rounded-full transition-colors"><Plus className="w-5 h-5 text-foreground" /></button>
+        <button onClick={() => setShowSearch(true)} className="p-2 hover:bg-muted rounded-full transition-colors">
+          <PenSquare className="w-5 h-5 text-foreground" />
+        </button>
       </div>
       <div className="max-w-lg mx-auto">
         {loading ? (
@@ -254,22 +358,44 @@ const Messages = () => {
             <Send className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
             <p className="text-foreground font-semibold">{t('messages.noMessages')}</p>
             <p className="text-sm text-muted-foreground mt-1">{t('messages.startConversation')}</p>
-            <Button variant="outline" className="mt-4" onClick={() => setShowSearch(true)}>
-              <Plus className="w-4 h-4 mr-2" /> {t('messages.newMessage')}
+            <Button
+              variant="outline"
+              className="mt-4 rounded-full"
+              onClick={() => setShowSearch(true)}
+            >
+              <Users className="w-4 h-4 mr-2" /> {t('messages.findAnglers')}
             </Button>
           </div>
         ) : (
           conversations.map(conv => (
-            <button key={conv.user_id} onClick={() => setSelectedUser(conv)} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors border-b border-border text-left">
-              <Avatar className="h-14 w-14"><AvatarImage src={conv.avatar_url || ''} /><AvatarFallback className="bg-muted text-muted-foreground text-lg">{(conv.display_name || 'U')[0].toUpperCase()}</AvatarFallback></Avatar>
+            <button
+              key={conv.user_id}
+              onClick={() => setSelectedUser(conv)}
+              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors border-b border-border text-left"
+            >
+              {/* Unread dot */}
+              <div className="w-2.5 shrink-0 flex justify-center">
+                {conv.unread > 0 && <span className="w-2 h-2 rounded-full bg-blue-500" />}
+              </div>
+              <Avatar className="h-14 w-14 shrink-0">
+                <AvatarImage src={conv.avatar_url || ''} />
+                <AvatarFallback className="bg-muted text-muted-foreground text-lg">
+                  {(conv.display_name || 'U')[0].toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <p className={`text-sm text-foreground ${conv.unread > 0 ? 'font-bold' : 'font-medium'}`}>{conv.display_name || conv.username}</p>
-                  <span className="text-xs text-muted-foreground">{formatTime(conv.last_time)}</span>
+                  <p className={`text-sm text-foreground truncate ${conv.unread > 0 ? 'font-bold' : 'font-medium'}`}>
+                    {conv.display_name || conv.username}
+                  </p>
+                  <span className={`text-xs shrink-0 ml-2 ${conv.unread > 0 ? 'text-foreground font-semibold' : 'text-muted-foreground'}`}>
+                    {formatTime(conv.last_time)}
+                  </span>
                 </div>
-                <p className={`text-sm truncate ${conv.unread > 0 ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>{conv.last_message}</p>
+                <p className={`text-sm truncate mt-0.5 ${conv.unread > 0 ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
+                  {conv.last_message.length > 40 ? conv.last_message.slice(0, 40) + '…' : conv.last_message}
+                </p>
               </div>
-              {conv.unread > 0 && <span className="bg-blue-500 text-white text-[11px] rounded-full w-2.5 h-2.5 flex-shrink-0" />}
             </button>
           ))
         )}

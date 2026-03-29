@@ -102,11 +102,16 @@
     "title": "Messaggi",
     "typeMessage": "Scrivi un messaggio...",
     "noMessages": "Nessun messaggio ancora",
-    "startConversation": "Inizia una conversazione cercando un utente",
+    "startConversation": "Inizia una conversazione!",
     "newMessage": "Nuovo messaggio",
-    "searchUser": "Cerca utente...",
+    "searchUser": "Cerca un utente...",
     "noUserFound": "Nessun utente trovato",
-    "send": "Invia"
+    "send": "Invia",
+    "findAnglers": "Trova pescatori →",
+    "seen": "Visto",
+    "sent": "Inviato",
+    "now": "ora",
+    "yesterday": "ieri"
   },
   "notifications": {
     "title": "Notifiche",
