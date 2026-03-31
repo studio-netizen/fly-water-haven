@@ -90,8 +90,27 @@ const Profile = () => {
   if (!profile) {
     return (
       <AppLayout>
-        <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <div className="max-w-lg mx-auto px-4">
+          <div className="flex items-center gap-6 py-5">
+            <div className="h-20 w-20 lg:h-24 lg:w-24 rounded-full bg-muted animate-pulse" />
+            <div className="flex-1 flex items-center gap-4">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="text-center flex-1 space-y-1.5">
+                  <div className="h-5 w-8 mx-auto bg-muted rounded animate-pulse" />
+                  <div className="h-3 w-14 mx-auto bg-muted rounded animate-pulse" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-2 pb-4">
+            <div className="h-4 w-32 bg-muted rounded animate-pulse" />
+            <div className="h-3 w-48 bg-muted rounded animate-pulse" />
+          </div>
+          <div className="grid grid-cols-3 gap-1 pb-4">
+            {Array.from({ length: 9 }).map((_, i) => (
+              <div key={i} className="aspect-square bg-muted rounded-lg animate-pulse" />
+            ))}
+          </div>
         </div>
       </AppLayout>
     );
