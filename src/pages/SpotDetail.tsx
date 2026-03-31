@@ -98,6 +98,35 @@ const SpotDetail = () => {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const shareUrl = spot ? `https://flywaters.app/spot/${spotId}` : '';
+  const shareText = spot ? `Check out this fly fishing spot: ${spot.name} on Flywaters` : '';
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: spot?.name, text: shareText, url: shareUrl });
+      } catch {}
+    } else {
+      handleCopyLink();
+    }
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    setCopied(true);
+    toast.success('Link copiato!');
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const shareToWhatsApp = () => {
+    window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+  };
+
+  const shareToFacebook = () => {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+  };
 
   useEffect(() => {
     if (spotId) {
