@@ -16,6 +16,7 @@ import EditProfile from "./pages/EditProfile";
 import Publish from "./pages/Publish";
 import PostDetail from "./pages/PostDetail";
 import NotFound from "./pages/NotFound";
+import FlyFishingRegion from "./pages/FlyFishingRegion";
 import Blog from "./pages/Blog";
 import BlogArticle from "./pages/BlogArticle";
 import Contatti from "./pages/Contatti";
