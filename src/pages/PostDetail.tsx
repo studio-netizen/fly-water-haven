@@ -230,7 +230,7 @@ const PostDetail = () => {
           <div className="aspect-[4/5] bg-muted">
             <img
               src={post.image_url}
-              alt={post.caption || 'Post di pesca'}
+              alt={`Foto di pesca a mosca condivisa da ${post.profiles?.username || 'pescatore'} su Flywaters`}
               className="w-full h-full object-cover"
               loading="eager"
             />
