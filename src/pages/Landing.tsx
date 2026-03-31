@@ -103,8 +103,7 @@ const Landing = () => {
                   onClick={() => openAuth('register')}
                   className="px-5 py-2 rounded-full text-xs tracking-widest uppercase font-medium bg-white text-[#242242] hover:opacity-85 transition-opacity"
                 >
-                  <span className="sm:hidden">{t('landing.login')}</span>
-                  <span className="hidden sm:inline">{t('landing.register')}</span>
+                  {t('landing.register')}
                 </button>
               </>
             ) : user ? (
