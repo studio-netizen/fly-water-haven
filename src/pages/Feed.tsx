@@ -75,6 +75,10 @@ const Feed = () => {
 
   if (!authLoading && !user) return <Landing />;
 
+  if (showOnboarding && user) {
+    return <OnboardingWizard onComplete={() => setShowOnboarding(false)} />;
+  }
+
   const fetchPosts = async () => {
     setLoading(true);
     let query = supabase
