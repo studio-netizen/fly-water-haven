@@ -3,7 +3,7 @@ import SEOHead from '@/components/SEOHead';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { ArrowLeft, Star, MapPin, Fish, Info, Send } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, Fish, Info, Send, Share2, Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
