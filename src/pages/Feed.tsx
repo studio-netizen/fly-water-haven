@@ -14,6 +14,7 @@ import SEOHead from '@/components/SEOHead';
 import { toast } from 'sonner';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useTranslation } from 'react-i18next';
+import OnboardingWizard from '@/components/OnboardingWizard';
 
 interface Post {
   id: string;
