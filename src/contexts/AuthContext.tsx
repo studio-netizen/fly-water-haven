@@ -29,8 +29,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(session?.user ?? null);
       setLoading(false);
 
-      // Send welcome email on first sign up
       if (event === 'SIGNED_IN' && session?.user) {
+        // Update last_login in CRM
+        supabase
+          .from('crm_contacts')
+          .update({ last_login: new Date().toISOString(), updated_at: new Date().toISOString() })
+          .eq('user_id', session.user.id)
+          .then(() => {});
+
+        // Send welcome email on first sign up
         const isNewUser = session.user.created_at && 
           (Date.now() - new Date(session.user.created_at).getTime()) < 60000;
         if (isNewUser) {
