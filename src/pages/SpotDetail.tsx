@@ -185,8 +185,16 @@ const SpotDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f5f0e8' }}>
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#242242]" />
+      <div className="min-h-screen pb-24" style={{ backgroundColor: '#f5f0e8' }}>
+        <div className="max-w-3xl mx-auto px-4 pt-16 space-y-4">
+          <div className="h-6 w-48 bg-[#242242]/10 rounded animate-pulse" />
+          <div className="h-3 w-24 bg-[#242242]/10 rounded animate-pulse" />
+          <div className="aspect-[4/3] bg-[#242242]/10 rounded animate-pulse" />
+          <div className="space-y-2">
+            <div className="h-3 w-full bg-[#242242]/10 rounded animate-pulse" />
+            <div className="h-3 w-3/4 bg-[#242242]/10 rounded animate-pulse" />
+          </div>
+        </div>
       </div>
     );
   }

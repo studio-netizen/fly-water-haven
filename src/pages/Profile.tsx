@@ -201,7 +201,7 @@ const Profile = () => {
           <div className="grid grid-cols-3 gap-1 pb-4">
             {posts.map(post => (
               <div key={post.id} className="aspect-square bg-muted rounded-lg overflow-hidden cursor-pointer" onClick={() => navigate(`/post/${post.id}`)}>
-                <img src={post.image_url} alt="" className="w-full h-full object-cover" loading="lazy" />
+                <img src={post.image_url} alt={`Foto di pesca a mosca condivisa da ${profile.username || 'pescatore'} su Flywaters`} className="w-full h-full object-cover" loading="lazy" />
               </div>
             ))}
             {posts.length === 0 && (

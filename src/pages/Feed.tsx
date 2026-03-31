@@ -211,8 +211,24 @@ const Feed = () => {
       {/* Posts */}
       <div className="max-w-lg mx-auto">
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          <div className="flex flex-col gap-4 p-4">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="rounded-card border border-black/[0.08] bg-card shadow-card overflow-hidden">
+                <div className="flex items-center gap-3 px-4 py-3">
+                  <div className="h-9 w-9 rounded-full bg-muted animate-pulse" />
+                  <div className="flex-1 space-y-1.5">
+                    <div className="h-3.5 w-24 bg-muted rounded animate-pulse" />
+                    <div className="h-2.5 w-16 bg-muted rounded animate-pulse" />
+                  </div>
+                </div>
+                <div className="aspect-[4/5] bg-muted animate-pulse" />
+                <div className="px-4 py-3 space-y-2">
+                  <div className="h-3 w-20 bg-muted rounded animate-pulse" />
+                  <div className="h-3 w-full bg-muted rounded animate-pulse" />
+                  <div className="h-3 w-3/4 bg-muted rounded animate-pulse" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : posts.length === 0 ? (
           <div className="text-center py-16 px-4">

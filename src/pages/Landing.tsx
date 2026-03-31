@@ -367,7 +367,7 @@ const Landing = () => {
       {/* ─── FOOTER ─── */}
       <footer className="bg-[#242242] text-[#f5f0e8] border-t border-[#f5f0e8]/10">
         <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <img src={logoWhite} alt="Flywaters" className="h-6" />
+          <img src={logoWhite} alt="Flywaters — La community italiana per la pesca a mosca" className="h-6" />
           <p className="text-xs tracking-[0.2em] uppercase text-[#f5f0e8]/50">
             {t('landing.footerTagline')}
           </p>

@@ -74,7 +74,7 @@ const DesktopSidebar = () => {
         <div className="border-t border-black/[0.08] pt-4 mt-4">
           <div className="flex items-center gap-3 px-2 mb-3">
             <Avatar className="h-9 w-9">
-              <AvatarImage src={profile.avatar_url || ''} />
+              <AvatarImage src={profile.avatar_url || ''} alt={`Profilo di ${profile.username || profile.display_name || 'utente'} su Flywaters`} />
               <AvatarFallback className="bg-primary/10 text-primary text-sm">
                 {(profile.display_name || 'U')[0].toUpperCase()}
               </AvatarFallback>

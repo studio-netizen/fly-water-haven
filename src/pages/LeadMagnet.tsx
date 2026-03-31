@@ -84,7 +84,7 @@ const LeadMagnet = () => {
           {/* Top bar with logo */}
           <div className="relative z-10 max-w-5xl mx-auto px-4 pt-6 pb-0">
             <Link to="/">
-              <img src={logoWhite} alt="Flywaters" className="h-8 md:h-10" />
+              <img src={logoWhite} alt="Flywaters — La community italiana per la pesca a mosca" className="h-8 md:h-10" />
             </Link>
           </div>
 

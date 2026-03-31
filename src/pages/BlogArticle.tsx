@@ -176,7 +176,7 @@ const BlogArticle = () => {
       {/* Footer */}
       <footer className="bg-[#242242] text-[#f5f0e8]">
         <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <img src={logoWhite} alt="Flywaters" className="h-6" />
+          <img src={logoWhite} alt="Flywaters — La community italiana per la pesca a mosca" className="h-6" />
           <div className="flex gap-8 text-xs tracking-wide text-[#f5f0e8]/60">
             <Link to="/blog" className="hover:text-[#f5f0e8] transition-colors">Blog</Link>
             <Link to="/contatti" className="hover:text-[#f5f0e8] transition-colors">Contatti</Link>
