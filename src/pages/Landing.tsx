@@ -111,7 +111,7 @@ const Landing = () => {
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity">
                     <Avatar className="h-8 w-8 border border-white/30">
-                      <AvatarImage src={''} />
+                      <AvatarImage src={''} alt={`Profilo di ${user.user_metadata?.full_name || user.email || 'utente'} su Flywaters`} />
                       <AvatarFallback className="bg-white/20 text-white text-sm">
                         {(user.user_metadata?.full_name || user.email || 'U')[0].toUpperCase()}
                       </AvatarFallback>
