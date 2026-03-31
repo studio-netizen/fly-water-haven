@@ -17,6 +17,7 @@ import Publish from "./pages/Publish";
 import PostDetail from "./pages/PostDetail";
 import NotFound from "./pages/NotFound";
 import FlyFishingRegion from "./pages/FlyFishingRegion";
+import LeadMagnet from "./pages/LeadMagnet";
 import Blog from "./pages/Blog";
 import BlogArticle from "./pages/BlogArticle";
 import Contatti from "./pages/Contatti";
@@ -79,6 +80,7 @@ const App = () => (
               <Route path="/contatti" element={<Contatti />} />
               <Route path="/fly-fishing-italy" element={<FlyFishingRegion />} />
               <Route path="/fly-fishing-italy/:region" element={<FlyFishingRegion />} />
+              <Route path="/fly-fishing-guide-italy" element={<LeadMagnet />} />
               {/* Admin routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
