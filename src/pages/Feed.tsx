@@ -170,7 +170,7 @@ const Feed = () => {
       {/* Mobile header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <img src={logoImg} alt="Flywaters" className="h-7" />
+          <img src={logoImg} alt="Flywaters — La community italiana per la pesca a mosca" className="h-7" />
           <button onClick={() => navigate('/messages')} className="relative p-1">
             <Send className="w-5 h-5 text-foreground" />
             {unreadMessages > 0 && (
