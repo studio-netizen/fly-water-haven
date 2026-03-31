@@ -232,7 +232,7 @@ const SpotDetail = () => {
             <div className={`grid gap-2 ${photos.length === 1 ? 'grid-cols-1' : photos.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
               {photos.map((url, i) => (
                 <button key={i} onClick={() => setSelectedPhoto(url)} className="overflow-hidden">
-                  <img src={url} alt={`${spot.name} foto ${i + 1}`} className="w-full aspect-[4/3] object-cover hover:opacity-90 transition-opacity" loading="lazy" />
+                  <img src={url} alt={`Foto dello spot ${spot.name} su Flywaters`} className="w-full aspect-[4/3] object-cover hover:opacity-90 transition-opacity" loading="lazy" />
                 </button>
               ))}
             </div>
