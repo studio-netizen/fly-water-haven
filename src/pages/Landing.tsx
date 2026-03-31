@@ -147,24 +147,23 @@ const Landing = () => {
         />
 
         <div className="absolute inset-0 flex items-end">
-          <div className="px-6 md:px-12 pb-12 md:pb-12 max-w-7xl w-full mx-auto">
+          <div className="px-6 md:px-12 pb-12 md:pb-16 max-w-7xl w-full mx-auto">
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-              className="text-[40px] md:text-[64px] font-bold leading-[1.1] tracking-tight text-white whitespace-pre-line"
+              className="text-[36px] md:text-[60px] font-bold leading-[1.1] tracking-tight text-white"
             >
-              {`Ogni fiume\nha la sua storia.`}
+              {t('landing.heroHeadline')}
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-              className="mt-5 text-white text-lg font-normal leading-[1.6] max-w-[520px]"
-              style={{ opacity: 0.92 }}
+              className="mt-5 text-white/90 text-lg font-normal leading-[1.6] max-w-[560px]"
             >
-              Flywaters è la community italiana per la pesca a mosca. Fotografa le tue catture, scopri gli spot migliori, connettiti con altri appassionati e custodisci ogni momento sul fiume.
+              {t('landing.heroSubheadline')}
             </motion.p>
 
             <motion.div
@@ -173,18 +172,29 @@ const Landing = () => {
               transition={{ duration: 0.8, delay: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
               className="mt-8 flex flex-col sm:flex-row gap-3"
             >
-              <button
-                onClick={() => openAuth('register')}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-full text-sm font-semibold bg-white text-[#242242] hover:opacity-85 transition-opacity"
-              >
-                Registrati gratis
-              </button>
-              <button
-                onClick={() => openAuth('login')}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-full text-sm font-semibold bg-transparent border-[1.5px] border-white text-white hover:opacity-85 transition-opacity"
-              >
-                Accedi
-              </button>
+              {user ? (
+                <button
+                  onClick={() => navigate('/map')}
+                  className="w-full sm:w-auto px-7 py-3.5 rounded-full text-sm font-semibold bg-white text-[#242242] hover:opacity-85 transition-opacity"
+                >
+                  {t('landing.ctaExplore')}
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => navigate('/map')}
+                    className="w-full sm:w-auto px-7 py-3.5 rounded-full text-sm font-semibold bg-white text-[#242242] hover:opacity-85 transition-opacity"
+                  >
+                    {t('landing.ctaExplore')}
+                  </button>
+                  <button
+                    onClick={() => openAuth('login')}
+                    className="w-full sm:w-auto px-7 py-3.5 rounded-full text-sm font-semibold bg-transparent border-[1.5px] border-white text-white hover:opacity-85 transition-opacity"
+                  >
+                    {t('landing.login')}
+                  </button>
+                </>
+              )}
             </motion.div>
           </div>
         </div>
