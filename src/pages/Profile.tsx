@@ -133,7 +133,7 @@ const Profile = () => {
       <div className="max-w-lg mx-auto px-4">
         <div className="flex items-center gap-6 py-5">
           <Avatar className="h-20 w-20 lg:h-24 lg:w-24">
-            <AvatarImage src={profile.avatar_url || ''} />
+            <AvatarImage src={profile.avatar_url || ''} alt={`Profilo di ${profile.username || profile.display_name || 'utente'} su Flywaters`} />
             <AvatarFallback className="bg-muted text-muted-foreground text-2xl">
               {(profile.display_name || 'U')[0].toUpperCase()}
             </AvatarFallback>
