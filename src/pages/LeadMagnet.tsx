@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -7,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MapPin, Fish, BookOpen, CheckCircle2, ArrowRight } from "lucide-react";
 import SEOHead from "@/components/SEOHead";
+import logoWhite from "@/assets/flywaters-logo-white.png";
 
 const LeadMagnet = () => {
   const { t } = useTranslation();
