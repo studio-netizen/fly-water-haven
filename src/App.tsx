@@ -80,6 +80,7 @@ const App = () => (
               <Route path="/contatti" element={<Contatti />} />
               <Route path="/fly-fishing-italy" element={<FlyFishingRegion />} />
               <Route path="/fly-fishing-italy/:region" element={<FlyFishingRegion />} />
+              <Route path="/fly-fishing-guide-italy" element={<LeadMagnet />} />
               {/* Admin routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />

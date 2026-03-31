@@ -67,7 +67,7 @@ const LeadMagnet = () => {
       <SEOHead
         title="Guida Gratuita Pesca a Mosca in Italia | Flywaters"
         description="Scarica la guida gratuita con i migliori spot di pesca a mosca in Italia. Coordinate GPS, tecniche e consigli dai pescatori locali."
-        canonicalUrl="/fly-fishing-guide-italy"
+        canonical="/fly-fishing-guide-italy"
       />
 
       <div className="min-h-screen bg-background">
