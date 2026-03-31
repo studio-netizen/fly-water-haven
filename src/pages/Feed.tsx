@@ -292,7 +292,7 @@ const Feed = () => {
                 <button onClick={() => navigate(`/post/${post.id}`)} className="block w-full aspect-[4/5] bg-muted">
                   <img
                     src={post.image_url}
-                    alt={post.caption || t('posts.fishingPost')}
+                    alt={`Foto di pesca a mosca condivisa da ${post.profiles?.username || 'pescatore'} su Flywaters`}
                     className="w-full h-full object-cover rounded-t-card"
                     loading="lazy"
                   />
