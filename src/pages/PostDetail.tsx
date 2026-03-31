@@ -188,7 +188,7 @@ const PostDetail = () => {
           <div className="flex items-center gap-3 px-4 py-3">
             <button onClick={() => navigate(`/profile/${post.user_id}`)}>
               <Avatar className="h-10 w-10">
-                <AvatarImage src={post.profiles?.avatar_url || ''} />
+                <AvatarImage src={post.profiles?.avatar_url || ''} alt={`Profilo di ${post.profiles?.username || 'pescatore'} su Flywaters`} />
                 <AvatarFallback className="bg-muted text-muted-foreground text-sm">
                   {(post.profiles?.display_name || 'U')[0].toUpperCase()}
                 </AvatarFallback>
