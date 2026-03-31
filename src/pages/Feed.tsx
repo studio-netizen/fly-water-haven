@@ -360,7 +360,7 @@ const Feed = () => {
                     >
                       <button onClick={() => navigate(`/profile/${su.user_id}`)}>
                         <Avatar className="h-14 w-14">
-                          <AvatarImage src={su.avatar_url || ''} />
+                          <AvatarImage src={su.avatar_url || ''} alt={`Profilo di ${su.username || su.display_name || 'utente'} su Flywaters`} />
                           <AvatarFallback className="bg-muted text-muted-foreground">
                             {(su.display_name || 'U')[0].toUpperCase()}
                           </AvatarFallback>
