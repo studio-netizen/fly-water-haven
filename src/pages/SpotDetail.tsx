@@ -365,7 +365,7 @@ const SpotDetail = () => {
                 <div key={review.id} className="space-y-2">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={review.profiles?.avatar_url || ''} />
+                      <AvatarImage src={review.profiles?.avatar_url || ''} alt={`Profilo di ${review.profiles?.username || review.profiles?.display_name || 'pescatore'} su Flywaters`} />
                       <AvatarFallback className="bg-[#242242]/10 text-[#242242] text-xs">
                         {(review.profiles?.display_name || 'U')[0].toUpperCase()}
                       </AvatarFallback>
