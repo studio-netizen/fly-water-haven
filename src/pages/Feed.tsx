@@ -407,7 +407,7 @@ const SuggestedUserCard = ({
     <div className="flex items-center gap-3 text-left">
       <button onClick={onNavigate}>
         <Avatar className="h-11 w-11">
-          <AvatarImage src={su.avatar_url || ''} />
+          <AvatarImage src={su.avatar_url || ''} alt={`Profilo di ${su.username || su.display_name || 'utente'} su Flywaters`} />
           <AvatarFallback className="bg-muted text-muted-foreground">
             {(su.display_name || 'U')[0].toUpperCase()}
           </AvatarFallback>
