@@ -39,7 +39,7 @@ const BlogArticle = () => {
       <nav className="sticky top-0 z-50 px-6 py-5 bg-[#f5f0e8]/95 backdrop-blur-sm border-b border-[#242242]/10">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logoDark} alt="Flywaters" className="h-5" />
+            <img src={logoDark} alt="Flywaters — La community italiana per la pesca a mosca" className="h-5" />
           </Link>
           <div className="flex items-center gap-6 text-sm">
             <Link to="/blog" className="font-medium text-[#242242]">Blog</Link>
