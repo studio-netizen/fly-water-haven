@@ -277,6 +277,38 @@ const SpotDetail = () => {
           )}
         </div>
 
+        {/* Share section */}
+        <div className="px-4 py-6">
+          <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-3">Condividi questo spot</p>
+          <div className="flex gap-2">
+            <button
+              onClick={handleShare}
+              className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium bg-[#242242] text-[#f5f0e8] rounded-full hover:opacity-85 transition-opacity"
+            >
+              <Share2 className="w-4 h-4" />
+              Condividi
+            </button>
+            <button
+              onClick={shareToWhatsApp}
+              className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium border border-[#242242]/15 rounded-full hover:border-[#242242]/30 transition-colors"
+            >
+              WhatsApp
+            </button>
+            <button
+              onClick={shareToFacebook}
+              className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium border border-[#242242]/15 rounded-full hover:border-[#242242]/30 transition-colors"
+            >
+              Facebook
+            </button>
+            <button
+              onClick={handleCopyLink}
+              className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium border border-[#242242]/15 rounded-full hover:border-[#242242]/30 transition-colors"
+            >
+              {copied ? <Check className="w-4 h-4 text-[#4a7c59]" /> : <Copy className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+
         <div className="mx-4 border-t border-[#242242]/10" />
 
         {user && (

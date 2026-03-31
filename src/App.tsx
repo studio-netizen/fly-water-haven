@@ -77,6 +77,8 @@ const App = () => (
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogArticle />} />
               <Route path="/contatti" element={<Contatti />} />
+              <Route path="/fly-fishing-italy" element={<FlyFishingRegion />} />
+              <Route path="/fly-fishing-italy/:region" element={<FlyFishingRegion />} />
               {/* Admin routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />

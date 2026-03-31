@@ -13,6 +13,9 @@
   "landing": {
     "login": "Accedi",
     "register": "Registrati",
+    "heroHeadline": "Scopri e condividi i migliori spot di pesca a mosca",
+    "heroSubheadline": "Salva le posizioni, carica le tue catture ed esplora gli spot condivisi da altri pescatori",
+    "ctaExplore": "Inizia a esplorare gli spot",
     "heroTagline": "Pescare a mosca è molto più di uno sport. È leggere il fiume, interpretare le schiuse, scegliere la mosca giusta. È entrare in sintonia con la natura — un'arte tramandata da generazioni di pescatori appassionati.",
     "everyWater": "Ogni acqua, ogni stagione",
     "spotsForCondition": "Spot per ogni condizione",

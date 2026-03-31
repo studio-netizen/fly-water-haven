@@ -11,6 +11,66 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://flywaters.app/fly-fishing-italy</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://flywaters.app/fly-fishing-italy/lombardia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://flywaters.app/fly-fishing-italy/trentino-alto-adige</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://flywaters.app/fly-fishing-italy/friuli-venezia-giulia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://flywaters.app/fly-fishing-italy/veneto</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://flywaters.app/fly-fishing-italy/piemonte</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://flywaters.app/fly-fishing-italy/emilia-romagna</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://flywaters.app/fly-fishing-italy/toscana</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://flywaters.app/fly-fishing-italy/umbria</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://flywaters.app/fly-fishing-italy/valle-d-aosta</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://flywaters.app/fly-fishing-italy/liguria</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://flywaters.app/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://flywaters.app/auth</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

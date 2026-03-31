@@ -13,6 +13,9 @@
   "landing": {
     "login": "Log in",
     "register": "Sign up",
+    "heroHeadline": "Discover and share the best fly fishing spots",
+    "heroSubheadline": "Save locations, upload your catches, and explore spots shared by other anglers",
+    "ctaExplore": "Start exploring spots",
     "heroTagline": "Fly fishing is much more than a sport. It's reading the river, interpreting the hatches, choosing the right fly. It's connecting with nature — an art passed down through generations of passionate anglers.",
     "everyWater": "Every water, every season",
     "spotsForCondition": "Spots for every condition",
