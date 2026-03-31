@@ -110,6 +110,7 @@ export type Database = {
           last_name: string | null
           registered_at: string
           source: string | null
+          status: string
           updated_at: string
           user_id: string
         }
@@ -122,6 +123,7 @@ export type Database = {
           last_name?: string | null
           registered_at?: string
           source?: string | null
+          status?: string
           updated_at?: string
           user_id: string
         }
@@ -134,6 +136,7 @@ export type Database = {
           last_name?: string | null
           registered_at?: string
           source?: string | null
+          status?: string
           updated_at?: string
           user_id?: string
         }
