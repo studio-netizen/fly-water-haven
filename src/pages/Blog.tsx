@@ -21,7 +21,7 @@ const Blog = () => {
       <nav className="sticky top-0 z-50 px-6 py-5 bg-[#f5f0e8]/95 backdrop-blur-sm border-b border-[#242242]/10">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logoDark} alt="Flywaters" className="h-5" />
+            <img src={logoDark} alt="Flywaters — La community italiana per la pesca a mosca" className="h-5" />
           </Link>
           <div className="flex items-center gap-6 text-sm">
             <Link to="/blog" className="font-medium text-[#242242]">Blog</Link>
@@ -77,7 +77,7 @@ const Blog = () => {
       {/* Footer */}
       <footer className="bg-[#242242] text-[#f5f0e8]">
         <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <img src={logoWhite} alt="Flywaters" className="h-6" />
+          <img src={logoWhite} alt="Flywaters — La community italiana per la pesca a mosca" className="h-6" />
           <div className="flex gap-8 text-xs tracking-wide text-[#f5f0e8]/60">
             <Link to="/blog" className="hover:text-[#f5f0e8] transition-colors">Blog</Link>
             <Link to="/contatti" className="hover:text-[#f5f0e8] transition-colors">Contatti</Link>

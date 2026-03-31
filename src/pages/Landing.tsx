@@ -111,7 +111,7 @@ const Landing = () => {
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity">
                     <Avatar className="h-8 w-8 border border-white/30">
-                      <AvatarImage src={''} />
+                      <AvatarImage src={''} alt={`Profilo di ${user.user_metadata?.full_name || user.email || 'utente'} su Flywaters`} />
                       <AvatarFallback className="bg-white/20 text-white text-sm">
                         {(user.user_metadata?.full_name || user.email || 'U')[0].toUpperCase()}
                       </AvatarFallback>
@@ -135,7 +135,7 @@ const Landing = () => {
       <section className="relative w-full h-[85vh]">
         <img
           src={heroImg}
-          alt="Pescatore a mosca in un fiume alpino"
+          alt="Pescatore a mosca in un torrente alpino italiano"
           className="w-full h-full object-cover object-center"
           style={{ filter: 'saturate(0.8) contrast(1.05)' }}
           width={1920}
@@ -367,7 +367,7 @@ const Landing = () => {
       {/* ─── FOOTER ─── */}
       <footer className="bg-[#242242] text-[#f5f0e8] border-t border-[#f5f0e8]/10">
         <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <img src={logoWhite} alt="Flywaters" className="h-6" />
+          <img src={logoWhite} alt="Flywaters — La community italiana per la pesca a mosca" className="h-6" />
           <p className="text-xs tracking-[0.2em] uppercase text-[#f5f0e8]/50">
             {t('landing.footerTagline')}
           </p>

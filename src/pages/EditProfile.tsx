@@ -112,8 +112,15 @@ const EditProfile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      <div className="min-h-screen bg-background">
+        <div className="max-w-lg mx-auto px-4 py-6 flex flex-col items-center gap-4">
+          <div className="h-24 w-24 rounded-full bg-muted animate-pulse" />
+          <div className="w-full space-y-4">
+            <div className="h-10 w-full bg-muted rounded animate-pulse" />
+            <div className="h-10 w-full bg-muted rounded animate-pulse" />
+            <div className="h-20 w-full bg-muted rounded animate-pulse" />
+          </div>
+        </div>
       </div>
     );
   }

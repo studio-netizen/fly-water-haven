@@ -185,8 +185,16 @@ const SpotDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f5f0e8' }}>
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#242242]" />
+      <div className="min-h-screen pb-24" style={{ backgroundColor: '#f5f0e8' }}>
+        <div className="max-w-3xl mx-auto px-4 pt-16 space-y-4">
+          <div className="h-6 w-48 bg-[#242242]/10 rounded animate-pulse" />
+          <div className="h-3 w-24 bg-[#242242]/10 rounded animate-pulse" />
+          <div className="aspect-[4/3] bg-[#242242]/10 rounded animate-pulse" />
+          <div className="space-y-2">
+            <div className="h-3 w-full bg-[#242242]/10 rounded animate-pulse" />
+            <div className="h-3 w-3/4 bg-[#242242]/10 rounded animate-pulse" />
+          </div>
+        </div>
       </div>
     );
   }
@@ -232,7 +240,7 @@ const SpotDetail = () => {
             <div className={`grid gap-2 ${photos.length === 1 ? 'grid-cols-1' : photos.length === 2 ? 'grid-cols-2' : 'grid-cols-3'}`}>
               {photos.map((url, i) => (
                 <button key={i} onClick={() => setSelectedPhoto(url)} className="overflow-hidden">
-                  <img src={url} alt={`${spot.name} foto ${i + 1}`} className="w-full aspect-[4/3] object-cover hover:opacity-90 transition-opacity" loading="lazy" />
+                  <img src={url} alt={`Foto dello spot ${spot.name} su Flywaters`} className="w-full aspect-[4/3] object-cover hover:opacity-90 transition-opacity" loading="lazy" />
                 </button>
               ))}
             </div>
@@ -365,7 +373,7 @@ const SpotDetail = () => {
                 <div key={review.id} className="space-y-2">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={review.profiles?.avatar_url || ''} />
+                      <AvatarImage src={review.profiles?.avatar_url || ''} alt={`Profilo di ${review.profiles?.username || review.profiles?.display_name || 'pescatore'} su Flywaters`} />
                       <AvatarFallback className="bg-[#242242]/10 text-[#242242] text-xs">
                         {(review.profiles?.display_name || 'U')[0].toUpperCase()}
                       </AvatarFallback>

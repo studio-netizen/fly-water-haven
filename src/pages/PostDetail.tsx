@@ -136,8 +136,21 @@ const PostDetail = () => {
   if (loading) {
     return (
       <AppLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-card">
+            <div className="flex items-center gap-3 px-4 py-3">
+              <div className="h-10 w-10 rounded-full bg-muted animate-pulse" />
+              <div className="flex-1 space-y-1.5">
+                <div className="h-3.5 w-24 bg-muted rounded animate-pulse" />
+                <div className="h-2.5 w-16 bg-muted rounded animate-pulse" />
+              </div>
+            </div>
+            <div className="aspect-[4/5] bg-muted animate-pulse" />
+            <div className="px-4 py-3 space-y-2">
+              <div className="h-3 w-20 bg-muted rounded animate-pulse" />
+              <div className="h-3 w-full bg-muted rounded animate-pulse" />
+            </div>
+          </div>
         </div>
       </AppLayout>
     );
@@ -188,7 +201,7 @@ const PostDetail = () => {
           <div className="flex items-center gap-3 px-4 py-3">
             <button onClick={() => navigate(`/profile/${post.user_id}`)}>
               <Avatar className="h-10 w-10">
-                <AvatarImage src={post.profiles?.avatar_url || ''} />
+                <AvatarImage src={post.profiles?.avatar_url || ''} alt={`Profilo di ${post.profiles?.username || 'pescatore'} su Flywaters`} />
                 <AvatarFallback className="bg-muted text-muted-foreground text-sm">
                   {(post.profiles?.display_name || 'U')[0].toUpperCase()}
                 </AvatarFallback>
@@ -230,7 +243,7 @@ const PostDetail = () => {
           <div className="aspect-[4/5] bg-muted">
             <img
               src={post.image_url}
-              alt={post.caption || 'Post di pesca'}
+              alt={`Foto di pesca a mosca condivisa da ${post.profiles?.username || 'pescatore'} su Flywaters`}
               className="w-full h-full object-cover"
               loading="eager"
             />

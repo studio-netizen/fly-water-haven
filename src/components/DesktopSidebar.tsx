@@ -39,7 +39,7 @@ const DesktopSidebar = () => {
   return (
     <aside className="hidden lg:flex flex-col w-60 h-screen sticky top-0 border-r border-black/[0.08] bg-background px-4 py-6">
       <div className="mb-8 px-2 flex items-center justify-between">
-        <img src={logoImg} alt="Flywaters" className="h-8" />
+        <img src={logoImg} alt="Flywaters — La community italiana per la pesca a mosca" className="h-8" />
         <LanguageSwitcher />
       </div>
 
@@ -74,7 +74,7 @@ const DesktopSidebar = () => {
         <div className="border-t border-black/[0.08] pt-4 mt-4">
           <div className="flex items-center gap-3 px-2 mb-3">
             <Avatar className="h-9 w-9">
-              <AvatarImage src={profile.avatar_url || ''} />
+              <AvatarImage src={profile.avatar_url || ''} alt={`Profilo di ${profile.username || profile.display_name || 'utente'} su Flywaters`} />
               <AvatarFallback className="bg-primary/10 text-primary text-sm">
                 {(profile.display_name || 'U')[0].toUpperCase()}
               </AvatarFallback>

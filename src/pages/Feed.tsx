@@ -14,6 +14,7 @@ import SEOHead from '@/components/SEOHead';
 import { toast } from 'sonner';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useTranslation } from 'react-i18next';
+import OnboardingWizard from '@/components/OnboardingWizard';
 
 interface Post {
   id: string;
@@ -51,6 +52,7 @@ const Feed = () => {
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [feedMode, setFeedMode] = useState<'forYou' | 'following'>('forYou');
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const unreadMessages = useUnreadMessages();
   const { t } = useTranslation();
 
@@ -59,6 +61,11 @@ const Feed = () => {
     fetchFollowedUsers();
     fetchLikedPosts();
     fetchSuggestedUsers();
+    // Check onboarding status
+    supabase.from('profiles').select('onboarding_completed').eq('user_id', user.id).single()
+      .then(({ data }) => {
+        if (data && !data.onboarding_completed) setShowOnboarding(true);
+      });
   }, [user]);
 
   useEffect(() => {
@@ -67,6 +74,10 @@ const Feed = () => {
   }, [user, feedMode, followedUsers]);
 
   if (!authLoading && !user) return <Landing />;
+
+  if (showOnboarding && user) {
+    return <OnboardingWizard onComplete={() => setShowOnboarding(false)} />;
+  }
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -170,7 +181,7 @@ const Feed = () => {
       {/* Mobile header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <img src={logoImg} alt="Flywaters" className="h-7" />
+          <img src={logoImg} alt="Flywaters — La community italiana per la pesca a mosca" className="h-7" />
           <button onClick={() => navigate('/messages')} className="relative p-1">
             <Send className="w-5 h-5 text-foreground" />
             {unreadMessages > 0 && (
@@ -211,8 +222,24 @@ const Feed = () => {
       {/* Posts */}
       <div className="max-w-lg mx-auto">
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          <div className="flex flex-col gap-4 p-4">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="rounded-card border border-black/[0.08] bg-card shadow-card overflow-hidden">
+                <div className="flex items-center gap-3 px-4 py-3">
+                  <div className="h-9 w-9 rounded-full bg-muted animate-pulse" />
+                  <div className="flex-1 space-y-1.5">
+                    <div className="h-3.5 w-24 bg-muted rounded animate-pulse" />
+                    <div className="h-2.5 w-16 bg-muted rounded animate-pulse" />
+                  </div>
+                </div>
+                <div className="aspect-[4/5] bg-muted animate-pulse" />
+                <div className="px-4 py-3 space-y-2">
+                  <div className="h-3 w-20 bg-muted rounded animate-pulse" />
+                  <div className="h-3 w-full bg-muted rounded animate-pulse" />
+                  <div className="h-3 w-3/4 bg-muted rounded animate-pulse" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : posts.length === 0 ? (
           <div className="text-center py-16 px-4">
@@ -250,7 +277,7 @@ const Feed = () => {
                 <div className="flex items-center gap-3 px-4 py-3">
                   <button onClick={() => navigate(`/profile/${post.user_id}`)}>
                     <Avatar className="h-9 w-9">
-                      <AvatarImage src={post.profiles?.avatar_url || ''} />
+                      <AvatarImage src={post.profiles?.avatar_url || ''} alt={`Profilo di ${post.profiles?.username || 'pescatore'} su Flywaters`} />
                       <AvatarFallback className="bg-muted text-muted-foreground text-sm">
                         {(post.profiles?.display_name || 'U')[0].toUpperCase()}
                       </AvatarFallback>
@@ -292,7 +319,7 @@ const Feed = () => {
                 <button onClick={() => navigate(`/post/${post.id}`)} className="block w-full aspect-[4/5] bg-muted">
                   <img
                     src={post.image_url}
-                    alt={post.caption || t('posts.fishingPost')}
+                    alt={`Foto di pesca a mosca condivisa da ${post.profiles?.username || 'pescatore'} su Flywaters`}
                     className="w-full h-full object-cover rounded-t-card"
                     loading="lazy"
                   />
@@ -360,7 +387,7 @@ const Feed = () => {
                     >
                       <button onClick={() => navigate(`/profile/${su.user_id}`)}>
                         <Avatar className="h-14 w-14">
-                          <AvatarImage src={su.avatar_url || ''} />
+                          <AvatarImage src={su.avatar_url || ''} alt={`Profilo di ${su.username || su.display_name || 'utente'} su Flywaters`} />
                           <AvatarFallback className="bg-muted text-muted-foreground">
                             {(su.display_name || 'U')[0].toUpperCase()}
                           </AvatarFallback>
@@ -407,7 +434,7 @@ const SuggestedUserCard = ({
     <div className="flex items-center gap-3 text-left">
       <button onClick={onNavigate}>
         <Avatar className="h-11 w-11">
-          <AvatarImage src={su.avatar_url || ''} />
+          <AvatarImage src={su.avatar_url || ''} alt={`Profilo di ${su.username || su.display_name || 'utente'} su Flywaters`} />
           <AvatarFallback className="bg-muted text-muted-foreground">
             {(su.display_name || 'U')[0].toUpperCase()}
           </AvatarFallback>
