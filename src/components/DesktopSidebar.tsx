@@ -39,7 +39,7 @@ const DesktopSidebar = () => {
   return (
     <aside className="hidden lg:flex flex-col w-60 h-screen sticky top-0 border-r border-black/[0.08] bg-background px-4 py-6">
       <div className="mb-8 px-2 flex items-center justify-between">
-        <img src={logoImg} alt="Flywaters" className="h-8" />
+        <img src={logoImg} alt="Flywaters — La community italiana per la pesca a mosca" className="h-8" />
         <LanguageSwitcher />
       </div>
 
