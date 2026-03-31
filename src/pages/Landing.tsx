@@ -135,7 +135,7 @@ const Landing = () => {
       <section className="relative w-full h-[85vh]">
         <img
           src={heroImg}
-          alt="Pescatore a mosca in un fiume alpino"
+          alt="Pescatore a mosca in un torrente alpino italiano"
           className="w-full h-full object-cover object-center"
           style={{ filter: 'saturate(0.8) contrast(1.05)' }}
           width={1920}
