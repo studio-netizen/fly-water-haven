@@ -52,6 +52,7 @@ const Feed = () => {
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [feedMode, setFeedMode] = useState<'forYou' | 'following'>('forYou');
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const unreadMessages = useUnreadMessages();
   const { t } = useTranslation();
 
