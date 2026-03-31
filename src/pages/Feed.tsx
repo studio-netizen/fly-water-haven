@@ -61,6 +61,11 @@ const Feed = () => {
     fetchFollowedUsers();
     fetchLikedPosts();
     fetchSuggestedUsers();
+    // Check onboarding status
+    supabase.from('profiles').select('onboarding_completed').eq('user_id', user.id).single()
+      .then(({ data }) => {
+        if (data && !data.onboarding_completed) setShowOnboarding(true);
+      });
   }, [user]);
 
   useEffect(() => {
