@@ -80,7 +80,15 @@ const LeadMagnet = () => {
               backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
             }} />
           </div>
-          <div className="relative max-w-5xl mx-auto px-4 py-16 md:py-24">
+
+          {/* Top bar with logo */}
+          <div className="relative z-10 max-w-5xl mx-auto px-4 pt-6 pb-0">
+            <Link to="/">
+              <img src={logoWhite} alt="Flywaters" className="h-8 md:h-10" />
+            </Link>
+          </div>
+
+          <div className="relative max-w-5xl mx-auto px-4 py-12 md:py-20">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               {/* Left: Copy */}
               <div>
