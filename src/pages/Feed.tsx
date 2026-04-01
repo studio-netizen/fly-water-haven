@@ -321,7 +321,7 @@ const Feed = () => {
                     src={post.image_url}
                     alt={`Foto di pesca a mosca condivisa da ${post.profiles?.username || 'pescatore'} su Flywaters`}
                     className="w-full h-full object-cover rounded-t-card"
-                    loading="lazy"
+                    loading={idx < 3 ? "eager" : "lazy"}
                   />
                 </button>
 

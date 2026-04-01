@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -8,7 +9,6 @@ import { AdminAuthProvider, useAdminAuth } from "@/contexts/AdminAuthContext";
 import Feed from "./pages/Feed";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
-import SpotMap from "./pages/SpotMap";
 import SpotDetail from "./pages/SpotDetail";
 import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
@@ -16,19 +16,22 @@ import EditProfile from "./pages/EditProfile";
 import Publish from "./pages/Publish";
 import PostDetail from "./pages/PostDetail";
 import NotFound from "./pages/NotFound";
-import FlyFishingRegion from "./pages/FlyFishingRegion";
 import LeadMagnet from "./pages/LeadMagnet";
-import Blog from "./pages/Blog";
-import BlogArticle from "./pages/BlogArticle";
 import Contatti from "./pages/Contatti";
 import AdminLogin from "./pages/admin/AdminLogin";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminUsers from "./pages/admin/AdminUsers";
-import AdminMessages from "./pages/admin/AdminMessages";
-import AdminSpots from "./pages/admin/AdminSpots";
-import AdminPosts from "./pages/admin/AdminPosts";
-import AdminSettings from "./pages/admin/AdminSettings";
 import AdminLayout from "./components/admin/AdminLayout";
+
+// Lazy load heavy pages
+const SpotMap = lazy(() => import("./pages/SpotMap"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogArticle = lazy(() => import("./pages/BlogArticle"));
+const FlyFishingRegion = lazy(() => import("./pages/FlyFishingRegion"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
+const AdminMessages = lazy(() => import("./pages/admin/AdminMessages"));
+const AdminSpots = lazy(() => import("./pages/admin/AdminSpots"));
+const AdminPosts = lazy(() => import("./pages/admin/AdminPosts"));
+const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
 
 const queryClient = new QueryClient();
 
@@ -52,6 +55,12 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   return <AdminLayout>{children}</AdminLayout>;
 };
 
+const LazyFallback = () => (
+  <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+  </div>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -60,37 +69,39 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Feed />} />
-              <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-              <Route path="/login" element={<Navigate to="/auth" replace />} />
-              <Route path="/register" element={<Navigate to="/auth" replace />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/profile/:userId" element={<Profile />} />
-              <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
-              <Route path="/map" element={<SpotMap />} />
-              <Route path="/spot/:spotId" element={<SpotDetail />} />
-              <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
-              <Route path="/messages/:userId" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
-              <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-              <Route path="/publish" element={<ProtectedRoute><Publish /></ProtectedRoute>} />
-              <Route path="/post/:postId" element={<PostDetail />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogArticle />} />
-              <Route path="/contatti" element={<Contatti />} />
-              <Route path="/fly-fishing-italy" element={<FlyFishingRegion />} />
-              <Route path="/fly-fishing-italy/:region" element={<FlyFishingRegion />} />
-              <Route path="/fly-fishing-guide-italy" element={<LeadMagnet />} />
-              {/* Admin routes */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-              <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
-              <Route path="/admin/messages" element={<AdminRoute><AdminMessages /></AdminRoute>} />
-              <Route path="/admin/spots" element={<AdminRoute><AdminSpots /></AdminRoute>} />
-              <Route path="/admin/posts" element={<AdminRoute><AdminPosts /></AdminRoute>} />
-              <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <Suspense fallback={<LazyFallback />}>
+              <Routes>
+                <Route path="/" element={<Feed />} />
+                <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+                <Route path="/login" element={<Navigate to="/auth" replace />} />
+                <Route path="/register" element={<Navigate to="/auth" replace />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/profile/:userId" element={<Profile />} />
+                <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+                <Route path="/map" element={<SpotMap />} />
+                <Route path="/spot/:spotId" element={<SpotDetail />} />
+                <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+                <Route path="/messages/:userId" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+                <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+                <Route path="/publish" element={<ProtectedRoute><Publish /></ProtectedRoute>} />
+                <Route path="/post/:postId" element={<PostDetail />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogArticle />} />
+                <Route path="/contatti" element={<Contatti />} />
+                <Route path="/fly-fishing-italy" element={<FlyFishingRegion />} />
+                <Route path="/fly-fishing-italy/:region" element={<FlyFishingRegion />} />
+                <Route path="/fly-fishing-guide-italy" element={<LeadMagnet />} />
+                {/* Admin routes */}
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+                <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
+                <Route path="/admin/messages" element={<AdminRoute><AdminMessages /></AdminRoute>} />
+                <Route path="/admin/spots" element={<AdminRoute><AdminSpots /></AdminRoute>} />
+                <Route path="/admin/posts" element={<AdminRoute><AdminPosts /></AdminRoute>} />
+                <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
           </BrowserRouter>
         </TooltipProvider>
       </AdminAuthProvider>
