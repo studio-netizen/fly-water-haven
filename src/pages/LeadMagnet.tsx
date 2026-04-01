@@ -153,7 +153,7 @@ const LeadMagnet = () => {
                         />
                         <label htmlFor="consent" className="text-xs text-muted-foreground leading-relaxed cursor-pointer">
                           Acconsento al trattamento dei miei dati personali in conformità con la{" "}
-                          <a href="/privacy" className="underline text-primary hover:text-primary/80">
+                          <a href="https://www.iubenda.com/privacy-policy/53958448" target="_blank" rel="noopener noreferrer" className="underline text-primary hover:text-primary/80">
                             Privacy Policy
                           </a>
                           . Riceverò la guida e comunicazioni da Flywaters. Posso cancellarmi in qualsiasi momento.
@@ -214,7 +214,8 @@ const LeadMagnet = () => {
         <footer className="py-8 text-center text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} Flywaters. Tutti i diritti riservati.</p>
           <div className="mt-2 space-x-4">
-            <a href="/privacy" className="hover:underline">Privacy Policy</a>
+            <a href="https://www.iubenda.com/privacy-policy/53958448" target="_blank" rel="noopener noreferrer" className="hover:underline">Privacy Policy</a>
+            <a href="https://www.iubenda.com/privacy-policy/53958448/cookie-policy" target="_blank" rel="noopener noreferrer" className="hover:underline">Cookie Policy</a>
             <a href="/contatti" className="hover:underline">Contatti</a>
           </div>
         </footer>
