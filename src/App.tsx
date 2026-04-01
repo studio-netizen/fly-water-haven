@@ -55,6 +55,12 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   return <AdminLayout>{children}</AdminLayout>;
 };
 
+const LazyFallback = () => (
+  <div className="min-h-screen bg-background flex items-center justify-center">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+  </div>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -63,37 +69,39 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Feed />} />
-              <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-              <Route path="/login" element={<Navigate to="/auth" replace />} />
-              <Route path="/register" element={<Navigate to="/auth" replace />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/profile/:userId" element={<Profile />} />
-              <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
-              <Route path="/map" element={<SpotMap />} />
-              <Route path="/spot/:spotId" element={<SpotDetail />} />
-              <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
-              <Route path="/messages/:userId" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
-              <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-              <Route path="/publish" element={<ProtectedRoute><Publish /></ProtectedRoute>} />
-              <Route path="/post/:postId" element={<PostDetail />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogArticle />} />
-              <Route path="/contatti" element={<Contatti />} />
-              <Route path="/fly-fishing-italy" element={<FlyFishingRegion />} />
-              <Route path="/fly-fishing-italy/:region" element={<FlyFishingRegion />} />
-              <Route path="/fly-fishing-guide-italy" element={<LeadMagnet />} />
-              {/* Admin routes */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-              <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
-              <Route path="/admin/messages" element={<AdminRoute><AdminMessages /></AdminRoute>} />
-              <Route path="/admin/spots" element={<AdminRoute><AdminSpots /></AdminRoute>} />
-              <Route path="/admin/posts" element={<AdminRoute><AdminPosts /></AdminRoute>} />
-              <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <Suspense fallback={<LazyFallback />}>
+              <Routes>
+                <Route path="/" element={<Feed />} />
+                <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+                <Route path="/login" element={<Navigate to="/auth" replace />} />
+                <Route path="/register" element={<Navigate to="/auth" replace />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/profile/:userId" element={<Profile />} />
+                <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+                <Route path="/map" element={<SpotMap />} />
+                <Route path="/spot/:spotId" element={<SpotDetail />} />
+                <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+                <Route path="/messages/:userId" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+                <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+                <Route path="/publish" element={<ProtectedRoute><Publish /></ProtectedRoute>} />
+                <Route path="/post/:postId" element={<PostDetail />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogArticle />} />
+                <Route path="/contatti" element={<Contatti />} />
+                <Route path="/fly-fishing-italy" element={<FlyFishingRegion />} />
+                <Route path="/fly-fishing-italy/:region" element={<FlyFishingRegion />} />
+                <Route path="/fly-fishing-guide-italy" element={<LeadMagnet />} />
+                {/* Admin routes */}
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+                <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
+                <Route path="/admin/messages" element={<AdminRoute><AdminMessages /></AdminRoute>} />
+                <Route path="/admin/spots" element={<AdminRoute><AdminSpots /></AdminRoute>} />
+                <Route path="/admin/posts" element={<AdminRoute><AdminPosts /></AdminRoute>} />
+                <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
           </BrowserRouter>
         </TooltipProvider>
       </AdminAuthProvider>
