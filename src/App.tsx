@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -8,7 +9,6 @@ import { AdminAuthProvider, useAdminAuth } from "@/contexts/AdminAuthContext";
 import Feed from "./pages/Feed";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
-import SpotMap from "./pages/SpotMap";
 import SpotDetail from "./pages/SpotDetail";
 import Messages from "./pages/Messages";
 import Notifications from "./pages/Notifications";
@@ -16,19 +16,22 @@ import EditProfile from "./pages/EditProfile";
 import Publish from "./pages/Publish";
 import PostDetail from "./pages/PostDetail";
 import NotFound from "./pages/NotFound";
-import FlyFishingRegion from "./pages/FlyFishingRegion";
 import LeadMagnet from "./pages/LeadMagnet";
-import Blog from "./pages/Blog";
-import BlogArticle from "./pages/BlogArticle";
 import Contatti from "./pages/Contatti";
 import AdminLogin from "./pages/admin/AdminLogin";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminUsers from "./pages/admin/AdminUsers";
-import AdminMessages from "./pages/admin/AdminMessages";
-import AdminSpots from "./pages/admin/AdminSpots";
-import AdminPosts from "./pages/admin/AdminPosts";
-import AdminSettings from "./pages/admin/AdminSettings";
 import AdminLayout from "./components/admin/AdminLayout";
+
+// Lazy load heavy pages
+const SpotMap = lazy(() => import("./pages/SpotMap"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogArticle = lazy(() => import("./pages/BlogArticle"));
+const FlyFishingRegion = lazy(() => import("./pages/FlyFishingRegion"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
+const AdminMessages = lazy(() => import("./pages/admin/AdminMessages"));
+const AdminSpots = lazy(() => import("./pages/admin/AdminSpots"));
+const AdminPosts = lazy(() => import("./pages/admin/AdminPosts"));
+const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
 
 const queryClient = new QueryClient();
 

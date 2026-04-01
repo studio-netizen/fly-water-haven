@@ -140,6 +140,8 @@ const Landing = () => {
           style={{ filter: 'saturate(0.8) contrast(1.05)' }}
           width={1920}
           height={1080}
+          fetchPriority="high"
+          loading="eager"
         />
         <div
           className="absolute inset-0"
