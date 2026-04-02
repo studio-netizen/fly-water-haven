@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import TagChipSelector from '@/components/TagChipSelector';
 import { FISH_SPECIES } from '@/lib/fishing-constants';
+import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
