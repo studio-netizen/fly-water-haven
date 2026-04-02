@@ -92,8 +92,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
     try {
       let avatarUrl = '';
       if (avatarFile) {
-        const ext = avatarFile.name.split('.').pop();
-        const path = `${user.id}/avatar.${ext}`;
+        const path = `${user.id}/avatar.webp`;
         await supabase.storage.from('avatars').upload(path, avatarFile, { upsert: true });
         const { data } = supabase.storage.from('avatars').getPublicUrl(path);
         avatarUrl = `${data.publicUrl}?t=${Date.now()}`;

@@ -182,8 +182,7 @@ const SpotMap = () => {
     try {
       const photoUrls: string[] = [];
       for (const file of spotPhotos) {
-        const ext = file.name.split('.').pop();
-        const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
         const { error: uploadError } = await supabase.storage.from('spots').upload(path, file);
         if (uploadError) throw uploadError;
         const { data: { publicUrl } } = supabase.storage.from('spots').getPublicUrl(path);
