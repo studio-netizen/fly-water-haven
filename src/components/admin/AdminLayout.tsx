@@ -6,6 +6,7 @@ import {
   MessageSquare,
   MapPin,
   Image,
+  PenLine,
   Settings,
   LogOut,
   Menu,

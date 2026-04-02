@@ -231,8 +231,79 @@ serve(async (req) => {
       }
 
       case "update_admin_password": {
-        // This is just a placeholder — password is stored as a secret
         return json({ error: "Password changes must be done in platform settings" }, 400);
+      }
+
+      // ─── Blog CRUD ───
+      case "get_blog_posts": {
+        const { data } = await supabase
+          .from("blog_posts")
+          .select("*")
+          .order("created_at", { ascending: false });
+        return json(data || []);
+      }
+
+      case "get_blog_post": {
+        const { id } = params;
+        const { data } = await supabase
+          .from("blog_posts")
+          .select("*")
+          .eq("id", id)
+          .single();
+        return json(data);
+      }
+
+      case "save_blog_post": {
+        const { id, post } = params as any;
+        if (id) {
+          const { data, error } = await supabase
+            .from("blog_posts")
+            .update(post)
+            .eq("id", id)
+            .select()
+            .single();
+          if (error) return json({ error: error.message }, 400);
+          return json(data);
+        } else {
+          const { data, error } = await supabase
+            .from("blog_posts")
+            .insert(post)
+            .select()
+            .single();
+          if (error) return json({ error: error.message }, 400);
+          return json(data);
+        }
+      }
+
+      case "delete_blog_post": {
+        const { id } = params;
+        await supabase.from("blog_posts").delete().eq("id", id);
+        return json({ success: true });
+      }
+
+      case "duplicate_blog_post": {
+        const { id } = params;
+        const { data: original } = await supabase
+          .from("blog_posts")
+          .select("*")
+          .eq("id", id)
+          .single();
+        if (!original) return json({ error: "Not found" }, 404);
+        const { id: _id, created_at, updated_at, ...rest } = original;
+        const dup = {
+          ...rest,
+          title: `${original.title} (copia)`,
+          slug: `${original.slug}-copia-${Date.now()}`,
+          status: "draft",
+          published_at: null,
+        };
+        const { data, error } = await supabase
+          .from("blog_posts")
+          .insert(dup)
+          .select()
+          .single();
+        if (error) return json({ error: error.message }, 400);
+        return json(data);
       }
 
       default:
