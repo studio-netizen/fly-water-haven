@@ -167,18 +167,23 @@ const SpotDetail = () => {
     }
     setSubmitting(true);
     try {
-      const { error } = await supabase.from('reviews').insert({
+      const { data: insertedData, error } = await supabase.from('reviews').insert({
         user_id: user.id,
         spot_id: spotId,
         rating,
         content: reviewText || null,
-      });
+      }).select('*, profiles:user_id(username, display_name, avatar_url)').single();
       if (error) throw error;
-      toast.success('Recensione inviata');
+      
+      // Optimistic UI: add review to top of list immediately
+      if (insertedData) {
+        setReviews(prev => [insertedData as unknown as Review, ...prev]);
+      }
+      setHasReviewed(true);
+      toast.success('Recensione pubblicata!');
       setRating(0);
       setReviewText('');
-      fetchReviews();
-      fetchSpot();
+      fetchSpot(); // refresh avg rating
     } catch (err: any) {
       toast.error(err.message);
     } finally {
