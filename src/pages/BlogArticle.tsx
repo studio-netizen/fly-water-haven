@@ -1,38 +1,87 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import SEOHead from '@/components/SEOHead';
-import { blogArticles } from '@/lib/blog-data';
-import { Clock, Share2, Copy, Check } from 'lucide-react';
-import { useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Clock, Copy, Check } from 'lucide-react';
 import logoDark from '@/assets/flywaters-logo-dark.png';
 import logoWhite from '@/assets/flywaters-logo-white.png';
 
+interface BlogPost {
+  title: string;
+  slug: string;
+  seo_title: string | null;
+  meta_description: string | null;
+  cover_image_url: string | null;
+  cover_image_alt: string | null;
+  body_html: string | null;
+  author: string;
+  reading_time_minutes: number | null;
+  published_at: string | null;
+}
+
+interface RelatedPost {
+  slug: string;
+  title: string;
+  cover_image_url: string | null;
+  cover_image_alt: string | null;
+  reading_time_minutes: number | null;
+}
+
 const BlogArticle = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [article, setArticle] = useState<BlogPost | null>(null);
+  const [related, setRelated] = useState<RelatedPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const article = blogArticles.find((a) => a.slug === slug);
-  if (!article) return <Navigate to="/blog" replace />;
+  useEffect(() => {
+    if (!slug) return;
+    (async () => {
+      const { data } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('slug', slug)
+        .eq('status', 'published')
+        .single();
+      if (!data) { setNotFound(true); setLoading(false); return; }
+      setArticle(data as any);
 
-  const related = blogArticles.filter((a) => a.slug !== slug);
+      const { data: others } = await supabase
+        .from('blog_posts')
+        .select('slug, title, cover_image_url, cover_image_alt, reading_time_minutes')
+        .eq('status', 'published')
+        .neq('slug', slug)
+        .order('published_at', { ascending: false })
+        .limit(2);
+      setRelated((others as any) || []);
+      setLoading(false);
+    })();
+  }, [slug]);
+
+  if (notFound) return <Navigate to="/blog" replace />;
+  if (loading || !article) return (
+    <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f5f0e8' }}>
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#242242]" />
+    </div>
+  );
 
   const shareUrl = `https://flywaters.app/blog/${article.slug}`;
-  const shareText = article.title;
-
   const copyLink = () => {
     navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(article.title + ' ' + shareUrl)}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#f5f0e8', color: '#242242' }}>
       <SEOHead
-        title={article.titleTag}
-        description={article.metaDescription}
+        title={`${article.seo_title || article.title} | Flywaters`}
+        description={article.meta_description || undefined}
         canonical={shareUrl}
+        ogImage={article.cover_image_url || undefined}
       />
 
       {/* Navbar */}
@@ -60,16 +109,18 @@ const BlogArticle = () => {
       </div>
 
       {/* Hero image */}
-      <div className="px-6 pt-6">
-        <div className="max-w-[780px] mx-auto">
-          <img
-            src={article.coverImage}
-            alt={article.title}
-            className="w-full aspect-[16/9] object-cover"
-            style={{ filter: 'saturate(0.8) contrast(1.05)' }}
-          />
+      {article.cover_image_url && (
+        <div className="px-6 pt-6">
+          <div className="max-w-[780px] mx-auto">
+            <img
+              src={article.cover_image_url}
+              alt={article.cover_image_alt || article.title}
+              className="w-full aspect-[16/9] object-cover"
+              style={{ filter: 'saturate(0.8) contrast(1.05)' }}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Article */}
       <article className="px-6 pt-10 pb-20">
@@ -80,52 +131,41 @@ const BlogArticle = () => {
               <img src={logoDark} alt="Team Flywaters" className="h-4 invert" />
             </div>
             <div>
-              <p className="text-sm font-medium">Team Flywaters</p>
+              <p className="text-sm font-medium">{article.author}</p>
               <div className="flex items-center gap-2 text-xs text-[#8c8c7a]">
                 <Clock className="w-3 h-3" />
-                <span>{article.readingTime} di lettura</span>
+                <span>{article.reading_time_minutes || 5} min di lettura</span>
               </div>
             </div>
           </div>
 
           <h1 className="text-3xl md:text-4xl font-bold font-serif leading-tight mb-10">
-            {article.h1}
+            {article.title}
           </h1>
 
-          {/* Sections */}
-          <div className="space-y-10" style={{ fontSize: '18px', lineHeight: '1.8' }}>
-            {article.sections.map((section, i) => (
-              <div key={i}>
-                <h2 className="text-xl md:text-2xl font-bold font-serif mb-4">{section.heading}</h2>
-                <p className="text-[#242242]/80">{section.body}</p>
-              </div>
-            ))}
-          </div>
+          {/* Body HTML */}
+          {article.body_html && (
+            <div
+              className="prose prose-lg max-w-none [&_h2]:text-xl [&_h2]:md:text-2xl [&_h2]:font-bold [&_h2]:font-serif [&_h2]:mb-4 [&_h2]:mt-10 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:font-serif [&_h3]:mb-3 [&_h3]:mt-8 [&_p]:text-[#242242]/80 [&_p]:leading-[1.8] [&_p]:mb-4"
+              style={{ fontSize: '18px', lineHeight: '1.8' }}
+              dangerouslySetInnerHTML={{ __html: article.body_html }}
+            />
+          )}
 
           {/* Share buttons */}
           <div className="mt-14 pt-8 border-t border-[#242242]/10">
             <p className="text-sm font-medium mb-4">Condividi questo articolo</p>
             <div className="flex items-center gap-3">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 text-xs font-medium tracking-wide bg-[#25D366] text-white hover:opacity-90 transition-opacity"
-              >
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"
+                className="px-4 py-2 text-xs font-medium tracking-wide bg-[#25D366] text-white hover:opacity-90 transition-opacity">
                 WhatsApp
               </a>
-              <a
-                href={facebookUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 text-xs font-medium tracking-wide bg-[#1877F2] text-white hover:opacity-90 transition-opacity"
-              >
+              <a href={facebookUrl} target="_blank" rel="noopener noreferrer"
+                className="px-4 py-2 text-xs font-medium tracking-wide bg-[#1877F2] text-white hover:opacity-90 transition-opacity">
                 Facebook
               </a>
-              <button
-                onClick={copyLink}
-                className="px-4 py-2 text-xs font-medium tracking-wide border border-[#242242]/20 text-[#242242] hover:bg-[#242242]/5 transition-colors inline-flex items-center gap-2"
-              >
+              <button onClick={copyLink}
+                className="px-4 py-2 text-xs font-medium tracking-wide border border-[#242242]/20 text-[#242242] hover:bg-[#242242]/5 transition-colors inline-flex items-center gap-2">
                 {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
                 {copied ? 'Copiato!' : 'Copia link'}
               </button>
@@ -136,40 +176,40 @@ const BlogArticle = () => {
           <div className="mt-14 bg-[#242242] text-[#f5f0e8] p-8 md:p-12 text-center">
             <h3 className="text-2xl font-bold font-serif mb-3">Scopri gli spot su Flywaters</h3>
             <p className="text-sm text-[#f5f0e8]/70 mb-6">Esplora la mappa, condividi le tue catture e connettiti con la community.</p>
-            <Link
-              to="/auth"
-              className="inline-block px-8 py-3 text-sm tracking-widest uppercase font-medium border border-[#f5f0e8]/60 text-[#f5f0e8] hover:bg-[#f5f0e8]/10 transition-colors"
-            >
+            <Link to="/auth"
+              className="inline-block px-8 py-3 text-sm tracking-widest uppercase font-medium border border-[#f5f0e8]/60 text-[#f5f0e8] hover:bg-[#f5f0e8]/10 transition-colors">
               Registrati gratis
             </Link>
           </div>
 
           {/* Related articles */}
-          <div className="mt-16">
-            <h3 className="text-xl font-bold font-serif mb-8">Articoli correlati</h3>
-            <div className="grid md:grid-cols-2 gap-8">
-              {related.map((r) => (
-                <Link key={r.slug} to={`/blog/${r.slug}`} className="group">
-                  <div className="overflow-hidden mb-3">
-                    <img
-                      src={r.coverImage}
-                      alt={r.title}
-                      className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
-                      style={{ filter: 'saturate(0.8) contrast(1.05)' }}
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-[#8c8c7a] mb-1">
-                    <Clock className="w-3 h-3" />
-                    <span>{r.readingTime}</span>
-                  </div>
-                  <h4 className="text-base font-semibold font-serif group-hover:text-[#4a7c59] transition-colors leading-snug">
-                    {r.title}
-                  </h4>
-                </Link>
-              ))}
+          {related.length > 0 && (
+            <div className="mt-16">
+              <h3 className="text-xl font-bold font-serif mb-8">Articoli correlati</h3>
+              <div className="grid md:grid-cols-2 gap-8">
+                {related.map((r) => (
+                  <Link key={r.slug} to={`/blog/${r.slug}`} className="group">
+                    <div className="overflow-hidden mb-3">
+                      <img
+                        src={r.cover_image_url || 'https://images.unsplash.com/photo-1494564605686-2e931f77a8e2?w=800'}
+                        alt={r.cover_image_alt || r.title}
+                        className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
+                        style={{ filter: 'saturate(0.8) contrast(1.05)' }}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-[#8c8c7a] mb-1">
+                      <Clock className="w-3 h-3" />
+                      <span>{r.reading_time_minutes || 5} min</span>
+                    </div>
+                    <h4 className="text-base font-semibold font-serif group-hover:text-[#4a7c59] transition-colors leading-snug">
+                      {r.title}
+                    </h4>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </article>
 
