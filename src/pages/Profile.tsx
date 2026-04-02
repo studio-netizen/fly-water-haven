@@ -16,6 +16,12 @@ const Profile = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const userId = paramUserId || user?.id;
+
+  useEffect(() => {
+    if (!paramUserId && !user) {
+      navigate('/auth', { replace: true });
+    }
+  }, [paramUserId, user, navigate]);
   const [profile, setProfile] = useState<any>(null);
   const [posts, setPosts] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
