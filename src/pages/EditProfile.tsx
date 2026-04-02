@@ -54,15 +54,25 @@ const EditProfile = () => {
     fetchProfile();
   }, [user]);
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error(t('profile.imageTooLarge'));
-      return;
+    const validationError = validateImageFile(file);
+    if (validationError) { toast.error(validationError); return; }
+    setCompressingAvatar(true);
+    setAvatarCompressionInfo(null);
+    try {
+      const result = await compressImage(file, 'avatar');
+      setAvatarFile(result.file);
+      setAvatarPreview(URL.createObjectURL(result.file));
+      if (result.wasCompressed) {
+        setAvatarCompressionInfo(`${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
+      } else {
+        toast.warning('Compressione non riuscita, verrà caricato il file originale');
+      }
+    } finally {
+      setCompressingAvatar(false);
     }
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
   };
 
   const toggleFishingType = (type: string) => {
