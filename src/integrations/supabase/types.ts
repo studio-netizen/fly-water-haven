@@ -35,6 +35,69 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_posts: {
+        Row: {
+          author: string | null
+          body_html: string | null
+          category: string | null
+          cover_image_alt: string | null
+          cover_image_url: string | null
+          created_at: string | null
+          excerpt: string | null
+          focus_keyword: string | null
+          id: string
+          meta_description: string | null
+          published_at: string | null
+          reading_time_minutes: number | null
+          seo_title: string | null
+          slug: string
+          status: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author?: string | null
+          body_html?: string | null
+          category?: string | null
+          cover_image_alt?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          excerpt?: string | null
+          focus_keyword?: string | null
+          id?: string
+          meta_description?: string | null
+          published_at?: string | null
+          reading_time_minutes?: number | null
+          seo_title?: string | null
+          slug: string
+          status?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author?: string | null
+          body_html?: string | null
+          category?: string | null
+          cover_image_alt?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          excerpt?: string | null
+          focus_keyword?: string | null
+          id?: string
+          meta_description?: string | null
+          published_at?: string | null
+          reading_time_minutes?: number | null
+          seo_title?: string | null
+          slug?: string
+          status?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       comments: {
         Row: {
           content: string
