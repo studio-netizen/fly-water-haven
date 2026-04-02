@@ -89,8 +89,7 @@ const EditProfile = () => {
       let newAvatarUrl = avatarUrl;
 
       if (avatarFile) {
-        const ext = avatarFile.name.split('.').pop();
-        const filePath = `${user.id}/avatar.${ext}`;
+        const filePath = `${user.id}/avatar.webp`;
         const { error: uploadError } = await supabase.storage
           .from('avatars')
           .upload(filePath, avatarFile, { upsert: true });
