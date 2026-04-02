@@ -152,7 +152,12 @@ const SpotDetail = () => {
       .select('*, profiles:user_id(username, display_name, avatar_url)')
       .eq('spot_id', spotId!)
       .order('created_at', { ascending: false });
-    if (data) setReviews(data as unknown as Review[]);
+    if (data) {
+      setReviews(data as unknown as Review[]);
+      if (user) {
+        setHasReviewed(data.some((r: any) => r.user_id === user.id));
+      }
+    }
   };
 
   const handleSubmitReview = async () => {
