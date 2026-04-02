@@ -113,6 +113,11 @@ const Publish = () => {
         >
           {imagePreview ? (
             <img src={imagePreview} alt="Anteprima" className="w-full h-full object-cover" />
+          ) : compressing ? (
+            <div className="text-center">
+              <Loader2 className="w-12 h-12 text-muted-foreground mx-auto mb-3 animate-spin" />
+              <p className="text-sm text-muted-foreground font-medium">Ottimizzazione foto in corso...</p>
+            </div>
           ) : (
             <div className="text-center">
               <ImagePlus className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
@@ -120,7 +125,10 @@ const Publish = () => {
             </div>
           )}
         </div>
-        <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+        <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" onChange={handleFileChange} className="hidden" />
+        {compressionInfo && (
+          <p className="text-xs text-muted-foreground text-center -mt-3">📦 {compressionInfo}</p>
+        )}
 
         <div>
           <Label className="text-sm font-medium">Posizione</Label>

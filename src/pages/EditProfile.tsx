@@ -171,16 +171,26 @@ const EditProfile = () => {
               <Camera className="w-4 h-4" />
             </button>
           </div>
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="text-sm text-primary font-medium"
-          >
-            {t('profile.changePhoto')}
-          </button>
+          {compressingAvatar ? (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Ottimizzazione foto in corso...
+            </div>
+          ) : (
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="text-sm text-primary font-medium"
+            >
+              {t('profile.changePhoto')}
+            </button>
+          )}
+          {avatarCompressionInfo && (
+            <p className="text-xs text-muted-foreground">📦 {avatarCompressionInfo}</p>
+          )}
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp,image/heic"
             className="hidden"
             onChange={handleAvatarChange}
           />

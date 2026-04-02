@@ -124,7 +124,10 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
             )
             )}
           </div>
-          <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+          <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" onChange={handleFileChange} className="hidden" />
+          {compressionInfo && (
+            <p className="text-xs text-muted-foreground text-center">📦 {compressionInfo}</p>
+          )}
 
           <div className="space-y-2">
             <Label>Didascalia</Label>
