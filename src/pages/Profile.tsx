@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 
 const Profile = () => {
   const { userId: paramUserId } = useParams<{ userId: string }>();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const userId = paramUserId || user?.id;
 
