@@ -56,8 +56,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
     setLoading(true);
 
     try {
-      const ext = imageFile.name.split('.').pop();
-      const path = `${user.id}/${Date.now()}.${ext}`;
+      const path = `${user.id}/${Date.now()}.webp`;
       const { error: uploadError } = await supabase.storage.from('posts').upload(path, imageFile);
       if (uploadError) throw uploadError;
 
