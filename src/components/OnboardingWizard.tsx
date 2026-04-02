@@ -5,8 +5,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Camera, MapPin, Image as ImageIcon, MessageCircle } from 'lucide-react';
+import { Camera, MapPin, Image as ImageIcon, MessageCircle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
 import L from 'leaflet';
 import { useEffect } from 'react';
 
