@@ -35,6 +35,8 @@ const EditProfile = () => {
   const [fishingTypes, setFishingTypes] = useState<string[]>([]);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState('');
+  const [compressingAvatar, setCompressingAvatar] = useState(false);
+  const [avatarCompressionInfo, setAvatarCompressionInfo] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
