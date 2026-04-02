@@ -72,6 +72,13 @@ const Auth = () => {
     if (result.error) toast.error(result.error.message);
   };
 
+  const handleAppleLogin = async () => {
+    const result = await lovable.auth.signInWithOAuth('apple', {
+      redirect_uri: window.location.origin,
+    });
+    if (result.error) toast.error(result.error.message);
+  };
+
   const inputClass =
     'pl-10 bg-white border border-[#242242]/10 rounded-xl focus-visible:ring-[#242242]/30 focus-visible:ring-2 h-12 text-base md:text-sm';
 
