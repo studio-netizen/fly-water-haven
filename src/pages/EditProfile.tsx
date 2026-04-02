@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Camera } from 'lucide-react';
+import { ArrowLeft, Camera, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
 
 const FISHING_TYPES = [
   { value: 'fly-fishing', label: '🎣 Pesca a mosca' },
