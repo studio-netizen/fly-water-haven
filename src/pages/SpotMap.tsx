@@ -152,10 +152,23 @@ const SpotMap = () => {
     });
   }, [spots, filterType]);
 
-  const handlePhotosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotosChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setSpotPhotos(prev => [...prev, ...files]);
-    setSpotPhotosPreviews(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
+    for (const file of files) {
+      const validationError = validateImageFile(file);
+      if (validationError) { toast.error(`${file.name}: ${validationError}`); continue; }
+      try {
+        const result = await compressImage(file, 'default');
+        setSpotPhotos(prev => [...prev, result.file]);
+        setSpotPhotosPreviews(prev => [...prev, URL.createObjectURL(result.file)]);
+        if (result.wasCompressed) {
+          toast.success(`${file.name}: ${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
+        }
+      } catch {
+        setSpotPhotos(prev => [...prev, file]);
+        setSpotPhotosPreviews(prev => [...prev, URL.createObjectURL(file)]);
+      }
+    }
   };
 
   const removePhoto = (idx: number) => {
