@@ -68,8 +68,8 @@ const Messages = () => {
     fetchMessages(selectedUser.user_id);
     markAsRead(selectedUser.user_id);
     const channel = supabase
-      .channel('chat-realtime')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload: any) => {
+      .channel(`chat-realtime-${selectedUser.user_id}`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `sender_id=eq.${selectedUser.user_id}` }, (payload: any) => {
         const msg = payload.new as Message;
         const isRelevant = (msg.sender_id === selectedUser.user_id && msg.receiver_id === user.id) || (msg.sender_id === user.id && msg.receiver_id === selectedUser.user_id);
         if (isRelevant) {
