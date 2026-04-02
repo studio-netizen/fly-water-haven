@@ -147,16 +147,42 @@ const SpotDetail = () => {
   };
 
   const fetchReviews = async () => {
-    const { data } = await supabase
+    const { data: reviewsData, error } = await supabase
       .from('reviews')
-      .select('*, profiles:user_id(username, display_name, avatar_url)')
+      .select('*')
       .eq('spot_id', spotId!)
       .order('created_at', { ascending: false });
-    if (data) {
-      setReviews(data as unknown as Review[]);
-      if (user) {
-        setHasReviewed(data.some((r: any) => r.user_id === user.id));
+    
+    if (error || !reviewsData) {
+      console.error('Error fetching reviews:', error);
+      return;
+    }
+
+    // Fetch profiles for review authors
+    const userIds = [...new Set(reviewsData.map((r) => r.user_id))];
+    let profilesMap: Record<string, { username: string | null; display_name: string | null; avatar_url: string | null }> = {};
+    
+    if (userIds.length > 0) {
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('user_id, username, display_name, avatar_url')
+        .in('user_id', userIds);
+      
+      if (profilesData) {
+        profilesData.forEach((p) => {
+          profilesMap[p.user_id] = { username: p.username, display_name: p.display_name, avatar_url: p.avatar_url };
+        });
       }
+    }
+
+    const enrichedReviews: Review[] = reviewsData.map((r) => ({
+      ...r,
+      profiles: profilesMap[r.user_id] || null,
+    }));
+
+    setReviews(enrichedReviews);
+    if (user) {
+      setHasReviewed(reviewsData.some((r) => r.user_id === user.id));
     }
   };
 
