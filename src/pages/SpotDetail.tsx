@@ -192,7 +192,7 @@ const SpotDetail = () => {
   };
 
   const formatDate = (d: string) =>
-    new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
+    new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
 
   if (loading) {
     return (
