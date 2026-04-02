@@ -26,15 +26,30 @@ const Publish = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [compressing, setCompressing] = useState(false);
+  const [compressionInfo, setCompressionInfo] = useState<string | null>(null);
   const [isPublic, setIsPublic] = useState(true);
   const [location, setLocation] = useState<LocationResult | null>(null);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+    if (!file) return;
+    const error = validateImageFile(file);
+    if (error) { toast.error(error); return; }
+    setCompressing(true);
+    setCompressionInfo(null);
+    try {
+      const result = await compressImage(file, 'default');
+      setImageFile(result.file);
+      setImagePreview(URL.createObjectURL(result.file));
+      if (result.wasCompressed) {
+        setCompressionInfo(`${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
+      } else {
+        toast.warning('Compressione non riuscita, verrà caricato il file originale');
+      }
+    } finally {
+      setCompressing(false);
     }
   };
 
