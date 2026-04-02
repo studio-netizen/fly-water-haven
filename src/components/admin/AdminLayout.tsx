@@ -20,6 +20,7 @@ const navItems = [
   { to: '/admin/messages', icon: MessageSquare, label: 'Messaggi' },
   { to: '/admin/spots', icon: MapPin, label: 'Spot' },
   { to: '/admin/posts', icon: Image, label: 'Post' },
+  { to: '/admin/blog', icon: PenLine, label: 'Blog' },
   { to: '/admin/settings', icon: Settings, label: 'Impostazioni' },
 ];
 
