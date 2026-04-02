@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, ImagePlus } from 'lucide-react';
+import { Plus, ImagePlus, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
+import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
 import TagChipSelector from '@/components/TagChipSelector';
 import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR } from '@/lib/fishing-constants';
 
@@ -26,13 +27,28 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [compressing, setCompressing] = useState(false);
+  const [compressionInfo, setCompressionInfo] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+    if (!file) return;
+    const error = validateImageFile(file);
+    if (error) { toast.error(error); return; }
+    setCompressing(true);
+    setCompressionInfo(null);
+    try {
+      const result = await compressImage(file, 'default');
+      setImageFile(result.file);
+      setImagePreview(URL.createObjectURL(result.file));
+      if (result.wasCompressed) {
+        setCompressionInfo(`${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
+      } else {
+        toast.warning('Compressione non riuscita, verrà caricato il file originale');
+      }
+    } finally {
+      setCompressing(false);
     }
   };
 
@@ -41,8 +57,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
     setLoading(true);
 
     try {
-      const ext = imageFile.name.split('.').pop();
-      const path = `${user.id}/${Date.now()}.${ext}`;
+      const path = `${user.id}/${Date.now()}.webp`;
       const { error: uploadError } = await supabase.storage.from('posts').upload(path, imageFile);
       if (uploadError) throw uploadError;
 
@@ -97,13 +112,23 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
             {imagePreview ? (
               <img src={imagePreview} alt="Anteprima" className="w-full h-full object-cover" />
             ) : (
+          compressing ? (
+              <div className="text-center">
+                <Loader2 className="w-10 h-10 text-muted-foreground mx-auto mb-2 animate-spin" />
+                <p className="text-sm text-muted-foreground">Ottimizzazione foto in corso...</p>
+              </div>
+            ) : (
               <div className="text-center">
                 <ImagePlus className="w-10 h-10 text-muted-foreground mx-auto mb-2" />
                 <p className="text-sm text-muted-foreground">Tocca per aggiungere una foto</p>
               </div>
+            )
             )}
           </div>
-          <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+          <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" onChange={handleFileChange} className="hidden" />
+          {compressionInfo && (
+            <p className="text-xs text-muted-foreground text-center">📦 {compressionInfo}</p>
+          )}
 
           <div className="space-y-2">
             <Label>Didascalia</Label>

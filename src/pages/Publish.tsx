@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { ImagePlus, ArrowLeft, MapPin, X } from 'lucide-react';
+import { ImagePlus, ArrowLeft, MapPin, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import AppLayout from '@/components/AppLayout';
+import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import TagChipSelector from '@/components/TagChipSelector';
 import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR } from '@/lib/fishing-constants';
@@ -25,15 +26,30 @@ const Publish = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [compressing, setCompressing] = useState(false);
+  const [compressionInfo, setCompressionInfo] = useState<string | null>(null);
   const [isPublic, setIsPublic] = useState(true);
   const [location, setLocation] = useState<LocationResult | null>(null);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+    if (!file) return;
+    const error = validateImageFile(file);
+    if (error) { toast.error(error); return; }
+    setCompressing(true);
+    setCompressionInfo(null);
+    try {
+      const result = await compressImage(file, 'default');
+      setImageFile(result.file);
+      setImagePreview(URL.createObjectURL(result.file));
+      if (result.wasCompressed) {
+        setCompressionInfo(`${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
+      } else {
+        toast.warning('Compressione non riuscita, verrà caricato il file originale');
+      }
+    } finally {
+      setCompressing(false);
     }
   };
 
@@ -41,8 +57,7 @@ const Publish = () => {
     if (!user || !imageFile) return;
     setLoading(true);
     try {
-      const ext = imageFile.name.split('.').pop();
-      const path = `${user.id}/${Date.now()}.${ext}`;
+      const path = `${user.id}/${Date.now()}.webp`;
       const { error: uploadError } = await supabase.storage.from('posts').upload(path, imageFile);
       if (uploadError) throw uploadError;
       const { data: { publicUrl } } = supabase.storage.from('posts').getPublicUrl(path);
@@ -98,6 +113,11 @@ const Publish = () => {
         >
           {imagePreview ? (
             <img src={imagePreview} alt="Anteprima" className="w-full h-full object-cover" />
+          ) : compressing ? (
+            <div className="text-center">
+              <Loader2 className="w-12 h-12 text-muted-foreground mx-auto mb-3 animate-spin" />
+              <p className="text-sm text-muted-foreground font-medium">Ottimizzazione foto in corso...</p>
+            </div>
           ) : (
             <div className="text-center">
               <ImagePlus className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
@@ -105,7 +125,10 @@ const Publish = () => {
             </div>
           )}
         </div>
-        <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+        <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" onChange={handleFileChange} className="hidden" />
+        {compressionInfo && (
+          <p className="text-xs text-muted-foreground text-center -mt-3">📦 {compressionInfo}</p>
+        )}
 
         <div>
           <Label className="text-sm font-medium">Posizione</Label>

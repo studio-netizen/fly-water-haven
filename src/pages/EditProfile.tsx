@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Camera } from 'lucide-react';
+import { ArrowLeft, Camera, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
 
 const FISHING_TYPES = [
   { value: 'fly-fishing', label: '🎣 Pesca a mosca' },
@@ -34,6 +35,8 @@ const EditProfile = () => {
   const [fishingTypes, setFishingTypes] = useState<string[]>([]);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState('');
+  const [compressingAvatar, setCompressingAvatar] = useState(false);
+  const [avatarCompressionInfo, setAvatarCompressionInfo] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -51,15 +54,25 @@ const EditProfile = () => {
     fetchProfile();
   }, [user]);
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error(t('profile.imageTooLarge'));
-      return;
+    const validationError = validateImageFile(file);
+    if (validationError) { toast.error(validationError); return; }
+    setCompressingAvatar(true);
+    setAvatarCompressionInfo(null);
+    try {
+      const result = await compressImage(file, 'avatar');
+      setAvatarFile(result.file);
+      setAvatarPreview(URL.createObjectURL(result.file));
+      if (result.wasCompressed) {
+        setAvatarCompressionInfo(`${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
+      } else {
+        toast.warning('Compressione non riuscita, verrà caricato il file originale');
+      }
+    } finally {
+      setCompressingAvatar(false);
     }
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
   };
 
   const toggleFishingType = (type: string) => {
@@ -76,8 +89,7 @@ const EditProfile = () => {
       let newAvatarUrl = avatarUrl;
 
       if (avatarFile) {
-        const ext = avatarFile.name.split('.').pop();
-        const filePath = `${user.id}/avatar.${ext}`;
+        const filePath = `${user.id}/avatar.webp`;
         const { error: uploadError } = await supabase.storage
           .from('avatars')
           .upload(filePath, avatarFile, { upsert: true });
@@ -159,16 +171,26 @@ const EditProfile = () => {
               <Camera className="w-4 h-4" />
             </button>
           </div>
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="text-sm text-primary font-medium"
-          >
-            {t('profile.changePhoto')}
-          </button>
+          {compressingAvatar ? (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Ottimizzazione foto in corso...
+            </div>
+          ) : (
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="text-sm text-primary font-medium"
+            >
+              {t('profile.changePhoto')}
+            </button>
+          )}
+          {avatarCompressionInfo && (
+            <p className="text-xs text-muted-foreground">📦 {avatarCompressionInfo}</p>
+          )}
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp,image/heic"
             className="hidden"
             onChange={handleAvatarChange}
           />

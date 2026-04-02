@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Star, Plus, Filter, X, ImagePlus } from 'lucide-react';
+import { MapPin, Star, Plus, Filter, X, ImagePlus, Loader2 } from 'lucide-react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import BottomNav from '@/components/BottomNav';
@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import TagChipSelector from '@/components/TagChipSelector';
 import { FISH_SPECIES } from '@/lib/fishing-constants';
+import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -151,10 +152,23 @@ const SpotMap = () => {
     });
   }, [spots, filterType]);
 
-  const handlePhotosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotosChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setSpotPhotos(prev => [...prev, ...files]);
-    setSpotPhotosPreviews(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
+    for (const file of files) {
+      const validationError = validateImageFile(file);
+      if (validationError) { toast.error(`${file.name}: ${validationError}`); continue; }
+      try {
+        const result = await compressImage(file, 'default');
+        setSpotPhotos(prev => [...prev, result.file]);
+        setSpotPhotosPreviews(prev => [...prev, URL.createObjectURL(result.file)]);
+        if (result.wasCompressed) {
+          toast.success(`${file.name}: ${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
+        }
+      } catch {
+        setSpotPhotos(prev => [...prev, file]);
+        setSpotPhotosPreviews(prev => [...prev, URL.createObjectURL(file)]);
+      }
+    }
   };
 
   const removePhoto = (idx: number) => {
@@ -168,8 +182,7 @@ const SpotMap = () => {
     try {
       const photoUrls: string[] = [];
       for (const file of spotPhotos) {
-        const ext = file.name.split('.').pop();
-        const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
         const { error: uploadError } = await supabase.storage.from('spots').upload(path, file);
         if (uploadError) throw uploadError;
         const { data: { publicUrl } } = supabase.storage.from('spots').getPublicUrl(path);
