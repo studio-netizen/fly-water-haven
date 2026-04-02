@@ -99,6 +99,7 @@ const SpotDetail = () => {
   const [reviewText, setReviewText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [hasReviewed, setHasReviewed] = useState(false);
 
   const shareUrl = spot ? `https://flywaters.app/spot/${spotId}` : '';
   const shareText = spot ? `Check out this fly fishing spot: ${spot.name} on Flywaters` : '';
