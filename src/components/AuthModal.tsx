@@ -212,9 +212,9 @@ const AuthModal = ({ open, onOpenChange, defaultMode = 'login' }: AuthModalProps
                   <input type="checkbox" checked={privacyAccepted} onChange={(e) => setPrivacyAccepted(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-[#242242]/20 text-[#242242] focus:ring-[#242242]/30 accent-[#242242]" />
                   <span className="text-xs text-[#8c8c7a] leading-relaxed">
                     Ho letto e accetto i{' '}
-                    <a href="/terms" className="text-[#242242] underline hover:no-underline">Termini di utilizzo</a>
+                    <a href="https://www.iubenda.com/privacy-policy/53958448" target="_blank" rel="noopener noreferrer" className="text-[#242242] underline hover:no-underline">Privacy Policy</a>
                     {' '}e la{' '}
-                    <a href="/privacy" className="text-[#242242] underline hover:no-underline">Privacy Policy</a>
+                    <a href="https://www.iubenda.com/privacy-policy/53958448/cookie-policy" target="_blank" rel="noopener noreferrer" className="text-[#242242] underline hover:no-underline">Cookie Policy</a>
                   </span>
                 </label>
               </>

@@ -99,7 +99,9 @@ Vuoi accedere a centinaia di spot con coordinate GPS, foto e recensioni? <a href
 Lancia. Osserva. Rilascia. Rispetta.
 </p>
 <p style="margin:0 0 12px;font-size:12px;">
-<a href="https://flywaters.app/privacy" style="color:#aaaaaa;text-decoration:underline;">Privacy Policy</a>
+<a href="https://www.iubenda.com/privacy-policy/53958448" style="color:#aaaaaa;text-decoration:underline;">Privacy Policy</a>
+&nbsp;|&nbsp;
+<a href="https://www.iubenda.com/privacy-policy/53958448/cookie-policy" style="color:#aaaaaa;text-decoration:underline;">Cookie Policy</a>
 &nbsp;|&nbsp;
 <a href="https://flywaters.app/contatti" style="color:#aaaaaa;text-decoration:underline;">Contatti</a>
 </p>

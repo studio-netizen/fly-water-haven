@@ -99,6 +99,7 @@ const SpotDetail = () => {
   const [reviewText, setReviewText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [hasReviewed, setHasReviewed] = useState(false);
 
   const shareUrl = spot ? `https://flywaters.app/spot/${spotId}` : '';
   const shareText = spot ? `Check out this fly fishing spot: ${spot.name} on Flywaters` : '';
@@ -151,7 +152,12 @@ const SpotDetail = () => {
       .select('*, profiles:user_id(username, display_name, avatar_url)')
       .eq('spot_id', spotId!)
       .order('created_at', { ascending: false });
-    if (data) setReviews(data as unknown as Review[]);
+    if (data) {
+      setReviews(data as unknown as Review[]);
+      if (user) {
+        setHasReviewed(data.some((r: any) => r.user_id === user.id));
+      }
+    }
   };
 
   const handleSubmitReview = async () => {
@@ -161,18 +167,23 @@ const SpotDetail = () => {
     }
     setSubmitting(true);
     try {
-      const { error } = await supabase.from('reviews').insert({
+      const { data: insertedData, error } = await supabase.from('reviews').insert({
         user_id: user.id,
         spot_id: spotId,
         rating,
         content: reviewText || null,
-      });
+      }).select('*, profiles:user_id(username, display_name, avatar_url)').single();
       if (error) throw error;
-      toast.success('Recensione inviata');
+      
+      // Optimistic UI: add review to top of list immediately
+      if (insertedData) {
+        setReviews(prev => [insertedData as unknown as Review, ...prev]);
+      }
+      setHasReviewed(true);
+      toast.success('Recensione pubblicata!');
       setRating(0);
       setReviewText('');
-      fetchReviews();
-      fetchSpot();
+      fetchSpot(); // refresh avg rating
     } catch (err: any) {
       toast.error(err.message);
     } finally {
@@ -181,7 +192,7 @@ const SpotDetail = () => {
   };
 
   const formatDate = (d: string) =>
-    new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
+    new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
 
   if (loading) {
     return (
@@ -319,7 +330,7 @@ const SpotDetail = () => {
 
         <div className="mx-4 border-t border-[#242242]/10" />
 
-        {user && (
+        {user && !hasReviewed && (
           <div className="px-4 py-8">
             <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-4">Scrivi una recensione</p>
             <div className="space-y-4">
@@ -346,6 +357,12 @@ const SpotDetail = () => {
           </div>
         )}
 
+        {user && hasReviewed && (
+          <div className="px-4 py-8">
+            <p className="text-sm text-[#8c8c7a] italic">Hai già recensito questo spot.</p>
+          </div>
+        )}
+
         {!user && (
           <div className="px-4 py-8 text-center">
             <p className="text-sm text-[#8c8c7a] mb-3">Accedi per lasciare una recensione</p>
@@ -368,30 +385,32 @@ const SpotDetail = () => {
           {reviews.length === 0 ? (
             <p className="text-sm text-[#8c8c7a]">Nessuna recensione ancora. Sii il primo a condividere la tua esperienza.</p>
           ) : (
-            <div className="space-y-8">
+            <div className="divide-y divide-[#242242]/10">
               {reviews.map((review) => (
-                <div key={review.id} className="space-y-2">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-8 w-8">
+                <div key={review.id} className="py-5 first:pt-0 last:pb-0">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Avatar className="h-10 w-10">
                       <AvatarImage src={review.profiles?.avatar_url || ''} alt={`Profilo di ${review.profiles?.username || review.profiles?.display_name || 'pescatore'} su Flywaters`} />
-                      <AvatarFallback className="bg-[#242242]/10 text-[#242242] text-xs">
+                      <AvatarFallback className="bg-[#242242]/10 text-[#242242] text-sm">
                         {(review.profiles?.display_name || 'U')[0].toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">
+                      <p className="text-sm font-bold truncate">
                         {review.profiles?.display_name || review.profiles?.username || 'Pescatore'}
                       </p>
                       <p className="text-xs text-[#8c8c7a]">{formatDate(review.created_at)}</p>
                     </div>
-                    <StarRating value={review.rating} readonly size="sm" />
                   </div>
-                  {review.content && (
-                    <p className="text-sm leading-relaxed text-[#8c8c7a] pl-11">{review.content}</p>
-                  )}
-                  {review.photo_url && (
-                    <img src={review.photo_url} alt="Foto della recensione" className="ml-11 w-48 aspect-[4/3] object-cover" loading="lazy" />
-                  )}
+                  <div className="pl-[52px]">
+                    <StarRating value={review.rating} readonly size="sm" />
+                    {review.content && (
+                      <p className="text-sm leading-relaxed text-[#8c8c7a] mt-2">{review.content}</p>
+                    )}
+                    {review.photo_url && (
+                      <img src={review.photo_url} alt="Foto della recensione" className="mt-2 w-48 aspect-[4/3] object-cover" loading="lazy" />
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
