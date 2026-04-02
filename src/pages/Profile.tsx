@@ -6,14 +6,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Grid3X3, MapPin, Pencil, Star } from 'lucide-react';
+import { Grid3X3, MapPin, Pencil, Star, ArrowLeft, LogOut } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import FollowersModal from '@/components/FollowersModal';
 import { useTranslation } from 'react-i18next';
 
 const Profile = () => {
   const { userId: paramUserId } = useParams<{ userId: string }>();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const userId = paramUserId || user?.id;
 
@@ -127,12 +127,22 @@ const Profile = () => {
       <SEOHead title={`${profile?.display_name || profile?.username || t('nav.profile')} | Flywaters`} description={`${profile?.display_name || profile?.username || ''}`} />
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
+          <button onClick={() => navigate(-1)} className="text-foreground p-1">
+            <ArrowLeft className="w-5 h-5" />
+          </button>
           <h1 className="text-base font-semibold text-foreground">{profile.username || 'pescatore'}</h1>
-          {isOwnProfile && (
-            <Button variant="ghost" size="icon" onClick={() => navigate('/profile/edit')}>
-              <Pencil className="w-5 h-5" />
-            </Button>
-          )}
+          <div className="flex items-center gap-1">
+            {isOwnProfile && (
+              <Button variant="ghost" size="icon" onClick={() => navigate('/profile/edit')}>
+                <Pencil className="w-5 h-5" />
+              </Button>
+            )}
+            {isOwnProfile && (
+              <Button variant="ghost" size="icon" onClick={signOut}>
+                <LogOut className="w-5 h-5" />
+              </Button>
+            )}
+          </div>
         </div>
       </header>
 
