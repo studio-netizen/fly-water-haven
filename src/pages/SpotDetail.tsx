@@ -330,7 +330,7 @@ const SpotDetail = () => {
 
         <div className="mx-4 border-t border-[#242242]/10" />
 
-        {user && (
+        {user && !hasReviewed && (
           <div className="px-4 py-8">
             <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-4">Scrivi una recensione</p>
             <div className="space-y-4">
@@ -354,6 +354,12 @@ const SpotDetail = () => {
                 {submitting ? 'Invio in corso...' : 'Invia recensione'}
               </button>
             </div>
+          </div>
+        )}
+
+        {user && hasReviewed && (
+          <div className="px-4 py-8">
+            <p className="text-sm text-[#8c8c7a] italic">Hai già recensito questo spot.</p>
           </div>
         )}
 
