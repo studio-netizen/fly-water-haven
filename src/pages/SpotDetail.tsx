@@ -385,30 +385,32 @@ const SpotDetail = () => {
           {reviews.length === 0 ? (
             <p className="text-sm text-[#8c8c7a]">Nessuna recensione ancora. Sii il primo a condividere la tua esperienza.</p>
           ) : (
-            <div className="space-y-8">
+            <div className="divide-y divide-[#242242]/10">
               {reviews.map((review) => (
-                <div key={review.id} className="space-y-2">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-8 w-8">
+                <div key={review.id} className="py-5 first:pt-0 last:pb-0">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Avatar className="h-10 w-10">
                       <AvatarImage src={review.profiles?.avatar_url || ''} alt={`Profilo di ${review.profiles?.username || review.profiles?.display_name || 'pescatore'} su Flywaters`} />
-                      <AvatarFallback className="bg-[#242242]/10 text-[#242242] text-xs">
+                      <AvatarFallback className="bg-[#242242]/10 text-[#242242] text-sm">
                         {(review.profiles?.display_name || 'U')[0].toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">
+                      <p className="text-sm font-bold truncate">
                         {review.profiles?.display_name || review.profiles?.username || 'Pescatore'}
                       </p>
                       <p className="text-xs text-[#8c8c7a]">{formatDate(review.created_at)}</p>
                     </div>
-                    <StarRating value={review.rating} readonly size="sm" />
                   </div>
-                  {review.content && (
-                    <p className="text-sm leading-relaxed text-[#8c8c7a] pl-11">{review.content}</p>
-                  )}
-                  {review.photo_url && (
-                    <img src={review.photo_url} alt="Foto della recensione" className="ml-11 w-48 aspect-[4/3] object-cover" loading="lazy" />
-                  )}
+                  <div className="pl-[52px]">
+                    <StarRating value={review.rating} readonly size="sm" />
+                    {review.content && (
+                      <p className="text-sm leading-relaxed text-[#8c8c7a] mt-2">{review.content}</p>
+                    )}
+                    {review.photo_url && (
+                      <img src={review.photo_url} alt="Foto della recensione" className="mt-2 w-48 aspect-[4/3] object-cover" loading="lazy" />
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
