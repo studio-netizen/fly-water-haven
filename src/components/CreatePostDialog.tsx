@@ -111,10 +111,17 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
             {imagePreview ? (
               <img src={imagePreview} alt="Anteprima" className="w-full h-full object-cover" />
             ) : (
+          compressing ? (
+              <div className="text-center">
+                <Loader2 className="w-10 h-10 text-muted-foreground mx-auto mb-2 animate-spin" />
+                <p className="text-sm text-muted-foreground">Ottimizzazione foto in corso...</p>
+              </div>
+            ) : (
               <div className="text-center">
                 <ImagePlus className="w-10 h-10 text-muted-foreground mx-auto mb-2" />
                 <p className="text-sm text-muted-foreground">Tocca per aggiungere una foto</p>
               </div>
+            )
             )}
           </div>
           <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
