@@ -48,15 +48,23 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
     }
   }, [step]);
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('Immagine troppo grande (max 5MB)');
-      return;
+    const validationError = validateImageFile(file);
+    if (validationError) { toast.error(validationError); return; }
+    try {
+      const result = await compressImage(file, 'avatar');
+      setAvatarFile(result.file);
+      setAvatarPreview(URL.createObjectURL(result.file));
+      if (result.wasCompressed) {
+        toast.success(`Foto ottimizzata: ${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
+      }
+    } catch {
+      toast.warning('Compressione non riuscita');
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
     }
-    setAvatarFile(file);
-    setAvatarPreview(URL.createObjectURL(file));
   };
 
   const toggleTag = (tag: string) => {
