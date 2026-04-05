@@ -1,6 +1,5 @@
 import imageCompression from 'browser-image-compression';
 
-const MAX_FILE_SIZE_MB = 5;
 const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic'];
 
 export interface CompressionResult {
@@ -11,11 +10,11 @@ export interface CompressionResult {
 }
 
 const defaultOptions = {
-  maxSizeMB: 0.8,
-  maxWidthOrHeight: 1920,
+  maxSizeMB: 1.5,
+  maxWidthOrHeight: 2048,
   useWebWorker: true,
   fileType: 'image/webp' as const,
-  initialQuality: 0.8,
+  initialQuality: 0.82,
 };
 
 const avatarOptions = {
@@ -23,13 +22,10 @@ const avatarOptions = {
   maxWidthOrHeight: 400,
   useWebWorker: true,
   fileType: 'image/webp' as const,
-  initialQuality: 0.8,
+  initialQuality: 0.85,
 };
 
 export function validateImageFile(file: File): string | null {
-  if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-    return `Il file supera il limite di ${MAX_FILE_SIZE_MB}MB. Scegli un file più piccolo.`;
-  }
   const type = file.type || '';
   const ext = file.name.split('.').pop()?.toLowerCase() || '';
   const validExt = ['jpg', 'jpeg', 'png', 'webp', 'heic'];
@@ -61,7 +57,6 @@ export async function compressImage(
       wasCompressed: true,
     };
   } catch {
-    // Fallback: upload original
     return {
       file,
       originalSize,
