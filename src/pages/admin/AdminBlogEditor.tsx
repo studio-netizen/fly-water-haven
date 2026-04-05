@@ -283,10 +283,7 @@ export default function AdminBlogEditor() {
                 />
               </label>
             )}
-            {uploading && <p className="text-xs text-muted-foreground mt-1">{compressionInfo}</p>}
-            {compressionInfo && !uploading && (
-              <p className="text-xs text-green-600 mt-1">{compressionInfo}</p>
-            )}
+            {uploading && <p className="text-xs text-muted-foreground mt-1">Caricamento in corso...</p>}
           </div>
 
           {/* TipTap editor */}
