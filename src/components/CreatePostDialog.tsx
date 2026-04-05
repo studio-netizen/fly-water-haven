@@ -108,7 +108,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
           compressing ? (
               <div className="text-center">
                 <Loader2 className="w-10 h-10 text-muted-foreground mx-auto mb-2 animate-spin" />
-                <p className="text-sm text-muted-foreground">Ottimizzazione foto in corso...</p>
+                <p className="text-sm text-muted-foreground">Caricamento in corso...</p>
               </div>
             ) : (
               <div className="text-center">
