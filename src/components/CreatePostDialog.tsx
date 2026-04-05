@@ -77,8 +77,8 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
       setImageFile(null);
       setImagePreview(null);
       onPostCreated();
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch {
+      toast.error('Errore nel caricamento. Riprova.');
     } finally {
       setLoading(false);
     }
