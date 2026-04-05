@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { ArrowLeft, Camera, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
-import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
+import { validateImageFile, compressImage } from '@/lib/image-compression';
 
 const FISHING_TYPES = [
   { value: 'fly-fishing', label: '🎣 Pesca a mosca' },
@@ -36,7 +36,6 @@ const EditProfile = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState('');
   const [compressingAvatar, setCompressingAvatar] = useState(false);
-  const [avatarCompressionInfo, setAvatarCompressionInfo] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -60,16 +59,10 @@ const EditProfile = () => {
     const validationError = validateImageFile(file);
     if (validationError) { toast.error(validationError); return; }
     setCompressingAvatar(true);
-    setAvatarCompressionInfo(null);
     try {
       const result = await compressImage(file, 'avatar');
       setAvatarFile(result.file);
       setAvatarPreview(URL.createObjectURL(result.file));
-      if (result.wasCompressed) {
-        setAvatarCompressionInfo(`${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
-      } else {
-        toast.warning('Compressione non riuscita, verrà caricato il file originale');
-      }
     } finally {
       setCompressingAvatar(false);
     }
@@ -174,7 +167,7 @@ const EditProfile = () => {
           {compressingAvatar ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="w-4 h-4 animate-spin" />
-              Ottimizzazione foto in corso...
+              Caricamento in corso...
             </div>
           ) : (
             <button
@@ -183,9 +176,6 @@ const EditProfile = () => {
             >
               {t('profile.changePhoto')}
             </button>
-          )}
-          {avatarCompressionInfo && (
-            <p className="text-xs text-muted-foreground">📦 {avatarCompressionInfo}</p>
           )}
           <input
             ref={fileInputRef}

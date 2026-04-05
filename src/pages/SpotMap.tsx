@@ -17,7 +17,7 @@ import { toast } from 'sonner';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import TagChipSelector from '@/components/TagChipSelector';
 import { FISH_SPECIES } from '@/lib/fishing-constants';
-import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
+import { validateImageFile, compressImage } from '@/lib/image-compression';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -161,9 +161,6 @@ const SpotMap = () => {
         const result = await compressImage(file, 'default');
         setSpotPhotos(prev => [...prev, result.file]);
         setSpotPhotosPreviews(prev => [...prev, URL.createObjectURL(result.file)]);
-        if (result.wasCompressed) {
-          toast.success(`${file.name}: ${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
-        }
       } catch {
         setSpotPhotos(prev => [...prev, file]);
         setSpotPhotosPreviews(prev => [...prev, URL.createObjectURL(file)]);

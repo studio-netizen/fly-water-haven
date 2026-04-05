@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Plus, ImagePlus, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
-import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
+import { validateImageFile, compressImage } from '@/lib/image-compression';
 import TagChipSelector from '@/components/TagChipSelector';
 import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR } from '@/lib/fishing-constants';
 
@@ -28,7 +28,6 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [compressing, setCompressing] = useState(false);
-  const [compressionInfo, setCompressionInfo] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,16 +36,10 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
     const error = validateImageFile(file);
     if (error) { toast.error(error); return; }
     setCompressing(true);
-    setCompressionInfo(null);
     try {
       const result = await compressImage(file, 'default');
       setImageFile(result.file);
       setImagePreview(URL.createObjectURL(result.file));
-      if (result.wasCompressed) {
-        setCompressionInfo(`${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
-      } else {
-        toast.warning('Compressione non riuscita, verrà caricato il file originale');
-      }
     } finally {
       setCompressing(false);
     }
@@ -126,9 +119,6 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
             )}
           </div>
           <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" onChange={handleFileChange} className="hidden" />
-          {compressionInfo && (
-            <p className="text-xs text-muted-foreground text-center">📦 {compressionInfo}</p>
-          )}
 
           <div className="space-y-2">
             <Label>Didascalia</Label>

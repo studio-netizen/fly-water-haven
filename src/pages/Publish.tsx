@@ -9,7 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { ImagePlus, ArrowLeft, MapPin, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import AppLayout from '@/components/AppLayout';
-import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
+import { validateImageFile, compressImage } from '@/lib/image-compression';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import TagChipSelector from '@/components/TagChipSelector';
 import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR } from '@/lib/fishing-constants';
@@ -27,7 +27,6 @@ const Publish = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [compressing, setCompressing] = useState(false);
-  const [compressionInfo, setCompressionInfo] = useState<string | null>(null);
   const [isPublic, setIsPublic] = useState(true);
   const [location, setLocation] = useState<LocationResult | null>(null);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
@@ -38,16 +37,10 @@ const Publish = () => {
     const error = validateImageFile(file);
     if (error) { toast.error(error); return; }
     setCompressing(true);
-    setCompressionInfo(null);
     try {
       const result = await compressImage(file, 'default');
       setImageFile(result.file);
       setImagePreview(URL.createObjectURL(result.file));
-      if (result.wasCompressed) {
-        setCompressionInfo(`${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
-      } else {
-        toast.warning('Compressione non riuscita, verrà caricato il file originale');
-      }
     } finally {
       setCompressing(false);
     }
@@ -116,7 +109,7 @@ const Publish = () => {
           ) : compressing ? (
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-muted-foreground mx-auto mb-3 animate-spin" />
-              <p className="text-sm text-muted-foreground font-medium">Ottimizzazione foto in corso...</p>
+              <p className="text-sm text-muted-foreground font-medium">Caricamento in corso...</p>
             </div>
           ) : (
             <div className="text-center">
@@ -126,9 +119,6 @@ const Publish = () => {
           )}
         </div>
         <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" onChange={handleFileChange} className="hidden" />
-        {compressionInfo && (
-          <p className="text-xs text-muted-foreground text-center -mt-3">📦 {compressionInfo}</p>
-        )}
 
         <div>
           <Label className="text-sm font-medium">Posizione</Label>
