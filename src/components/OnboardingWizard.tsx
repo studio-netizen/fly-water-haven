@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Camera, MapPin, Image as ImageIcon, MessageCircle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
+import { validateImageFile, compressImage } from '@/lib/image-compression';
 import L from 'leaflet';
 import { useEffect } from 'react';
 
@@ -57,11 +57,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
       const result = await compressImage(file, 'avatar');
       setAvatarFile(result.file);
       setAvatarPreview(URL.createObjectURL(result.file));
-      if (result.wasCompressed) {
-        toast.success(`Foto ottimizzata: ${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`);
-      }
     } catch {
-      toast.warning('Compressione non riuscita');
       setAvatarFile(file);
       setAvatarPreview(URL.createObjectURL(file));
     }

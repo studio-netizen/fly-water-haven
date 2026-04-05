@@ -16,7 +16,7 @@ import Underline from '@tiptap/extension-underline';
 import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
 import { supabase } from '@/integrations/supabase/client';
-import { compressImage, validateImageFile, formatFileSize } from '@/lib/image-compression';
+import { compressImage, validateImageFile } from '@/lib/image-compression';
 
 const CATEGORIES = ['Spot', 'Tecniche', 'Specie', 'Attrezzatura', 'Community'];
 
@@ -120,7 +120,6 @@ export default function AdminBlogEditor() {
   const [saving, setSaving] = useState(false);
   const [tagsInput, setTagsInput] = useState('');
   const [uploading, setUploading] = useState(false);
-  const [compressionInfo, setCompressionInfo] = useState('');
   const [slugManual, setSlugManual] = useState(false);
 
   const editor = useEditor({
@@ -183,14 +182,9 @@ export default function AdminBlogEditor() {
     const err = validateImageFile(file);
     if (err) { toast.error(err); return; }
     setUploading(true);
-    setCompressionInfo('Ottimizzazione foto in corso…');
     try {
       const result = await compressImage(file, 'default');
-      setCompressionInfo(
-        `${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)}`
-      );
-      const ext = 'webp';
-      const path = `blog/${Date.now()}.${ext}`;
+      const path = `blog/${Date.now()}.webp`;
       const { error } = await supabase.storage.from('posts').upload(path, result.file, {
         contentType: 'image/webp',
         upsert: true,
@@ -200,10 +194,9 @@ export default function AdminBlogEditor() {
       updateField('cover_image_url', urlData.publicUrl);
       toast.success('Immagine caricata');
     } catch {
-      toast.error('Errore nel caricamento immagine');
+      toast.error('Errore nel caricamento. Riprova.');
     } finally {
       setUploading(false);
-      setTimeout(() => setCompressionInfo(''), 3000);
     }
   };
 
@@ -290,10 +283,7 @@ export default function AdminBlogEditor() {
                 />
               </label>
             )}
-            {uploading && <p className="text-xs text-muted-foreground mt-1">{compressionInfo}</p>}
-            {compressionInfo && !uploading && (
-              <p className="text-xs text-green-600 mt-1">{compressionInfo}</p>
-            )}
+            {uploading && <p className="text-xs text-muted-foreground mt-1">Caricamento in corso...</p>}
           </div>
 
           {/* TipTap editor */}
