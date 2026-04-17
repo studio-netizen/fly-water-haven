@@ -9,6 +9,7 @@ import PostComments from '@/components/PostComments';
 import logoImg from '@/assets/flywaters-logo-dark.png';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import GuideAvatar from '@/components/GuideAvatar';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
 import { toast } from 'sonner';
@@ -40,6 +41,7 @@ interface SuggestedUser {
   username: string | null;
   display_name: string | null;
   avatar_url: string | null;
+  is_guide?: boolean | null;
   post_count: number;
 }
 
@@ -89,7 +91,7 @@ const Feed = () => {
     setLoading(true);
     let query = supabase
       .from('posts')
-      .select('*, profiles!posts_user_id_profiles_fkey(username, display_name, avatar_url)')
+      .select('*, profiles!posts_user_id_profiles_fkey(username, display_name, avatar_url, is_guide)')
       .order('created_at', { ascending: false })
       .limit(50);
 
@@ -122,7 +124,7 @@ const Feed = () => {
     if (!user) return;
     const { data: profiles } = await supabase
       .from('profiles')
-      .select('user_id, username, display_name, avatar_url')
+      .select('user_id, username, display_name, avatar_url, is_guide')
       .neq('user_id', user.id)
       .limit(10);
 
@@ -282,12 +284,13 @@ const Feed = () => {
                 {/* Post header */}
                 <div className="flex items-center gap-3 px-4 py-3">
                   <button onClick={() => navigate(`/profile/${post.user_id}`)}>
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage src={post.profiles?.avatar_url || ''} alt={`Profilo di ${post.profiles?.username || 'pescatore'} su Flywaters`} />
-                      <AvatarFallback className="bg-muted text-muted-foreground text-sm">
-                        {(post.profiles?.display_name || 'U')[0].toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
+                    <GuideAvatar
+                      src={post.profiles?.avatar_url}
+                      alt={`Profilo di ${post.profiles?.username || 'pescatore'} su Flywaters`}
+                      fallback={post.profiles?.display_name || 'U'}
+                      isGuide={!!(post.profiles as any)?.is_guide}
+                      size="md"
+                    />
                   </button>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -392,12 +395,13 @@ const Feed = () => {
                       className="flex flex-col items-center gap-2 min-w-[100px] py-3 px-2 border border-border rounded-xl"
                     >
                       <button onClick={() => navigate(`/profile/${su.user_id}`)}>
-                        <Avatar className="h-14 w-14">
-                          <AvatarImage src={su.avatar_url || ''} alt={`Profilo di ${su.username || su.display_name || 'utente'} su Flywaters`} />
-                          <AvatarFallback className="bg-muted text-muted-foreground">
-                            {(su.display_name || 'U')[0].toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
+                        <GuideAvatar
+                          src={su.avatar_url}
+                          alt={`Profilo di ${su.username || su.display_name || 'utente'} su Flywaters`}
+                          fallback={su.display_name || 'U'}
+                          isGuide={!!su.is_guide}
+                          size="xl"
+                        />
                       </button>
                       <p className="text-xs font-semibold text-foreground text-center truncate w-full">
                         {su.username || su.display_name}
@@ -439,12 +443,13 @@ const SuggestedUserCard = ({
   return (
     <div className="flex items-center gap-3 text-left">
       <button onClick={onNavigate}>
-        <Avatar className="h-11 w-11">
-          <AvatarImage src={su.avatar_url || ''} alt={`Profilo di ${su.username || su.display_name || 'utente'} su Flywaters`} />
-          <AvatarFallback className="bg-muted text-muted-foreground">
-            {(su.display_name || 'U')[0].toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+        <GuideAvatar
+          src={su.avatar_url}
+          alt={`Profilo di ${su.username || su.display_name || 'utente'} su Flywaters`}
+          fallback={su.display_name || 'U'}
+          isGuide={!!su.is_guide}
+          size="lg"
+        />
       </button>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-foreground truncate">{su.display_name || su.username}</p>

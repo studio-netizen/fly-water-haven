@@ -397,7 +397,9 @@ export type Database = {
           created_at: string
           display_name: string | null
           fishing_types: string[] | null
+          guide_status: string
           id: string
+          is_guide: boolean
           onboarding_completed: boolean
           updated_at: string
           user_id: string
@@ -409,7 +411,9 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           fishing_types?: string[] | null
+          guide_status?: string
           id?: string
+          is_guide?: boolean
           onboarding_completed?: boolean
           updated_at?: string
           user_id: string
@@ -421,7 +425,9 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           fishing_types?: string[] | null
+          guide_status?: string
           id?: string
+          is_guide?: boolean
           onboarding_completed?: boolean
           updated_at?: string
           user_id?: string

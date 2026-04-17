@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Heart, MessageCircle, Share2, MapPin, ArrowLeft } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import GuideAvatar from '@/components/GuideAvatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import PostComments from '@/components/PostComments';
@@ -28,6 +29,7 @@ interface PostData {
     username: string | null;
     display_name: string | null;
     avatar_url: string | null;
+    is_guide?: boolean | null;
   } | null;
 }
 
@@ -56,7 +58,7 @@ const PostDetail = () => {
     setLoading(true);
     const { data, error } = await supabase
       .from('posts')
-      .select('*, profiles!posts_user_id_profiles_fkey(username, display_name, avatar_url)')
+      .select('*, profiles!posts_user_id_profiles_fkey(username, display_name, avatar_url, is_guide)')
       .eq('id', postId!)
       .maybeSingle();
 
@@ -200,12 +202,13 @@ const PostDetail = () => {
           {/* Post header */}
           <div className="flex items-center gap-3 px-4 py-3">
             <button onClick={() => navigate(`/profile/${post.user_id}`)}>
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={post.profiles?.avatar_url || ''} alt={`Profilo di ${post.profiles?.username || 'pescatore'} su Flywaters`} />
-                <AvatarFallback className="bg-muted text-muted-foreground text-sm">
-                  {(post.profiles?.display_name || 'U')[0].toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <GuideAvatar
+                src={post.profiles?.avatar_url}
+                alt={`Profilo di ${post.profiles?.username || 'pescatore'} su Flywaters`}
+                fallback={post.profiles?.display_name || 'U'}
+                isGuide={!!post.profiles?.is_guide}
+                size="lg"
+              />
             </button>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
