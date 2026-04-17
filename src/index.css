@@ -58,6 +58,10 @@
     --navy: 249 30% 20%;
     --navy-foreground: 40 33% 97%;
     --warm-white: 40 29% 94%;
+
+    /* Forest accent — #2D3A27 */
+    --forest-accent: 95 19% 19%;
+    --forest-accent-foreground: 40 33% 97%;
   }
 
   .dark {
@@ -110,6 +114,9 @@
     --navy: 249 30% 80%;
     --navy-foreground: 200 25% 8%;
     --warm-white: 200 15% 16%;
+
+    --forest-accent: 95 22% 55%;
+    --forest-accent-foreground: 200 25% 8%;
   }
 }
 
@@ -161,5 +168,41 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     font-weight: 500;
+  }
+
+  /* Patagonia display headline — Inter ExtraBold tight tracking uppercase */
+  .display-xl {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+  }
+  .display-lg {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  /* Ghost button — sharp 1px border, minimal */
+  .btn-ghost-sharp {
+    @apply inline-flex items-center justify-center px-7 py-3 text-xs tracking-[0.18em] uppercase font-semibold border border-current bg-transparent transition-colors;
+  }
+  .btn-ghost-sharp:hover {
+    @apply bg-current;
+  }
+  .btn-ghost-sharp:hover > * {
+    color: hsl(var(--background));
+  }
+
+  /* Instagram-style grid hover overlay */
+  .ig-grid-overlay {
+    @apply absolute inset-0 flex items-center justify-center gap-6 bg-black/40 opacity-0 transition-opacity duration-200;
+  }
+  .ig-grid-cell:hover .ig-grid-overlay,
+  .ig-grid-cell:focus-visible .ig-grid-overlay {
+    @apply opacity-100;
   }
 }

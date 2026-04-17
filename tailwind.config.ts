@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         sans: ["Outfit", "sans-serif"],
         serif: ["Source Serif 4", "serif"],
+        display: ["Inter", "sans-serif"],
       },
       maxWidth: {
         content: "1200px",
@@ -83,6 +84,10 @@ export default {
           foreground: "hsl(var(--navy-foreground))",
         },
         "warm-white": "hsl(var(--warm-white))",
+        "forest-accent": {
+          DEFAULT: "hsl(var(--forest-accent))",
+          foreground: "hsl(var(--forest-accent-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
