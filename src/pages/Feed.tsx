@@ -302,7 +302,7 @@ const Feed = () => {
                           <span className="text-muted-foreground text-xs">•</span>
                           <button
                             onClick={() => toggleFollow(post.user_id)}
-                            className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
+                            className="text-xs font-semibold text-[hsl(var(--forest-accent))] hover:opacity-70 transition-opacity"
                           >
                             {t('feed.follow')}
                           </button>

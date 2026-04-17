@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Grid3X3, MapPin, Pencil, Star, ArrowLeft, LogOut } from 'lucide-react';
+import { Grid3X3, MapPin, Pencil, Star, ArrowLeft, LogOut, Heart, MessageCircle } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import FollowersModal from '@/components/FollowersModal';
 import { useTranslation } from 'react-i18next';
@@ -112,9 +112,9 @@ const Profile = () => {
             <div className="h-4 w-32 bg-muted rounded animate-pulse" />
             <div className="h-3 w-48 bg-muted rounded animate-pulse" />
           </div>
-          <div className="grid grid-cols-3 gap-1 pb-4">
+          <div className="grid grid-cols-3 gap-[2px] pb-4">
             {Array.from({ length: 9 }).map((_, i) => (
-              <div key={i} className="aspect-square bg-muted rounded-lg animate-pulse" />
+              <div key={i} className="aspect-square bg-muted animate-pulse" />
             ))}
           </div>
         </div>
@@ -214,11 +214,31 @@ const Profile = () => {
         </div>
 
         {activeTab === 'posts' ? (
-          <div className="grid grid-cols-3 gap-1 pb-4">
+          <div className="grid grid-cols-3 gap-[2px] pb-4">
             {posts.map(post => (
-              <div key={post.id} className="aspect-square bg-muted rounded-lg overflow-hidden cursor-pointer" onClick={() => navigate(`/post/${post.id}`)}>
-                <img src={post.image_url} alt={`Foto di pesca a mosca condivisa da ${profile.username || 'pescatore'} su Flywaters`} className="w-full h-full object-cover" loading="lazy" />
-              </div>
+              <button
+                key={post.id}
+                onClick={() => navigate(`/post/${post.id}`)}
+                className="ig-grid-cell relative aspect-square bg-muted overflow-hidden group focus:outline-none"
+                aria-label={`Apri post di ${profile.username || 'pescatore'}`}
+              >
+                <img
+                  src={post.image_url}
+                  alt={`Foto di pesca a mosca condivisa da ${profile.username || 'pescatore'} su Flywaters`}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  loading="lazy"
+                />
+                <div className="ig-grid-overlay text-white">
+                  <span className="flex items-center gap-1.5 font-semibold text-sm">
+                    <Heart className="w-5 h-5 fill-white" />
+                    {post.like_count ?? 0}
+                  </span>
+                  <span className="flex items-center gap-1.5 font-semibold text-sm">
+                    <MessageCircle className="w-5 h-5 fill-white" />
+                    {post.comment_count ?? 0}
+                  </span>
+                </div>
+              </button>
             ))}
             {posts.length === 0 && (
               <p className="col-span-3 text-center py-14 text-muted-foreground text-sm">{t('profile.noPosts')}</p>
