@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
@@ -26,6 +28,8 @@ interface AdminUser {
   review_count: number;
   banned: boolean;
   bio: string | null;
+  is_guide?: boolean;
+  guide_status?: string;
 }
 
 export default function AdminUsers() {
@@ -46,6 +50,12 @@ export default function AdminUsers() {
     await adminFetch('toggle_user_ban', { userId: user.user_id, ban: !user.banned });
     load();
     setSelected(null);
+  };
+
+  const toggleGuide = async (user: AdminUser, value: boolean) => {
+    await adminFetch('toggle_user_guide', { userId: user.user_id, isGuide: value });
+    setSelected({ ...user, is_guide: value, guide_status: value ? 'approved' : 'none' });
+    load();
   };
 
   const filtered = users.filter(

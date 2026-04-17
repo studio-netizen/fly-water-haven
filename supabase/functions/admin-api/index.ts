@@ -216,6 +216,19 @@ serve(async (req) => {
         return json({ success: true });
       }
 
+      case "toggle_user_guide": {
+        const { userId, isGuide } = params;
+        await supabase
+          .from("profiles")
+          .update({
+            is_guide: !!isGuide,
+            guide_status: isGuide ? "approved" : "none",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("user_id", userId);
+        return json({ success: true });
+      }
+
       case "get_settings": {
         const { data } = await supabase.from("app_settings").select("*");
         return json(data || []);
