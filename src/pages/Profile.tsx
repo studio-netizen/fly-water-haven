@@ -3,8 +3,8 @@ import SEOHead from '@/components/SEOHead';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import GuideAvatar from '@/components/GuideAvatar';
 import { Button } from '@/components/ui/button';
 import { Grid3X3, MapPin, Pencil, Star, ArrowLeft, LogOut, Heart, MessageCircle } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
@@ -148,12 +148,13 @@ const Profile = () => {
 
       <div className="max-w-lg mx-auto px-4">
         <div className="flex items-center gap-6 py-5">
-          <Avatar className="h-20 w-20 lg:h-24 lg:w-24">
-            <AvatarImage src={profile.avatar_url || ''} alt={`Profilo di ${profile.username || profile.display_name || 'utente'} su Flywaters`} />
-            <AvatarFallback className="bg-muted text-muted-foreground text-2xl">
-              {(profile.display_name || 'U')[0].toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <GuideAvatar
+            src={profile.avatar_url}
+            alt={`Profilo di ${profile.username || profile.display_name || 'utente'} su Flywaters`}
+            fallback={profile.display_name || 'U'}
+            isGuide={!!profile.is_guide}
+            size="2xl"
+          />
           <div className="flex-1">
             <div className="flex items-center gap-4">
               <StatItem value={stats.posts} label="Posts" />
@@ -164,7 +165,14 @@ const Profile = () => {
         </div>
 
         <div className="pb-3">
-          <h2 className="font-semibold text-foreground text-sm">{profile.display_name}</h2>
+          <h2 className="font-semibold text-foreground text-sm flex items-center gap-1.5">
+            {profile.display_name}
+            {profile.is_guide && (
+              <Badge className="bg-[hsl(43,74%,55%)] hover:bg-[hsl(43,74%,50%)] text-white text-[10px] uppercase tracking-wide font-semibold px-1.5 py-0">
+                Guida Certificata
+              </Badge>
+            )}
+          </h2>
           {profile.bio && <p className="text-sm text-foreground mt-0.5">{profile.bio}</p>}
           {profile.fishing_types && profile.fishing_types.length > 0 && (
             <div className="flex gap-1 mt-2 flex-wrap">

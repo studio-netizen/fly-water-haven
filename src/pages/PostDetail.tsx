@@ -28,6 +28,7 @@ interface PostData {
     username: string | null;
     display_name: string | null;
     avatar_url: string | null;
+    is_guide?: boolean | null;
   } | null;
 }
 
@@ -56,7 +57,7 @@ const PostDetail = () => {
     setLoading(true);
     const { data, error } = await supabase
       .from('posts')
-      .select('*, profiles!posts_user_id_profiles_fkey(username, display_name, avatar_url)')
+      .select('*, profiles!posts_user_id_profiles_fkey(username, display_name, avatar_url, is_guide)')
       .eq('id', postId!)
       .maybeSingle();
 

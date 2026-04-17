@@ -89,7 +89,7 @@ const Feed = () => {
     setLoading(true);
     let query = supabase
       .from('posts')
-      .select('*, profiles!posts_user_id_profiles_fkey(username, display_name, avatar_url)')
+      .select('*, profiles!posts_user_id_profiles_fkey(username, display_name, avatar_url, is_guide)')
       .order('created_at', { ascending: false })
       .limit(50);
 
@@ -122,7 +122,7 @@ const Feed = () => {
     if (!user) return;
     const { data: profiles } = await supabase
       .from('profiles')
-      .select('user_id, username, display_name, avatar_url')
+      .select('user_id, username, display_name, avatar_url, is_guide')
       .neq('user_id', user.id)
       .limit(10);
 

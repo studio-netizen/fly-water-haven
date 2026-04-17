@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Send } from 'lucide-react';
 import { toast } from 'sonner';
+import GuideAvatar from '@/components/GuideAvatar';
 
 interface Comment {
   id: string;
@@ -15,6 +15,7 @@ interface Comment {
     username: string | null;
     display_name: string | null;
     avatar_url: string | null;
+    is_guide?: boolean | null;
   } | null;
 }
 
@@ -51,7 +52,7 @@ const PostComments = ({ postId, commentCount, onCommentAdded }: PostCommentsProp
     const userIds = [...new Set(data.map(c => c.user_id))];
     const { data: profiles } = await supabase
       .from('profiles')
-      .select('user_id, username, display_name, avatar_url')
+      .select('user_id, username, display_name, avatar_url, is_guide')
       .in('user_id', userIds);
 
     const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
@@ -115,12 +116,14 @@ const PostComments = ({ postId, commentCount, onCommentAdded }: PostCommentsProp
         <div className="space-y-2 mb-3 max-h-48 overflow-y-auto">
           {comments.map((comment) => (
             <div key={comment.id} className="flex items-start gap-2">
-              <Avatar className="h-6 w-6 mt-0.5">
-                <AvatarImage src={comment.profiles?.avatar_url || ''} />
-                <AvatarFallback className="bg-primary/10 text-primary text-[10px]">
-                  {(comment.profiles?.display_name || 'U')[0].toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <div className="mt-0.5">
+                <GuideAvatar
+                  src={comment.profiles?.avatar_url}
+                  fallback={comment.profiles?.display_name || 'U'}
+                  isGuide={!!comment.profiles?.is_guide}
+                  size="sm"
+                />
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm">
                   <span className="font-semibold mr-1">
