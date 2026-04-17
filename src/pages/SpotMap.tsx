@@ -18,6 +18,7 @@ import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import TagChipSelector from '@/components/TagChipSelector';
 import { FISH_SPECIES } from '@/lib/fishing-constants';
 import { validateImageFile, compressImage } from '@/lib/image-compression';
+import MapAuthGate from '@/components/MapAuthGate';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -100,8 +101,10 @@ const SpotMap = () => {
   }, []);
 
   useEffect(() => {
-    fetchSpots();
-  }, []);
+    // Gated content: only authenticated users get spot coordinates
+    if (user) fetchSpots();
+    else setSpots([]);
+  }, [user]);
 
   const fetchSpots = async () => {
     const { data } = await supabase.from('spots').select('*').order('created_at', { ascending: false });
@@ -329,6 +332,7 @@ const SpotMap = () => {
 
         <BottomNav />
       </div>
+      {!user && <MapAuthGate />}
     </div>
   );
 };
