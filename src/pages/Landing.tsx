@@ -154,7 +154,7 @@ const Landing = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-              className="text-[36px] md:text-[60px] font-bold leading-[1.1] tracking-tight text-white"
+              className="display-xl text-[44px] md:text-[88px] text-white max-w-[14ch]"
             >
               {t('landing.heroHeadline')}
             </motion.h1>
@@ -208,7 +208,7 @@ const Landing = () => {
           <motion.p variants={slow(0)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="label-caps text-[#8c8c7a] mb-3">
             {t('landing.everyWater')}
           </motion.p>
-          <motion.h2 variants={slow(0.1)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-3xl md:text-5xl font-bold font-serif mb-10">
+          <motion.h2 variants={slow(0.1)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="display-lg text-3xl md:text-6xl mb-10">
             {t('landing.spotsForCondition')}
           </motion.h2>
 
@@ -235,7 +235,7 @@ const Landing = () => {
             <motion.div key={`text-${seasons[activeSeason].key}`} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
               <h3 className="text-2xl md:text-3xl font-bold font-serif mb-4">{seasons[activeSeason].label}</h3>
               <p className="text-base md:text-lg leading-relaxed text-[#8c8c7a] mb-8">{seasons[activeSeason].desc}</p>
-              <button onClick={() => navigate('/map')} className="text-sm font-medium tracking-wide text-[#242242] hover:text-[#4a7c59] transition-colors inline-flex items-center gap-2 group">
+              <button onClick={() => navigate('/map')} className="text-sm font-semibold tracking-[0.18em] uppercase text-[#2D3A27] hover:opacity-70 transition-opacity inline-flex items-center gap-2 group">
                 {t('landing.exploreSpots')}
                 <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </button>
@@ -249,13 +249,13 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
           <motion.div variants={slow(0.2)} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-100px' }} className="max-w-lg order-2 md:order-1">
             <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-4">{t('landing.ourMission')}</p>
-            <h2 className="text-3xl md:text-4xl font-bold font-serif leading-tight mb-6 whitespace-pre-line">
+            <h2 className="display-lg text-3xl md:text-5xl mb-6 whitespace-pre-line">
               {t('landing.builtByFishers')}
             </h2>
             <p className="text-base leading-relaxed text-[#8c8c7a] mb-8">
               {t('landing.missionDesc')}
             </p>
-            <button onClick={() => openAuth('register')} className="px-8 py-4 rounded-full text-sm tracking-widest uppercase font-medium bg-[#242242] text-[#f5f0e8] hover:opacity-85 transition-opacity">
+            <button onClick={() => openAuth('register')} className="inline-flex items-center justify-center px-8 py-3.5 text-xs tracking-[0.2em] uppercase font-semibold border border-[#2D3A27] text-[#2D3A27] hover:bg-[#2D3A27] hover:text-[#f5f0e8] transition-colors">
               {t('landing.joinCommunity')}
             </button>
           </motion.div>
@@ -271,13 +271,13 @@ const Landing = () => {
           <motion.p variants={slow(0)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-3">
             {t('landing.whatYouCanDo')}
           </motion.p>
-          <motion.h2 variants={slow(0.1)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-3xl md:text-5xl font-bold font-serif mb-14">
+          <motion.h2 variants={slow(0.1)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="display-lg text-3xl md:text-6xl mb-14">
             {t('landing.digitalCompanion')}
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-10 md:gap-12">
             {features.map((f, i) => (
               <motion.div key={f.title} variants={slow(i * 0.15)} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
-                <f.icon className="w-7 h-7 text-[#4a7c59] mb-5" strokeWidth={1.5} />
+                <f.icon className="w-7 h-7 text-[#2D3A27] mb-5" strokeWidth={1.5} />
                 <h3 className="text-xl font-bold font-serif mb-3">{f.title}</h3>
                 <p className="text-sm leading-relaxed text-[#8c8c7a]">{f.desc}</p>
               </motion.div>
@@ -292,7 +292,7 @@ const Landing = () => {
           <motion.p variants={slow(0)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-xs tracking-[0.3em] uppercase text-[#f5f0e8]/50 mb-4">
             {t('landing.ourValue')}
           </motion.p>
-          <motion.h2 variants={slow(0.1)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-3xl md:text-5xl font-bold font-serif mb-8">
+          <motion.h2 variants={slow(0.1)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="display-lg text-3xl md:text-6xl mb-8">
             {t('landing.noKillPhilosophy')}
           </motion.h2>
           <motion.p variants={slow(0.2)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-base md:text-lg leading-relaxed text-[#f5f0e8]/75">
@@ -314,7 +314,7 @@ const Landing = () => {
           <motion.p variants={slow(0)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-3">
             {t('landing.startIn3Steps')}
           </motion.p>
-          <motion.h2 variants={slow(0.1)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-3xl md:text-5xl font-bold font-serif mb-14">
+          <motion.h2 variants={slow(0.1)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="display-lg text-3xl md:text-6xl mb-14">
             {t('landing.howItWorks')}
           </motion.h2>
           <div className="grid md:grid-cols-3 gap-10 md:gap-16">
@@ -335,7 +335,7 @@ const Landing = () => {
           <motion.p variants={slow(0)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-4">
             {t('landing.featured')}
           </motion.p>
-          <motion.h2 variants={slow(0.1)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-3xl md:text-5xl font-bold font-serif mb-14">
+          <motion.h2 variants={slow(0.1)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="display-lg text-3xl md:text-6xl mb-14">
             {t('landing.spotsWorthTrip')}
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
@@ -355,11 +355,11 @@ const Landing = () => {
       {/* ─── CTA BANNER ─── */}
       <section className="bg-[#242242] text-[#f5f0e8] py-20 md:py-28 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.h2 variants={slow(0)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-3xl md:text-5xl font-bold font-serif mb-6 whitespace-pre-line">
+          <motion.h2 variants={slow(0)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="display-lg text-3xl md:text-6xl mb-6 whitespace-pre-line">
             {t('landing.ctaTitle')}
           </motion.h2>
           <motion.div variants={slow(0.2)} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <button onClick={() => navigate('/map')} className="px-8 py-4 rounded-full text-sm tracking-widest uppercase font-medium border-[1.5px] border-[#f5f0e8]/60 text-[#f5f0e8] hover:opacity-85 transition-opacity">
+            <button onClick={() => navigate('/map')} className="inline-flex items-center justify-center px-8 py-3.5 text-xs tracking-[0.2em] uppercase font-semibold border border-[#f5f0e8]/60 text-[#f5f0e8] hover:bg-[#f5f0e8] hover:text-[#242242] transition-colors">
               {t('landing.exploreSpots')}
             </button>
           </motion.div>
