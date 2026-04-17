@@ -6,9 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Plus, ImagePlus, Loader2 } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
-import { validateImageFile, compressImage } from '@/lib/image-compression';
+import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
 import TagChipSelector from '@/components/TagChipSelector';
 import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR } from '@/lib/fishing-constants';
 
@@ -28,6 +29,9 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [compressing, setCompressing] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [progressLabel, setProgressLabel] = useState('');
+  const [sizeInfo, setSizeInfo] = useState<{ before: number; after: number } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,24 +40,33 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
     const error = validateImageFile(file);
     if (error) { toast.error(error); return; }
     setCompressing(true);
+    setProgress(15);
+    setProgressLabel('Ottimizzazione foto...');
     try {
       const result = await compressImage(file, 'default');
       setImageFile(result.file);
       setImagePreview(URL.createObjectURL(result.file));
+      setSizeInfo({ before: result.originalSize, after: result.compressedSize });
+      setProgress(100);
     } finally {
       setCompressing(false);
+      setTimeout(() => { setProgress(0); setProgressLabel(''); }, 600);
     }
   };
 
   const handleSubmit = async () => {
     if (!user || !imageFile) return;
     setLoading(true);
+    setProgress(20);
+    setProgressLabel('Caricamento...');
 
     try {
       const path = `${user.id}/${Date.now()}.webp`;
+      setProgress(55);
       const { error: uploadError } = await supabase.storage.from('posts').upload(path, imageFile);
       if (uploadError) throw uploadError;
 
+      setProgress(80);
       const { data: { publicUrl } } = supabase.storage.from('posts').getPublicUrl(path);
 
       const { error } = await supabase.from('posts').insert({
@@ -67,6 +80,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
       });
 
       if (error) throw error;
+      setProgress(100);
       toast.success('Post condiviso!');
       setOpen(false);
       setCaption('');
@@ -76,11 +90,13 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
       setSelectedGear([]);
       setImageFile(null);
       setImagePreview(null);
+      setSizeInfo(null);
       onPostCreated();
     } catch {
       toast.error('Errore nel caricamento. Riprova.');
     } finally {
       setLoading(false);
+      setTimeout(() => { setProgress(0); setProgressLabel(''); }, 600);
     }
   };
 
@@ -119,6 +135,20 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
             )}
           </div>
           <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" onChange={handleFileChange} className="hidden" />
+
+          {(progress > 0 || progressLabel) && (
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>{progressLabel}</span>
+                {sizeInfo && (
+                  <span className="tabular-nums">
+                    {formatFileSize(sizeInfo.before)} → {formatFileSize(sizeInfo.after)}
+                  </span>
+                )}
+              </div>
+              <Progress value={progress} className="h-1" />
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label>Didascalia</Label>
