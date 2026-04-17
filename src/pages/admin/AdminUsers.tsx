@@ -86,6 +86,7 @@ export default function AdminUsers() {
                 <TableHead className="hidden lg:table-cell">Ultimo accesso</TableHead>
                 <TableHead>Post</TableHead>
                 <TableHead>Recensioni</TableHead>
+                <TableHead>Guida</TableHead>
                 <TableHead>Stato</TableHead>
               </TableRow>
             </TableHeader>
@@ -119,6 +120,15 @@ export default function AdminUsers() {
                   </TableCell>
                   <TableCell>{u.post_count}</TableCell>
                   <TableCell>{u.review_count}</TableCell>
+                  <TableCell>
+                    {u.is_guide ? (
+                      <Badge className="bg-[hsl(43,74%,55%)] hover:bg-[hsl(43,74%,50%)] text-white">Guida</Badge>
+                    ) : u.guide_status === 'pending' ? (
+                      <Badge variant="outline">In attesa</Badge>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">—</span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     {u.banned ? (
                       <Badge variant="destructive">Disabilitato</Badge>
@@ -158,6 +168,25 @@ export default function AdminUsers() {
                   <div><span className="text-muted-foreground">Pesca:</span> {(selected.fishing_types || []).join(', ') || '—'}</div>
                 </div>
                 {selected.bio && <p className="text-sm">{selected.bio}</p>}
+
+                <div className="flex items-center justify-between rounded-lg border p-3 bg-muted/30">
+                  <div>
+                    <Label htmlFor="guide-toggle" className="font-semibold cursor-pointer">
+                      Guida Certificata Flywaters
+                    </Label>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {selected.guide_status === 'pending'
+                        ? 'Richiesta in attesa di approvazione'
+                        : 'Mostra badge dorato sul profilo'}
+                    </p>
+                  </div>
+                  <Switch
+                    id="guide-toggle"
+                    checked={!!selected.is_guide}
+                    onCheckedChange={(v) => toggleGuide(selected, v)}
+                  />
+                </div>
+
                 <Button
                   variant={selected.banned ? 'default' : 'destructive'}
                   onClick={() => toggleBan(selected)}
