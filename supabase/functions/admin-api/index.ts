@@ -178,6 +178,54 @@ serve(async (req) => {
         return json(users);
       }
 
+      case "get_spots": {
+        const { data: spots } = await supabase
+          .from("spots")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        const creatorIds = Array.from(
+          new Set((spots || []).map((s: any) => s.created_by).filter(Boolean))
+        );
+        const { data: profs } = creatorIds.length
+          ? await supabase.from("profiles").select("user_id, username").in("user_id", creatorIds)
+          : { data: [] as any[] };
+        const profMap: Record<string, string> = {};
+        (profs || []).forEach((p: any) => { profMap[p.user_id] = p.username; });
+
+        return json(
+          (spots || []).map((s: any) => ({
+            ...s,
+            creator_username: s.created_by ? profMap[s.created_by] || null : null,
+          }))
+        );
+      }
+
+      case "get_posts": {
+        const { data: posts } = await supabase
+          .from("posts")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(500);
+
+        const userIds = Array.from(new Set((posts || []).map((p: any) => p.user_id)));
+        const { data: profs } = userIds.length
+          ? await supabase
+              .from("profiles")
+              .select("user_id, username, avatar_url")
+              .in("user_id", userIds)
+          : { data: [] as any[] };
+        const profMap: Record<string, any> = {};
+        (profs || []).forEach((p: any) => { profMap[p.user_id] = p; });
+
+        return json(
+          (posts || []).map((p: any) => ({
+            ...p,
+            profiles: profMap[p.user_id] || null,
+          }))
+        );
+      }
+
       case "get_messages": {
         const { data: messages } = await supabase
           .from("messages")
