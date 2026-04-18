@@ -272,6 +272,19 @@
     "defaultTitle": "Flywaters — La community italiana per la pesca a mosca",
     "defaultDescription": "Scopri i migliori spot di pesca in Italia, condividi le tue catture e connettiti con altri pescatori a mosca."
   },
+  "mapGate": {
+    "title": "ESPLORA I MIGLIORI SPOT D'ITALIA",
+    "description": "Per proteggere i nostri fiumi e condividere le coordinate precise, Flywaters è una community riservata. Registrati gratuitamente per sbloccare la mappa completa, i consigli sulle mosche e i dati idrometrici.",
+    "ctaJoin": "Unisciti alla Community (Gratis)",
+    "alreadyHaveAccount": "Hai già un account?",
+    "loginHere": "Accedi qui",
+    "close": "Chiudi"
+  },
+  "guide": {
+    "tooltip": "Guida Certificata Flywaters",
+    "applyBadge": "Richiedi badge Guida",
+    "registerCheckbox": "Sei una guida professionista? Richiedi il badge"
+  },
   "common": {
     "fishingTypes": {
       "fly-fishing": "🎣 Pesca a mosca",

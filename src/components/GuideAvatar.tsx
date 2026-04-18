@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface GuideAvatarProps {
@@ -75,6 +76,7 @@ const GuideAvatar = ({
   showBadge = true,
   className,
 }: GuideAvatarProps) => {
+  const { t } = useTranslation();
   const avatar = (
     <Avatar
       className={cn(
@@ -115,7 +117,7 @@ const GuideAvatar = ({
     <TooltipProvider delayDuration={150}>
       <Tooltip>
         <TooltipTrigger asChild>{wrapped}</TooltipTrigger>
-        <TooltipContent side="top">Guida Certificata Flywaters</TooltipContent>
+        <TooltipContent side="top">{t('guide.tooltip')}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

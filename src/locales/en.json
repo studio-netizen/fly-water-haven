@@ -272,6 +272,19 @@
     "defaultTitle": "Flywaters — The Italian Fly Fishing Community",
     "defaultDescription": "Discover the best fly fishing spots in Italy, share your catches and connect with anglers. Flywaters is the no-kill community for fly fishing enthusiasts."
   },
+  "mapGate": {
+    "title": "EXPLORE ITALY'S BEST SPOTS",
+    "description": "To protect our rivers and share precise coordinates, Flywaters is a private community. Register for free to unlock the full map, fly suggestions, and real-time water levels.",
+    "ctaJoin": "Join the Community (Free)",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginHere": "Login here",
+    "close": "Close"
+  },
+  "guide": {
+    "tooltip": "Flywaters Certified Guide",
+    "applyBadge": "Apply for Guide Badge",
+    "registerCheckbox": "Are you a professional guide? Request the badge"
+  },
   "common": {
     "fishingTypes": {
       "fly-fishing": "🎣 Fly fishing",
