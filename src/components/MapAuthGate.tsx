@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Fish, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const MapAuthGate = () => {
+  const { t } = useTranslation();
   const [dismissed, setDismissed] = useState(false);
 
   return (
@@ -26,7 +28,7 @@ const MapAuthGate = () => {
             <button
               onClick={() => setDismissed(true)}
               className="absolute top-3 right-3 p-1.5 rounded-full hover:bg-muted transition-colors"
-              aria-label="Chiudi"
+              aria-label={t('mapGate.close')}
             >
               <X className="w-4 h-4 text-muted-foreground" />
             </button>
@@ -41,27 +43,24 @@ const MapAuthGate = () => {
               id="map-gate-title"
               className="display-lg text-center text-foreground mb-3 text-2xl sm:text-3xl"
             >
-              Esplora i migliori spot d'Italia
+              {t('mapGate.title')}
             </h2>
 
             <p className="text-sm sm:text-base text-muted-foreground text-center leading-relaxed mb-6">
-              Per proteggere i nostri fiumi e condividere le coordinate precise,
-              Flywaters è una community riservata. Registrati gratuitamente per
-              sbloccare la mappa completa, i consigli sulle mosche e i dati
-              idrometrici.
+              {t('mapGate.description')}
             </p>
 
             <div className="space-y-3">
               <Button asChild size="lg" className="w-full rounded-full">
-                <Link to="/auth">Unisciti alla Community (Gratis)</Link>
+                <Link to="/auth">{t('mapGate.ctaJoin')}</Link>
               </Button>
               <p className="text-center text-sm text-muted-foreground">
-                Hai già un account?{' '}
+                {t('mapGate.alreadyHaveAccount')}{' '}
                 <Link
                   to="/auth"
                   className="text-forest-accent font-semibold hover:underline"
                 >
-                  Accedi qui
+                  {t('mapGate.loginHere')}
                 </Link>
               </p>
             </div>
