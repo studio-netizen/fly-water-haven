@@ -40,15 +40,20 @@ const EditProfile = () => {
   useEffect(() => {
     if (!user) return;
     const fetchProfile = async () => {
-      const { data } = await supabase.from('profiles').select('*').eq('user_id', user.id).single();
-      if (data) {
-        setDisplayName(data.display_name || '');
-        setUsername(data.username || '');
-        setBio(data.bio || '');
-        setAvatarUrl(data.avatar_url || '');
-        setFishingTypes(data.fishing_types || []);
+      try {
+        const { data } = await supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle();
+        if (data) {
+          setDisplayName(data.display_name || '');
+          setUsername(data.username || '');
+          setBio(data.bio || '');
+          setAvatarUrl(data.avatar_url || '');
+          setFishingTypes(data.fishing_types || []);
+        }
+      } catch (err) {
+        console.error('[EditProfile] fetch error:', err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     fetchProfile();
   }, [user]);
@@ -215,12 +220,20 @@ const EditProfile = () => {
             <Textarea
               id="bio"
               value={bio}
-              onChange={e => setBio(e.target.value)}
+              onChange={e => setBio(e.target.value.slice(0, 150))}
               placeholder={t('profile.bioPlaceholder')}
-              maxLength={160}
+              maxLength={150}
               rows={3}
+              className="resize-none"
             />
-            <p className="text-xs text-muted-foreground mt-1">{bio.length}/160</p>
+            <div className="flex justify-between items-center mt-1">
+              <p className="text-xs text-muted-foreground">{t('profile.bioHelp')}</p>
+              <p className={`text-xs tabular-nums ${
+                bio.length >= 140 ? 'text-orange-500 font-semibold' : 'text-muted-foreground'
+              }`}>
+                {bio.length}/150
+              </p>
+            </div>
           </div>
 
           <div>

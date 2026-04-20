@@ -4,9 +4,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
-import GuideAvatar from '@/components/GuideAvatar';
+import GuideAvatar, { GoldenFlyInline } from '@/components/GuideAvatar';
 import { Button } from '@/components/ui/button';
-import { Grid3X3, MapPin, Pencil, Star, ArrowLeft, LogOut, Heart, MessageCircle } from 'lucide-react';
+import { Grid3X3, MapPin, Pencil, Star, ArrowLeft, LogOut, Heart, MessageCircle, Camera, Plus, Sparkles } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import FollowersModal from '@/components/FollowersModal';
 import { useTranslation } from 'react-i18next';
@@ -189,7 +189,8 @@ const Profile = () => {
       </header>
 
       <div className="max-w-lg mx-auto px-4">
-        <div className="flex items-center gap-6 py-5">
+        {/* Avatar + name + bio (centered, Instagram-like hierarchy) */}
+        <div className="flex flex-col items-center text-center pt-6 pb-4">
           <GuideAvatar
             src={profile.avatar_url}
             alt={`Profilo di ${profile.username || profile.display_name || 'utente'} su Flywaters`}
@@ -197,27 +198,20 @@ const Profile = () => {
             isGuide={!!profile.is_guide}
             size="2xl"
           />
-          <div className="flex-1">
-            <div className="flex items-center gap-4">
-              <StatItem value={stats.posts} label="Posts" />
-              <StatItem value={stats.followers} label="Followers" onClick={() => setModalType('followers')} />
-              <StatItem value={stats.following} label="Following" onClick={() => setModalType('following')} />
-            </div>
-          </div>
-        </div>
-
-        <div className="pb-3">
-          <h2 className="font-semibold text-foreground text-sm flex items-center gap-1.5">
-            {profile.display_name}
-            {profile.is_guide && (
-              <Badge className="bg-[hsl(43,74%,55%)] hover:bg-[hsl(43,74%,50%)] text-white text-[10px] uppercase tracking-wide font-semibold px-1.5 py-0">
-                Guida Certificata
-              </Badge>
-            )}
+          <h2 className="mt-3 text-lg font-semibold text-foreground flex items-center gap-1.5">
+            {profile.display_name || profile.username}
+            {profile.is_guide && <GoldenFlyInline size={16} />}
           </h2>
-          {profile.bio && <p className="text-sm text-foreground mt-0.5">{profile.bio}</p>}
+          {profile.username && profile.display_name && (
+            <p className="text-xs text-muted-foreground">@{profile.username}</p>
+          )}
+          {profile.bio && (
+            <p className="mt-2 text-sm text-foreground max-w-xs leading-snug whitespace-pre-line">
+              {profile.bio}
+            </p>
+          )}
           {profile.fishing_types && profile.fishing_types.length > 0 && (
-            <div className="flex gap-1 mt-2 flex-wrap">
+            <div className="flex gap-1 mt-2 flex-wrap justify-center">
               {profile.fishing_types.map((ft: string) => (
                 <Badge key={ft} variant={ft === 'fly-fishing' ? 'default' : 'secondary'} className="text-xs">
                   {t(`common.fishingTypes.${ft}` as any) || ft}
@@ -225,6 +219,13 @@ const Profile = () => {
               ))}
             </div>
           )}
+        </div>
+
+        {/* Prominent counter cards (visual hierarchy) */}
+        <div className="grid grid-cols-3 gap-2 pb-4">
+          <StatCard value={stats.posts} label={t('profile.posts')} />
+          <StatCard value={stats.followers} label={t('profile.followers')} onClick={() => setModalType('followers')} />
+          <StatCard value={stats.following} label={t('profile.following')} onClick={() => setModalType('following')} />
         </div>
 
         <div className="flex gap-2 pb-4">
@@ -291,7 +292,25 @@ const Profile = () => {
               </button>
             ))}
             {posts.length === 0 && (
-              <p className="col-span-3 text-center py-14 text-muted-foreground text-sm">{t('profile.noPosts')}</p>
+              <div className="col-span-3 py-10 px-4">
+                <div className="rounded-xl border border-dashed border-border bg-muted/30 p-8 text-center shadow-sm">
+                  <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                    <Camera className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-foreground mb-1">
+                    {isOwnProfile ? t('profile.emptyPostsTitleOwn') : t('profile.emptyPostsTitleOther')}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mb-4 max-w-xs mx-auto leading-relaxed">
+                    {isOwnProfile ? t('profile.emptyPostsDescOwn') : t('profile.emptyPostsDescOther')}
+                  </p>
+                  {isOwnProfile && (
+                    <Button onClick={() => navigate('/publish')} size="sm" className="rounded-full gap-1.5">
+                      <Plus className="w-4 h-4" />
+                      {t('profile.shareFirstCatch')}
+                    </Button>
+                  )}
+                </div>
+              </div>
             )}
           </div>
         ) : (
@@ -312,7 +331,25 @@ const Profile = () => {
               </div>
             ))}
             {reviews.length === 0 && (
-              <p className="text-center py-14 text-muted-foreground text-sm">{t('profile.noReviews')}</p>
+              <div className="py-10 px-4">
+                <div className="rounded-xl border border-dashed border-border bg-muted/30 p-8 text-center shadow-sm">
+                  <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                    <MapPin className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-foreground mb-1">
+                    {isOwnProfile ? t('profile.emptyReviewsTitleOwn') : t('profile.emptyReviewsTitleOther')}
+                  </h3>
+                  <p className="text-xs text-muted-foreground mb-4 max-w-xs mx-auto leading-relaxed">
+                    {isOwnProfile ? t('profile.emptyReviewsDescOwn') : t('profile.emptyReviewsDescOther')}
+                  </p>
+                  {isOwnProfile && (
+                    <Button onClick={() => navigate('/map')} size="sm" variant="outline" className="rounded-full gap-1.5">
+                      <MapPin className="w-4 h-4" />
+                      {t('profile.exploreSpots')}
+                    </Button>
+                  )}
+                </div>
+              </div>
             )}
           </div>
         )}
@@ -325,10 +362,16 @@ const Profile = () => {
   );
 };
 
-const StatItem = ({ value, label, onClick }: { value: number; label: string; onClick?: () => void }) => (
-  <button onClick={onClick} className="text-center flex-1" disabled={!onClick}>
-    <p className="text-lg font-bold text-foreground">{value}</p>
-    <p className="text-xs text-muted-foreground">{label}</p>
+const StatCard = ({ value, label, onClick }: { value: number; label: string; onClick?: () => void }) => (
+  <button
+    onClick={onClick}
+    disabled={!onClick}
+    className={`rounded-xl bg-muted/40 border border-border/50 px-3 py-3 text-center transition-all duration-200 ${
+      onClick ? 'hover:bg-muted hover:shadow-sm cursor-pointer' : 'cursor-default'
+    }`}
+  >
+    <p className="text-2xl font-bold text-foreground leading-tight tabular-nums">{value}</p>
+    <p className="text-[11px] uppercase tracking-wider text-muted-foreground mt-0.5">{label}</p>
   </button>
 );
 
