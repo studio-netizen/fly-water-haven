@@ -23,6 +23,8 @@ const Profile = () => {
     }
   }, [paramUserId, user, navigate]);
   const [profile, setProfile] = useState<any>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [profileNotFound, setProfileNotFound] = useState(false);
   const [posts, setPosts] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
   const [stats, setStats] = useState({ posts: 0, followers: 0, following: 0 });
@@ -43,8 +45,22 @@ const Profile = () => {
   }, [userId, user]);
 
   const fetchProfile = async () => {
-    const { data } = await supabase.from('profiles').select('*').eq('user_id', userId!).single();
-    if (data) setProfile(data);
+    setProfileLoading(true);
+    setProfileNotFound(false);
+    try {
+      const { data, error } = await supabase.from('profiles').select('*').eq('user_id', userId!).maybeSingle();
+      if (error) throw error;
+      if (!data) {
+        setProfileNotFound(true);
+      } else {
+        setProfile(data);
+      }
+    } catch (err) {
+      console.error('[Profile] fetchProfile error:', err);
+      setProfileNotFound(true);
+    } finally {
+      setProfileLoading(false);
+    }
   };
 
   const fetchPosts = async () => {
@@ -93,7 +109,33 @@ const Profile = () => {
     }
   };
 
-  if (!profile) {
+  // Profile not found — show message + logout option instead of infinite skeleton
+  if (profileNotFound) {
+    return (
+      <AppLayout>
+        <div className="max-w-lg mx-auto px-4 py-12 text-center">
+          <h2 className="text-lg font-semibold text-foreground mb-2">Profilo non trovato</h2>
+          <p className="text-sm text-muted-foreground mb-6">
+            Il profilo richiesto non esiste o non è più disponibile.
+          </p>
+          <div className="flex flex-col gap-2 max-w-xs mx-auto">
+            <Button onClick={() => navigate('/')} variant="default">
+              Torna al feed
+            </Button>
+            {isOwnProfile && (
+              <Button onClick={signOut} variant="outline" className="gap-2">
+                <LogOut className="w-4 h-4" />
+                {t('nav.logout')}
+              </Button>
+            )}
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (profileLoading || !profile) {
+
     return (
       <AppLayout>
         <div className="max-w-lg mx-auto px-4">
