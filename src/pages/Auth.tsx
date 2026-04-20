@@ -140,7 +140,28 @@ const Auth = () => {
                   </button>
                 </div>
               </div>
-              <button type="button" className="text-xs text-[#8c8c7a] hover:text-[#242242] transition-colors">
+              <button 
+                type="button" 
+                onClick={async () => {
+                  if (!email) {
+                    toast.error(t('resetPassword.enterEmail'));
+                    return;
+                  }
+                  setLoading(true);
+                  try {
+                    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                      redirectTo: `${window.location.origin}/reset-password`,
+                    });
+                    if (error) throw error;
+                    toast.success(t('resetPassword.emailSent'));
+                  } catch (err: any) {
+                    toast.error(err.message);
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                className="text-xs text-[#8c8c7a] hover:text-[#242242] transition-colors text-left"
+              >
                 {t('auth.forgotPassword')}
               </button>
             </>

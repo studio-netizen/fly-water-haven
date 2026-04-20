@@ -286,6 +286,21 @@
     "applyBadge": "Richiedi badge Guida",
     "registerCheckbox": "Sei una guida professionista? Richiedi il badge"
   },
+  "resetPassword": {
+    "title": "Reimposta password",
+    "subtitle": "Inserisci la tua nuova password",
+    "newPassword": "Nuova password",
+    "confirmPassword": "Conferma nuova password",
+    "updatePassword": "Aggiorna password",
+    "updating": "Aggiornamento...",
+    "success": "Password aggiornata con successo!",
+    "redirecting": "Reindirizzamento al login...",
+    "error": "Errore durante l'aggiornamento",
+    "enterEmail": "Inserisci prima la tua email",
+    "emailSent": "Email di recupero inviata! Controlla la tua inbox.",
+    "invalidLink": "Link di recupero non valido o scaduto",
+    "passwordTooShort": "La password deve essere di almeno 6 caratteri"
+  },
   "common": {
     "fishingTypes": {
       "fly-fishing": "🎣 Pesca a mosca",

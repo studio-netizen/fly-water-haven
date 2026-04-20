@@ -20,6 +20,7 @@ import LeadMagnet from "./pages/LeadMagnet";
 import Contatti from "./pages/Contatti";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./components/admin/AdminLayout";
+import ResetPassword from "./pages/ResetPassword";
 
 // Lazy load heavy pages
 const SpotMap = lazy(() => import("./pages/SpotMap"));
@@ -104,6 +105,7 @@ const App = () => (
                 <Route path="/admin/blog" element={<AdminRoute><AdminBlog /></AdminRoute>} />
                 <Route path="/admin/blog/nuovo" element={<AdminRoute><AdminBlogEditor /></AdminRoute>} />
                 <Route path="/admin/blog/:id/modifica" element={<AdminRoute><AdminBlogEditor /></AdminRoute>} />
+                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
