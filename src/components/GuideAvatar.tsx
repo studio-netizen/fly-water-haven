@@ -77,13 +77,10 @@ const GuideAvatar = ({
   className,
 }: GuideAvatarProps) => {
   const { t } = useTranslation();
+
   const avatar = (
     <Avatar
-      className={cn(
-        sizeMap[size],
-        isGuide && 'ring-2 ring-[hsl(43,74%,55%)] ring-offset-2 ring-offset-background',
-        className
-      )}
+      className={cn(sizeMap[size], className)}
     >
       <AvatarImage src={src || ''} alt={alt} />
       <AvatarFallback className="bg-muted text-muted-foreground">
@@ -94,29 +91,57 @@ const GuideAvatar = ({
 
   if (!isGuide) return avatar;
 
-  const badge = (
+  // Static gold gradient border (no animation per design decision)
+  const goldGradientWrapper = (
     <span
-      className={cn(
-        'absolute rounded-full bg-background flex items-center justify-center shadow-md ring-1 ring-[hsl(43,74%,55%)]',
-        badgeSizeMap[size]
-      )}
-      style={{ color: 'hsl(43, 74%, 49%)' }}
+      className="relative inline-block shrink-0 rounded-full p-[2.5px]"
+      style={{
+        background:
+          'linear-gradient(135deg, hsl(43, 90%, 65%) 0%, hsl(38, 85%, 50%) 50%, hsl(43, 90%, 65%) 100%)',
+      }}
     >
-      <FlyIcon size={iconSizeMap[size]} />
-    </span>
-  );
-
-  const wrapped = (
-    <span className="relative inline-block shrink-0">
-      {avatar}
-      {showBadge && badge}
+      <span className="block rounded-full bg-background p-[2px]">
+        {avatar}
+      </span>
+      {showBadge && (
+        <span
+          className={cn(
+            'absolute rounded-full bg-background flex items-center justify-center shadow-md ring-1 ring-[hsl(43,74%,55%)]',
+            badgeSizeMap[size]
+          )}
+          style={{ color: 'hsl(38, 85%, 45%)' }}
+        >
+          <FlyIcon size={iconSizeMap[size]} />
+        </span>
+      )}
     </span>
   );
 
   return (
     <TooltipProvider delayDuration={150}>
       <Tooltip>
-        <TooltipTrigger asChild>{wrapped}</TooltipTrigger>
+        <TooltipTrigger asChild>{goldGradientWrapper}</TooltipTrigger>
+        <TooltipContent side="top">{t('guide.tooltip')}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};
+
+/** Standalone golden fly icon — used inline next to a guide's display name. */
+export const GoldenFlyInline = ({ size = 14 }: { size?: number }) => {
+  const { t } = useTranslation();
+  return (
+    <TooltipProvider delayDuration={150}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span
+            className="inline-flex items-center justify-center"
+            style={{ color: 'hsl(38, 85%, 45%)' }}
+            aria-label={t('guide.tooltip')}
+          >
+            <FlyIcon size={size} />
+          </span>
+        </TooltipTrigger>
         <TooltipContent side="top">{t('guide.tooltip')}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
