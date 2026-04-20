@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { lovable } from '@/integrations/lovable';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
@@ -28,6 +27,7 @@ const AuthModal = ({ open, onOpenChange, defaultMode = 'login' }: AuthModalProps
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [requestGuideBadge, setRequestGuideBadge] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -56,15 +56,22 @@ const AuthModal = ({ open, onOpenChange, defaultMode = 'login' }: AuthModalProps
           setLoading(false);
           return;
         }
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            data: { full_name: `${fullName} ${lastName}`, username, provincia },
+            data: { full_name: `${fullName} ${lastName}`, username, provincia, request_guide: requestGuideBadge },
             emailRedirectTo: window.location.origin,
           },
         });
         if (error) throw error;
+        if (requestGuideBadge && data.user) {
+          supabase
+            .from('profiles')
+            .update({ guide_status: 'requested' })
+            .eq('user_id', data.user.id)
+            .then(() => {});
+        }
         toast.success('Controlla la tua email per confermare l\'account!');
       }
     } catch (err: any) {
@@ -72,20 +79,6 @@ const AuthModal = ({ open, onOpenChange, defaultMode = 'login' }: AuthModalProps
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleGoogleLogin = async () => {
-    const result = await lovable.auth.signInWithOAuth('google', {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) toast.error(result.error.message);
-  };
-
-  const handleAppleLogin = async () => {
-    const result = await lovable.auth.signInWithOAuth('apple', {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) toast.error(result.error.message);
   };
 
   const inputClass =
@@ -213,6 +206,14 @@ const AuthModal = ({ open, onOpenChange, defaultMode = 'login' }: AuthModalProps
                     </select>
                   </div>
                 </div>
+
+                {/* Guide Badge */}
+                <label className="flex items-start gap-2.5 cursor-pointer pt-1">
+                  <input type="checkbox" checked={requestGuideBadge} onChange={(e) => setRequestGuideBadge(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-[#242242]/20 text-[#242242] focus:ring-[#242242]/30 accent-[#242242]" />
+                  <span className="text-xs text-[#8c8c7a] leading-relaxed">
+                    Richiedi il <strong>Badge Guida</strong> — solo per guide di pesca a mosca certificate.
+                  </span>
+                </label>
 
                 {/* Privacy */}
                 <label className="flex items-start gap-2.5 cursor-pointer pt-1">
