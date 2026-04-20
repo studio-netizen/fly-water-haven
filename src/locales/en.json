@@ -286,6 +286,21 @@
     "applyBadge": "Apply for Guide Badge",
     "registerCheckbox": "Are you a professional guide? Request the badge"
   },
+  "resetPassword": {
+    "title": "Reset password",
+    "subtitle": "Enter your new password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "updatePassword": "Update password",
+    "updating": "Updating...",
+    "success": "Password updated successfully!",
+    "redirecting": "Redirecting to login...",
+    "error": "Error updating password",
+    "enterEmail": "Please enter your email first",
+    "emailSent": "Recovery email sent! Check your inbox.",
+    "invalidLink": "Invalid or expired recovery link",
+    "passwordTooShort": "Password must be at least 6 characters"
+  },
   "common": {
     "fishingTypes": {
       "fly-fishing": "🎣 Fly fishing",
