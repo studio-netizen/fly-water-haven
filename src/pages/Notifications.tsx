@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Heart, MessageCircle, Star, UserPlus, CheckCheck } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
+import SEOHead from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
 
 const ICONS: Record<string, any> = {
@@ -79,6 +80,8 @@ const Notifications = () => {
 
   return (
     <AppLayout>
+      <SEOHead title={`${t('notifications.title')} | Flywaters`} description={t('seo.defaultDescription')} />
+
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <h1 className="text-base font-semibold text-foreground">{t('notifications.title')}</h1>

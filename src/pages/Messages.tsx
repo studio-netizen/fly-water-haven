@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Send, ArrowLeft, PenSquare, Search, Users } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
+import SEOHead from '@/components/SEOHead';
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from 'react-i18next';
 
@@ -336,6 +337,7 @@ const Messages = () => {
   // Inbox
   return (
     <AppLayout>
+      <SEOHead title={`${t('messages.title')} | Flywaters`} description={t('seo.defaultDescription')} />
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <h1 className="text-base font-semibold text-foreground">{t('messages.title')}</h1>

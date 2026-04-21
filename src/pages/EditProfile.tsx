@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { ArrowLeft, Camera, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import SEOHead from '@/components/SEOHead';
 import { validateImageFile, compressImage } from '@/lib/image-compression';
 
 const FISHING_TYPES = [
@@ -139,6 +140,7 @@ const EditProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title={`${t('profile.editProfile')} | Flywaters`} description={t('seo.defaultDescription')} />
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <button onClick={() => navigate('/profile')} className="flex items-center gap-1 text-foreground">
