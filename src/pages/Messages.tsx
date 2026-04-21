@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Send, ArrowLeft, PenSquare, Search, Users } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
+import SEOHead from '@/components/SEOHead';
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from 'react-i18next';
 

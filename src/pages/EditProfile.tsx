@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { ArrowLeft, Camera, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import SEOHead from '@/components/SEOHead';
 import { validateImageFile, compressImage } from '@/lib/image-compression';
 
 const FISHING_TYPES = [

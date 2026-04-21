@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Heart, MessageCircle, Star, UserPlus, CheckCheck } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
+import SEOHead from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
 
 const ICONS: Record<string, any> = {

@@ -9,6 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { ImagePlus, ArrowLeft, MapPin, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import AppLayout from '@/components/AppLayout';
+import SEOHead from '@/components/SEOHead';
 import { validateImageFile, compressImage } from '@/lib/image-compression';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import TagChipSelector from '@/components/TagChipSelector';
