@@ -88,6 +88,7 @@ const Publish = () => {
 
   return (
     <AppLayout>
+      <SEOHead title="Nuovo post | Flywaters" description="Pubblica una nuova cattura o uno spot su Flywaters." />
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <button onClick={() => navigate(-1)} className="text-foreground">
