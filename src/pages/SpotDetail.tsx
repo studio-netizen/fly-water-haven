@@ -249,7 +249,13 @@ const SpotDetail = () => {
 
   return (
     <div className="min-h-screen pb-24" style={{ backgroundColor: '#f5f0e8', color: '#242242' }}>
-      <SEOHead title={`${spot.name} | Flywaters`} description={spot.description || `Scopri lo spot ${spot.name} su Flywaters`} />
+      <SEOHead
+        title={`${spot.name} | Flywaters`}
+        description={spot.description || `Scopri lo spot di pesca a mosca ${spot.name} su Flywaters: recensioni, specie ittiche e accesso.`}
+        canonical={`https://flywaters.app/spot/${spot.id}`}
+        ogImage={photos[0] || undefined}
+        ogType="place"
+      />
 
       <header className="sticky top-0 z-40 border-b border-[#242242]/10 px-4 py-3" style={{ backgroundColor: '#f5f0e8' }}>
         <div className="max-w-3xl mx-auto flex items-center gap-3">
