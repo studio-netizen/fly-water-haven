@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AuthModal from '@/components/AuthModal';
-import { MapPin, Camera, Users } from 'lucide-react';
+import { MapPin, Camera, Users, Search, Share2, Fish } from 'lucide-react';
 import logoWhite from '@/assets/flywaters-logo-white.png';
 import logoDark from '@/assets/flywaters-logo-dark.png';
 import heroImg from '@/assets/hero-mosca-club.jpg';
@@ -71,9 +71,9 @@ const Landing = () => {
   ];
 
   const steps = [
-    { num: '01', title: t('landing.step1Title'), desc: t('landing.step1Desc') },
-    { num: '02', title: t('landing.step2Title'), desc: t('landing.step2Desc') },
-    { num: '03', title: t('landing.step3Title'), desc: t('landing.step3Desc') },
+    { num: '01', title: t('landing.step1Title'), desc: t('landing.step1Desc'), Icon: Fish },
+    { num: '02', title: t('landing.step2Title'), desc: t('landing.step2Desc'), Icon: Search },
+    { num: '03', title: t('landing.step3Title'), desc: t('landing.step3Desc'), Icon: Share2 },
   ];
 
   const openAuth = (mode: 'login' | 'register') => {
@@ -228,11 +228,16 @@ const Landing = () => {
             ))}
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-            <motion.div key={seasons[activeSeason].key} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} className="overflow-hidden">
+          <div className="grid md:grid-cols-5 gap-8 md:gap-12 items-center">
+            <motion.div key={seasons[activeSeason].key} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} className="overflow-hidden md:col-span-3 relative">
               <img src={seasons[activeSeason].img} alt={seasons[activeSeason].label} className="w-full aspect-[4/5] object-cover" style={{ filter: 'saturate(0.8) contrast(1.05)' }} loading="lazy" width={800} height={1000} />
+              <div className="absolute inset-0 flex items-end p-6 md:p-10" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.05) 50%, transparent 100%)' }}>
+                <span className="text-white text-3xl md:text-5xl font-bold font-serif uppercase tracking-wider leading-none">
+                  {seasons[activeSeason].label}
+                </span>
+              </div>
             </motion.div>
-            <motion.div key={`text-${seasons[activeSeason].key}`} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
+            <motion.div key={`text-${seasons[activeSeason].key}`} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }} className="md:col-span-2 self-center">
               <h3 className="text-2xl md:text-3xl font-bold font-serif mb-4">{seasons[activeSeason].label}</h3>
               <p className="text-base md:text-lg leading-relaxed text-[#8c8c7a] mb-8">{seasons[activeSeason].desc}</p>
               <button onClick={() => navigate('/map')} className="text-sm font-semibold tracking-[0.18em] uppercase text-[#2D3A27] hover:opacity-70 transition-opacity inline-flex items-center gap-2 group">
@@ -277,7 +282,13 @@ const Landing = () => {
           <div className="grid md:grid-cols-3 gap-10 md:gap-12">
             {features.map((f, i) => (
               <motion.div key={f.title} variants={slow(i * 0.15)} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
-                <f.icon className="w-7 h-7 text-[#2D3A27] mb-5" strokeWidth={1.5} />
+                <div
+                  className="flex items-center justify-center mb-6"
+                  style={{ width: 80, height: 80, borderRadius: '50%', backgroundColor: '#f0ede8' }}
+                >
+                  <f.icon style={{ width: 48, height: 48, color: '#242242' }} strokeWidth={1.5} />
+                </div>
+                <div className="mb-3" style={{ width: 40, height: 3, backgroundColor: '#242242' }} />
                 <h3 className="text-xl font-bold font-serif mb-3">{f.title}</h3>
                 <p className="text-sm leading-relaxed text-[#8c8c7a]">{f.desc}</p>
               </motion.div>
@@ -309,7 +320,7 @@ const Landing = () => {
       </section>
 
       {/* ─── HOW IT WORKS ─── */}
-      <section className="px-6 py-20 md:py-32">
+      <section className="px-6 py-20 md:py-32" style={{ backgroundColor: '#f5f0e8' }}>
         <div className="max-w-7xl mx-auto">
           <motion.p variants={slow(0)} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-3">
             {t('landing.startIn3Steps')}
@@ -320,7 +331,8 @@ const Landing = () => {
           <div className="grid md:grid-cols-3 gap-10 md:gap-16">
             {steps.map((s, i) => (
               <motion.div key={s.num} variants={slow(i * 0.15)} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }}>
-                <span className="text-5xl font-bold font-serif text-[#242242]/10 block mb-4">{s.num}</span>
+                <s.Icon className="w-14 h-14 mb-4" strokeWidth={1.4} style={{ color: '#242242' }} />
+                <span className="text-5xl font-bold font-serif block mb-4" style={{ color: '#242242' }}>{s.num}</span>
                 <h3 className="text-xl font-bold font-serif mb-3">{s.title}</h3>
                 <p className="text-sm leading-relaxed text-[#8c8c7a]">{s.desc}</p>
               </motion.div>

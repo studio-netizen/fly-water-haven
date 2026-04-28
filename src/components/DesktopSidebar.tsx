@@ -58,11 +58,14 @@ const DesktopSidebar = () => {
             >
               <div className="relative">
                 <Icon className="w-5 h-5" strokeWidth={isActive ? 2.2 : 1.5} />
-                {badge && badge > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 bg-destructive text-destructive-foreground text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                {badge && badge > 0 ? (
+                  <span
+                    className="absolute flex items-center justify-center font-bold text-white"
+                    style={{ top: -4, right: -4, width: 18, height: 18, borderRadius: '50%', backgroundColor: '#e53e3e', fontSize: 11, lineHeight: 1 }}
+                  >
                     {badge > 9 ? '9+' : badge}
                   </span>
-                )}
+                ) : null}
               </div>
               {label}
             </NavLink>
