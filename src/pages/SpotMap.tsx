@@ -86,7 +86,7 @@ const SpotMap = () => {
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
-    const map = L.map(mapContainerRef.current).setView([42.5, 12.5], 6);
+    const map = L.map(mapContainerRef.current).setView([41.9028, 12.4964], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map);
