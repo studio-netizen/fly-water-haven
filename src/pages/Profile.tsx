@@ -228,9 +228,14 @@ const Profile = () => {
           <StatCard value={stats.following} label={t('profile.following')} onClick={() => setModalType('following')} />
         </div>
 
-        <div className="flex gap-2 pb-4">
+        <div className="flex gap-2 pb-4 justify-center">
           {isOwnProfile ? (
-            <Button variant="outline" className="flex-1 h-9 text-sm font-semibold" onClick={() => navigate('/profile/edit')}>
+            <Button
+              variant="outline"
+              className="h-9 text-sm font-semibold rounded-full w-auto"
+              style={{ padding: '10px 32px', borderRadius: 9999 }}
+              onClick={() => navigate('/profile/edit')}
+            >
               {t('profile.editProfile')}
             </Button>
           ) : user ? (
