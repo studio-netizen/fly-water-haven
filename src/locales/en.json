@@ -310,6 +310,7 @@
     "success": "Password updated successfully!",
     "redirecting": "Redirecting to login...",
     "error": "Error updating password",
+    "sending": "Sending recovery email...",
     "enterEmail": "Please enter your email first",
     "emailSent": "Recovery email sent! Check your inbox.",
     "invalidLink": "Invalid or expired recovery link",

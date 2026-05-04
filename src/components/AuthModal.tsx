@@ -81,6 +81,36 @@ const AuthModal = ({ open, onOpenChange, defaultMode = 'login' }: AuthModalProps
     }
   };
 
+  const handleResetPassword = async () => {
+    const resetEmail = email.trim();
+    console.log('Reset triggered for:', resetEmail);
+    toast('Invio email di recupero in corso...');
+
+    if (!resetEmail) {
+      toast.error('Inserisci la tua email prima di continuare');
+      return;
+    }
+
+    if (!supabase?.auth?.resetPasswordForEmail) {
+      console.error('Supabase auth client is not initialized in AuthModal');
+      toast.error('Impossibile inviare l’email di recupero. Riprova.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const redirectTo = `${window.location.origin}/reset-password`;
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, { redirectTo });
+      if (error) throw error;
+      toast.success('Email di recupero inviata. Controlla la tua casella di posta.');
+    } catch (err: any) {
+      console.error('Password reset failed:', err);
+      toast.error(err.message || 'Errore durante l’invio dell’email di recupero');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const inputClass =
     'pl-10 bg-white border border-[#242242]/10 rounded-xl focus-visible:ring-[#242242]/30 focus-visible:ring-2 h-12 text-base md:text-sm';
 
@@ -119,7 +149,15 @@ const AuthModal = ({ open, onOpenChange, defaultMode = 'login' }: AuthModalProps
                     </button>
                   </div>
                 </div>
-                <button type="button" className="text-xs text-[#8c8c7a] hover:text-[#242242] transition-colors">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    void handleResetPassword();
+                  }}
+                  className="text-xs text-[#8c8c7a] hover:text-[#242242] transition-colors"
+                >
                   Password dimenticata?
                 </button>
               </>
