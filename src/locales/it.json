@@ -310,6 +310,7 @@
     "success": "Password aggiornata con successo!",
     "redirecting": "Reindirizzamento al login...",
     "error": "Errore durante l'aggiornamento",
+    "sending": "Invio email di recupero in corso...",
     "enterEmail": "Inserisci prima la tua email",
     "emailSent": "Email di recupero inviata! Controlla la tua inbox.",
     "invalidLink": "Link di recupero non valido o scaduto",
