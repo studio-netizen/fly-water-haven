@@ -22,15 +22,34 @@ const ResetPassword = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    // Check if we have a recovery token in the URL hash
+    // 1) Check URL hash immediately (token present, not yet consumed by supabase-js)
     const hash = window.location.hash;
-    if (hash.includes('type=recovery') || hash.includes('access_token')) {
-      setHasRecoveryToken(true);
-    } else {
-      // No token - redirect to auth
-      toast.error(t('resetPassword.invalidLink'));
-      navigate('/auth');
-    }
+    const hasHashToken = hash.includes('type=recovery') || hash.includes('access_token');
+
+    // 2) Listen for PASSWORD_RECOVERY event (supabase-js parses hash async)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && hasHashToken)) {
+        setHasRecoveryToken(true);
+      }
+    });
+
+    // 3) Also check existing session — user may already be in recovery state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (hasHashToken || session) {
+        setHasRecoveryToken(true);
+      } else {
+        // Wait briefly in case supabase is still parsing the hash
+        const timeout = setTimeout(() => {
+          if (!window.location.hash.includes('access_token') && !hasHashToken) {
+            toast.error(t('resetPassword.invalidLink'));
+            navigate('/auth');
+          }
+        }, 1500);
+        return () => clearTimeout(timeout);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, [navigate, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
