@@ -73,6 +73,36 @@ const Auth = () => {
     }
   };
 
+  const handleResetPassword = async () => {
+    const resetEmail = email.trim();
+    console.log('Reset triggered for:', resetEmail);
+    toast(t('resetPassword.sending'));
+
+    if (!resetEmail) {
+      toast.error(t('resetPassword.enterEmail'));
+      return;
+    }
+
+    if (!supabase?.auth?.resetPasswordForEmail) {
+      console.error('Supabase auth client is not initialized on Auth page');
+      toast.error(t('resetPassword.error'));
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const redirectTo = `${window.location.origin}/reset-password`;
+      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, { redirectTo });
+      if (error) throw error;
+      toast.success(t('resetPassword.emailSent'));
+    } catch (err: any) {
+      console.error('Password reset failed:', err);
+      toast.error(err.message || t('resetPassword.error'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const inputClass =
     'pl-10 bg-white border border-[#242242]/10 rounded-xl focus-visible:ring-[#242242]/30 focus-visible:ring-2 h-12 text-base md:text-sm';
 
@@ -142,23 +172,10 @@ const Auth = () => {
               </div>
               <button 
                 type="button" 
-                onClick={async () => {
-                  if (!email) {
-                    toast.error(t('resetPassword.enterEmail'));
-                    return;
-                  }
-                  setLoading(true);
-                  try {
-                    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                      redirectTo: `${window.location.origin}/reset-password`,
-                    });
-                    if (error) throw error;
-                    toast.success(t('resetPassword.emailSent'));
-                  } catch (err: any) {
-                    toast.error(err.message);
-                  } finally {
-                    setLoading(false);
-                  }
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  void handleResetPassword();
                 }}
                 className="text-xs text-[#8c8c7a] hover:text-[#242242] transition-colors text-left"
               >
