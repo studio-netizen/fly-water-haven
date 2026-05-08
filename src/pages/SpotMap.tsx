@@ -129,39 +129,22 @@ const SpotMap = () => {
     if (!markersRef.current) return;
     markersRef.current.clearLayers();
 
-    const filteredSpots = filterType && filterType !== 'all' ? spots.filter(s => s.spot_type === filterType) : spots;
+    let filteredSpots = filterType && filterType !== 'all' ? spots.filter(s => s.spot_type === filterType) : spots;
+    if (filterHatch && filterHatch !== 'all') {
+      filteredSpots = filteredSpots.filter(s => s.hatch_activity?.includes(filterHatch));
+    }
 
     filteredSpots.forEach(spot => {
       const marker = L.marker([spot.latitude, spot.longitude], {
         icon: createSpotIcon(spot.spot_type, spot.avg_rating),
       });
-
-      const fishHtml = spot.fish_species?.length
-        ? `<div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap">${spot.fish_species.map(f => `<span style="font-size:11px;background:#f1f5f9;padding:1px 6px;border-radius:4px">${f}</span>`).join('')}</div>`
-        : '';
-
-      const ratingHtml = spot.avg_rating > 0
-        ? `<span style="font-size:11px">⭐ ${Number(spot.avg_rating).toFixed(1)} (${spot.review_count})</span>`
-        : '';
-
-      const typeLabel = SPOT_TYPE_LABELS[spot.spot_type] || spot.spot_type;
-
-      marker.bindPopup(`
-        <div style="min-width:180px">
-          <strong style="font-size:13px">${spot.name}</strong>
-          <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
-            <span style="font-size:11px;background:#e2e8f0;padding:1px 6px;border-radius:4px">${typeLabel}</span>
-            ${ratingHtml}
-          </div>
-          ${spot.description ? `<p style="font-size:11px;margin-top:4px;color:#64748b">${spot.description}</p>` : ''}
-          ${fishHtml}
-          <a href="/spot/${spot.id}" style="display:inline-block;margin-top:8px;font-size:11px;color:#242242;font-weight:600;text-decoration:none">Vedi dettagli →</a>
-        </div>
-      `);
-
+      marker.on('click', () => {
+        setActiveSpot(spot);
+        setDrawerOpen(true);
+      });
       marker.addTo(markersRef.current!);
     });
-  }, [spots, filterType]);
+  }, [spots, filterType, filterHatch]);
 
   const handlePhotosChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
