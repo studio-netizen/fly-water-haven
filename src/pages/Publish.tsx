@@ -24,6 +24,7 @@ const Publish = () => {
   const [selectedSpecies, setSelectedSpecies] = useState<string[]>([]);
   const [selectedTechniques, setSelectedTechniques] = useState<string[]>([]);
   const [selectedGear, setSelectedGear] = useState<string[]>([]);
+  const [selectedHatch, setSelectedHatch] = useState<string[]>([]);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
