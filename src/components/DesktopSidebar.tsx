@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import UserSearch from '@/components/UserSearch';
 
 const DesktopSidebar = () => {
   const { user, signOut } = useAuth();
@@ -42,6 +43,8 @@ const DesktopSidebar = () => {
         <img src={logoImg} alt="Flywaters — La community italiana per la pesca a mosca" className="h-8" />
         <LanguageSwitcher />
       </div>
+
+      <UserSearch />
 
       <nav className="flex-1 space-y-1">
         {links.map(({ to, icon: Icon, label, badge }) => {
