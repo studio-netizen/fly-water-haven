@@ -233,7 +233,22 @@
     "searchPlace": "Search location, river, lake...",
     "hatchActivity": "Active hatches",
     "hatchAll": "All hatches",
-    "legend": "Legend"
+    "legend": "Legend",
+    "reportIssue": "Report issue",
+    "reportTitle": "Report an environmental issue",
+    "reportType": "Report type",
+    "reportPollution": "Pollution",
+    "reportPoaching": "Poaching",
+    "reportOther": "Other",
+    "reportDescription": "Description",
+    "reportDescPlaceholder": "Describe what you observed...",
+    "reportLocationHelp": "Tap the map or search to set the location",
+    "reportPhoto": "Photo (optional)",
+    "reportSubmit": "Send report",
+    "reportSending": "Sending...",
+    "reportSent": "Report sent to admins for review. Thank you for protecting our waters!",
+    "reportError": "Error sending the report",
+    "reportLegend": "Approved report"
   },
   "spot": {
     "position": "Location",
