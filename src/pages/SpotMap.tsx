@@ -54,6 +54,22 @@ const createSpotIcon = (type: string, rating: number) => {
   });
 };
 
+const createReportIcon = () => L.divIcon({
+  className: 'report-marker',
+  html: `<div style="background:#dc2626;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:3px solid white;box-shadow:0 2px 8px rgba(220,38,38,0.5);font-size:16px;font-weight:700;">!</div>`,
+  iconSize: [32, 32],
+  iconAnchor: [16, 16],
+});
+
+interface ReportPin {
+  id: string;
+  type: string;
+  description: string;
+  latitude: number;
+  longitude: number;
+  image_url: string | null;
+}
+
 interface Spot {
   id: string;
   name: string;
