@@ -6,10 +6,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import GuideAvatar, { GoldenFlyInline } from '@/components/GuideAvatar';
 import { Button } from '@/components/ui/button';
-import { Grid3X3, MapPin, Pencil, Star, ArrowLeft, LogOut, Heart, MessageCircle, Camera, Plus, Sparkles } from 'lucide-react';
+import { Grid3X3, MapPin, Pencil, Star, ArrowLeft, LogOut, Heart, MessageCircle, Camera, Plus, Sparkles, Instagram, Globe } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import FollowersModal from '@/components/FollowersModal';
 import { useTranslation } from 'react-i18next';
+import { fetchUserBadges, type UserBadges as UserBadgesType } from '@/lib/badges';
+import UserBadges from '@/components/UserBadges';
+import ProfileSpotsMiniMap from '@/components/ProfileSpotsMiniMap';
 
 const Profile = () => {
   const { userId: paramUserId } = useParams<{ userId: string }>();
@@ -31,6 +34,7 @@ const Profile = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState<'posts' | 'spots'>('posts');
   const [modalType, setModalType] = useState<'followers' | 'following' | null>(null);
+  const [badges, setBadges] = useState<UserBadgesType | null>(null);
   const isOwnProfile = user?.id === userId;
   const { t } = useTranslation();
 
@@ -40,6 +44,7 @@ const Profile = () => {
       fetchPosts();
       fetchStats();
       fetchReviews();
+      fetchUserBadges(userId).then(setBadges);
       if (user && !isOwnProfile) checkFollowing();
     }
   }, [userId, user]);
