@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink as RRNavLink, useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import {
   LayoutDashboard,
@@ -11,6 +11,7 @@ import {
   LogOut,
   Menu,
   X,
+  AlertTriangle,
 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,7 @@ const navItems = [
   { to: '/admin/messages', icon: MessageSquare, label: 'Messaggi' },
   { to: '/admin/spots', icon: MapPin, label: 'Spot' },
   { to: '/admin/posts', icon: Image, label: 'Post' },
+  { to: '/admin/reports', icon: AlertTriangle, label: 'Segnalazioni' },
   { to: '/admin/blog', icon: PenLine, label: 'Blog' },
   { to: '/admin/settings', icon: Settings, label: 'Impostazioni' },
 ];
