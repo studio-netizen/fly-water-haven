@@ -307,6 +307,7 @@ const SpotMap = () => {
               </div>
 
               <TagChipSelector label="Specie presenti" options={FISH_SPECIES} selected={selectedSpotFish} onChange={setSelectedSpotFish} />
+              <TagChipSelector label="Schiuse / Hatch attive" options={HATCH_ACTIVITIES} selected={selectedSpotHatch} onChange={setSelectedSpotHatch} />
 
               <div className="space-y-1">
                 <Label>Informazioni di accesso</Label>
