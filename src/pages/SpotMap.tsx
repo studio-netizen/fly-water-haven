@@ -188,6 +188,7 @@ const SpotMap = () => {
         latitude: spotLocation.lat,
         longitude: spotLocation.lng,
         fish_species: selectedSpotFish.length > 0 ? selectedSpotFish : null,
+        hatch_activity: selectedSpotHatch.length > 0 ? selectedSpotHatch : null,
         access_info: spotAccess || null,
         photos: photoUrls.length > 0 ? photoUrls : null,
       });
@@ -207,6 +208,7 @@ const SpotMap = () => {
     setSpotName('');
     setSpotDesc('');
     setSelectedSpotFish([]);
+    setSelectedSpotHatch([]);
     setSpotAccess('');
     setSpotType('river');
     setSpotLocation(null);
