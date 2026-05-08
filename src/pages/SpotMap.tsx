@@ -91,6 +91,7 @@ const SpotMap = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<L.LayerGroup | null>(null);
   const [spots, setSpots] = useState<Spot[]>([]);
+  const [reports, setReports] = useState<ReportPin[]>([]);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [spotName, setSpotName] = useState('');
   const [spotType, setSpotType] = useState('river');
