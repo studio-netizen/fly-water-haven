@@ -266,13 +266,16 @@ const SpotMap = () => {
       <div className="flex-1 flex flex-col relative">
         <div className="absolute top-4 left-4 right-4 z-[1000] flex gap-2 flex-wrap">
           {user && (
-            <Button
-              onClick={() => { resetForm(); setShowAddDialog(true); }}
-              size="sm"
-              className="shadow-xl rounded-full"
-            >
-              <Plus className="w-4 h-4 mr-1" /> Aggiungi spot
-            </Button>
+            <>
+              <Button
+                onClick={() => { resetForm(); setShowAddDialog(true); }}
+                size="sm"
+                className="shadow-xl rounded-full"
+              >
+                <Plus className="w-4 h-4 mr-1" /> Aggiungi spot
+              </Button>
+              <ReportIssueDialog />
+            </>
           )}
           <Select value={filterType} onValueChange={setFilterType}>
             <SelectTrigger
