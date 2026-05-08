@@ -21,6 +21,7 @@ import { validateImageFile, compressImage } from '@/lib/image-compression';
 import MapAuthGate from '@/components/MapAuthGate';
 import SpotDetailDrawer from '@/components/SpotDetailDrawer';
 import MapLegend from '@/components/MapLegend';
+import ReportIssueDialog from '@/components/ReportIssueDialog';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
