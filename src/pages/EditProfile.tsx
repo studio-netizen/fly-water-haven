@@ -34,6 +34,8 @@ const EditProfile = () => {
   const [bio, setBio] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [fishingTypes, setFishingTypes] = useState<string[]>([]);
+  const [instagramUrl, setInstagramUrl] = useState('');
+  const [websiteUrl, setWebsiteUrl] = useState('');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState('');
   const [compressingAvatar, setCompressingAvatar] = useState(false);
@@ -49,6 +51,8 @@ const EditProfile = () => {
           setBio(data.bio || '');
           setAvatarUrl(data.avatar_url || '');
           setFishingTypes(data.fishing_types || []);
+          setInstagramUrl((data as any).instagram_url || '');
+          setWebsiteUrl((data as any).website_url || '');
         }
       } catch (err) {
         console.error('[EditProfile] fetch error:', err);
@@ -107,7 +111,9 @@ const EditProfile = () => {
           bio: bio.trim(),
           avatar_url: newAvatarUrl,
           fishing_types: fishingTypes,
-        })
+          instagram_url: instagramUrl.trim() || null,
+          website_url: websiteUrl.trim() || null,
+        } as any)
         .eq('user_id', user.id);
 
       if (error) throw error;
