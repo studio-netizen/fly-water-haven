@@ -124,11 +124,13 @@
     "startedFollowing": "ha iniziato a seguirti",
     "reviewedSpot": "ha recensito uno spot che segui",
     "sentMessage": "ti ha inviato un messaggio",
+    "reportApproved": "La tua segnalazione è stata approvata. Grazie per proteggere le acque!",
     "interacted": "ha interagito con te",
     "noNotifications": "Nessuna notifica ancora",
     "willAppearHere": "Le notifiche appariranno qui",
     "markRead": "Segna lette",
     "markAllRead": "Segna tutte come lette",
+    "dismiss": "Rimuovi",
     "someone": "Qualcuno"
   },
   "profile": {
