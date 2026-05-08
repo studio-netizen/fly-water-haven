@@ -8,7 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Star, Plus, Filter, X, ImagePlus, Loader2 } from 'lucide-react';
+import { MapPin, Star, Plus, Filter, X, ImagePlus, Loader2, ArrowUpDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import BottomNav from '@/components/BottomNav';
@@ -87,6 +88,7 @@ interface Spot {
 
 const SpotMap = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<L.LayerGroup | null>(null);
@@ -312,6 +314,20 @@ const SpotMap = () => {
               {HATCH_ACTIVITIES.map(h => (
                 <SelectItem key={h} value={h}>{h}</SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger
+              className="w-40 shadow-xl border-white/40 rounded-full"
+              style={{ background: 'rgba(255,255,255,0.72)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+            >
+              <ArrowUpDown className="w-4 h-4 mr-1" />
+              <SelectValue placeholder={t('map.sortBy')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recent">{t('map.sortRecent')}</SelectItem>
+              <SelectItem value="rating">{t('map.sortMostLiked')}</SelectItem>
+              <SelectItem value="reviews">{t('map.sortMostReviewed')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
