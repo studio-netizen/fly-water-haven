@@ -104,6 +104,7 @@ const SpotMap = () => {
   const [spotPhotosPreviews, setSpotPhotosPreviews] = useState<string[]>([]);
   const [filterType, setFilterType] = useState<string>('');
   const [filterHatch, setFilterHatch] = useState<string>('');
+  const [sortBy, setSortBy] = useState<string>('recent');
   const [loading, setLoading] = useState(false);
   const [activeSpot, setActiveSpot] = useState<Spot | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -164,6 +165,11 @@ const SpotMap = () => {
     if (filterHatch && filterHatch !== 'all') {
       filteredSpots = filteredSpots.filter(s => s.hatch_activity?.includes(filterHatch));
     }
+    if (sortBy === 'rating') {
+      filteredSpots = [...filteredSpots].sort((a, b) => (b.avg_rating || 0) - (a.avg_rating || 0));
+    } else if (sortBy === 'reviews') {
+      filteredSpots = [...filteredSpots].sort((a, b) => (b.review_count || 0) - (a.review_count || 0));
+    }
 
     filteredSpots.forEach(spot => {
       const marker = L.marker([spot.latitude, spot.longitude], {
@@ -187,7 +193,7 @@ const SpotMap = () => {
       marker.bindPopup(html);
       marker.addTo(markersRef.current!);
     });
-  }, [spots, reports, filterType, filterHatch]);
+  }, [spots, reports, filterType, filterHatch, sortBy]);
 
   const handlePhotosChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
