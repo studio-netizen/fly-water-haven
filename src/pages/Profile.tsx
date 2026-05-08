@@ -272,6 +272,12 @@ const Profile = () => {
           ) : null}
         </div>
 
+        {userId && (
+          <div className="pb-4">
+            <ProfileSpotsMiniMap userId={userId} />
+          </div>
+        )}
+
         <div className="border-t border-border flex">
           <button
             onClick={() => setActiveTab('posts')}
