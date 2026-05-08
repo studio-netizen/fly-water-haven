@@ -16,9 +16,11 @@ import DesktopSidebar from '@/components/DesktopSidebar';
 import { toast } from 'sonner';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import TagChipSelector from '@/components/TagChipSelector';
-import { FISH_SPECIES } from '@/lib/fishing-constants';
+import { FISH_SPECIES, HATCH_ACTIVITIES } from '@/lib/fishing-constants';
 import { validateImageFile, compressImage } from '@/lib/image-compression';
 import MapAuthGate from '@/components/MapAuthGate';
+import SpotDetailDrawer from '@/components/SpotDetailDrawer';
+import MapLegend from '@/components/MapLegend';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
