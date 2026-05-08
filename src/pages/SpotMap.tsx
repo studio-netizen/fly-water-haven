@@ -61,6 +61,8 @@ interface Spot {
   latitude: number;
   longitude: number;
   fish_species: string[] | null;
+  hatch_activity: string[] | null;
+  photos: string[] | null;
   access_info: string | null;
   avg_rating: number;
   review_count: number;
