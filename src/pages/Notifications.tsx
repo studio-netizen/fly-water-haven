@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Heart, MessageCircle, Star, UserPlus, CheckCheck } from 'lucide-react';
+import { Heart, MessageCircle, Star, UserPlus, CheckCheck, Shield, X } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +15,7 @@ const ICONS: Record<string, any> = {
   review: Star,
   follow: UserPlus,
   message: MessageCircle,
+  report_approved: Shield,
 };
 
 const Notifications = () => {
@@ -62,8 +63,20 @@ const Notifications = () => {
       case 'follow': return t('notifications.startedFollowing');
       case 'review': return t('notifications.reviewedSpot');
       case 'message': return t('notifications.sentMessage');
+      case 'report_approved': return t('notifications.reportApproved');
       default: return t('notifications.interacted');
     }
+  };
+
+  const markRead = async (id: string) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    await supabase.from('notifications').update({ read: true }).eq('id', id);
+  };
+
+  const dismiss = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    setNotifications(prev => prev.filter(n => n.id !== id));
+    await supabase.from('notifications').delete().eq('id', id);
   };
 
   if (!user) {
@@ -126,12 +139,15 @@ const Notifications = () => {
             const Icon = ICONS[n.type] || Heart;
             const profile = n.profiles;
             return (
-              <button
+              <div
                 key={n.id}
                 onClick={() => {
-                  if (n.type === 'follow' && profile?.user_id) navigate(`/profile/${profile.user_id}`);
+                  if (!n.read) markRead(n.id);
+                  if ((n.type === 'like' || n.type === 'comment') && n.post_id) navigate(`/post/${n.post_id}`);
+                  else if (n.type === 'follow' && profile?.user_id) navigate(`/profile/${profile.user_id}`);
+                  else if (n.type === 'report_approved') navigate('/map');
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 border-b border-border text-left transition-colors hover:bg-muted/30 ${!n.read ? 'bg-primary/5' : ''}`}
+                className={`group w-full flex items-center gap-3 px-4 py-3 border-b border-border text-left transition-colors hover:bg-muted/30 cursor-pointer ${!n.read ? 'bg-primary/5' : ''}`}
               >
                 <Avatar className="h-11 w-11 flex-shrink-0">
                   <AvatarImage src={profile?.avatar_url || ''} />
@@ -141,13 +157,23 @@ const Notifications = () => {
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-foreground">
-                    <span className="font-semibold">{profile?.display_name || profile?.username || t('notifications.someone')}</span>{' '}
+                    {n.type !== 'report_approved' && (
+                      <span className="font-semibold">{profile?.display_name || profile?.username || t('notifications.someone')}</span>
+                    )}
+                    {n.type !== 'report_approved' && ' '}
                     {getMessage(n.type)}
                   </p>
                   <p className="text-xs text-muted-foreground mt-0.5">{formatTime(n.created_at)}</p>
                 </div>
-                <Icon className={`w-5 h-5 flex-shrink-0 ${n.type === 'like' ? 'text-destructive' : 'text-muted-foreground'}`} />
-              </button>
+                <Icon className={`w-5 h-5 flex-shrink-0 ${n.type === 'like' ? 'text-destructive' : n.type === 'report_approved' ? 'text-[#dc2626]' : 'text-muted-foreground'}`} />
+                <button
+                  onClick={(e) => dismiss(e, n.id)}
+                  className="opacity-0 group-hover:opacity-100 p-1 rounded-full text-muted-foreground hover:bg-muted transition-opacity"
+                  aria-label={t('notifications.dismiss')}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             );
           })
         )}
