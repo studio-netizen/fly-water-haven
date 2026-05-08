@@ -175,7 +175,19 @@ const SpotMap = () => {
       });
       marker.addTo(markersRef.current!);
     });
-  }, [spots, filterType, filterHatch]);
+
+    reports.forEach(rep => {
+      const marker = L.marker([rep.latitude, rep.longitude], { icon: createReportIcon() });
+      const html = `
+        <div style="min-width:200px;font-family:inherit;">
+          <strong style="color:#dc2626;text-transform:uppercase;font-size:11px;">${rep.type}</strong>
+          <p style="margin:4px 0 0 0;font-size:13px;line-height:1.4;">${rep.description.replace(/</g,'&lt;')}</p>
+          ${rep.image_url ? `<img src="${rep.image_url}" alt="report" style="margin-top:6px;width:100%;border-radius:6px;" />` : ''}
+        </div>`;
+      marker.bindPopup(html);
+      marker.addTo(markersRef.current!);
+    });
+  }, [spots, reports, filterType, filterHatch]);
 
   const handlePhotosChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
