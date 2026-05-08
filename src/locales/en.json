@@ -124,11 +124,13 @@
     "startedFollowing": "started following you",
     "reviewedSpot": "reviewed a spot you follow",
     "sentMessage": "sent you a message",
+    "reportApproved": "Your environmental report was approved. Thank you for protecting our waters!",
     "interacted": "interacted with you",
     "noNotifications": "No notifications yet",
     "willAppearHere": "Notifications will appear here",
     "markRead": "Mark read",
     "markAllRead": "Mark all as read",
+    "dismiss": "Dismiss",
     "someone": "Someone"
   },
   "profile": {
@@ -164,7 +166,10 @@
     "emptyReviewsDescOwn": "Visit the map, review the rivers you fished and help the community.",
     "exploreSpots": "Explore the map",
     "emptyReviewsTitleOther": "No reviews",
-    "emptyReviewsDescOther": "This angler hasn't reviewed any spots yet."
+    "emptyReviewsDescOther": "This angler hasn't reviewed any spots yet.",
+    "instagram": "Instagram",
+    "website": "Website",
+    "userSpots": "Shared spots"
   },
   "posts": {
     "addCaption": "Add a caption...",
@@ -248,7 +253,15 @@
     "reportSending": "Sending...",
     "reportSent": "Report sent to admins for review. Thank you for protecting our waters!",
     "reportError": "Error sending the report",
-    "reportLegend": "Approved report"
+    "reportLegend": "Approved report",
+    "sortBy": "Sort",
+    "sortRecent": "Most recent",
+    "sortMostLiked": "Most liked",
+    "sortMostReviewed": "Most reviewed"
+  },
+  "badges": {
+    "explorer": "Explorer",
+    "sentinel": "Sentinel"
   },
   "spot": {
     "position": "Location",
