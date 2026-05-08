@@ -224,6 +224,23 @@ const Profile = () => {
               ))}
             </div>
           )}
+          {badges && (badges.explorer || badges.sentinel) && (
+            <div className="mt-2"><UserBadges badges={badges} /></div>
+          )}
+          {(profile.instagram_url || profile.website_url) && (
+            <div className="flex gap-3 mt-2 justify-center">
+              {profile.instagram_url && (
+                <a href={profile.instagram_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground" aria-label="Instagram">
+                  <Instagram className="w-4 h-4" />
+                </a>
+              )}
+              {profile.website_url && (
+                <a href={profile.website_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground" aria-label="Website">
+                  <Globe className="w-4 h-4" />
+                </a>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Prominent counter cards (visual hierarchy) */}
