@@ -1,4 +1,4 @@
-import { NavLink as RRNavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import {
   LayoutDashboard,
