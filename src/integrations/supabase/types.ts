@@ -402,11 +402,13 @@ export type Database = {
           fishing_types: string[] | null
           guide_status: string
           id: string
+          instagram_url: string | null
           is_guide: boolean
           onboarding_completed: boolean
           updated_at: string
           user_id: string
           username: string | null
+          website_url: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -416,11 +418,13 @@ export type Database = {
           fishing_types?: string[] | null
           guide_status?: string
           id?: string
+          instagram_url?: string | null
           is_guide?: boolean
           onboarding_completed?: boolean
           updated_at?: string
           user_id: string
           username?: string | null
+          website_url?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -430,11 +434,13 @@ export type Database = {
           fishing_types?: string[] | null
           guide_status?: string
           id?: string
+          instagram_url?: string | null
           is_guide?: boolean
           onboarding_completed?: boolean
           updated_at?: string
           user_id?: string
           username?: string | null
+          website_url?: string | null
         }
         Relationships: []
       }

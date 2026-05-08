@@ -124,11 +124,13 @@
     "startedFollowing": "ha iniziato a seguirti",
     "reviewedSpot": "ha recensito uno spot che segui",
     "sentMessage": "ti ha inviato un messaggio",
+    "reportApproved": "La tua segnalazione è stata approvata. Grazie per proteggere le acque!",
     "interacted": "ha interagito con te",
     "noNotifications": "Nessuna notifica ancora",
     "willAppearHere": "Le notifiche appariranno qui",
     "markRead": "Segna lette",
     "markAllRead": "Segna tutte come lette",
+    "dismiss": "Rimuovi",
     "someone": "Qualcuno"
   },
   "profile": {
@@ -164,7 +166,10 @@
     "emptyReviewsDescOwn": "Visita la mappa, recensisci i fiumi che hai pescato e aiuta la community.",
     "exploreSpots": "Esplora la mappa",
     "emptyReviewsTitleOther": "Nessuna recensione",
-    "emptyReviewsDescOther": "Questo pescatore non ha ancora recensito spot."
+    "emptyReviewsDescOther": "Questo pescatore non ha ancora recensito spot.",
+    "instagram": "Instagram",
+    "website": "Sito web",
+    "userSpots": "Spot condivisi"
   },
   "posts": {
     "addCaption": "Scrivi una didascalia...",
@@ -248,7 +253,15 @@
     "reportSending": "Invio...",
     "reportSent": "Segnalazione inviata agli amministratori per la revisione. Grazie per proteggere le nostre acque!",
     "reportError": "Errore nell'invio della segnalazione",
-    "reportLegend": "Segnalazione approvata"
+    "reportLegend": "Segnalazione approvata",
+    "sortBy": "Ordina",
+    "sortRecent": "Più recenti",
+    "sortMostLiked": "Più valutati",
+    "sortMostReviewed": "Più recensiti"
+  },
+  "badges": {
+    "explorer": "Esploratore",
+    "sentinel": "Sentinella"
   },
   "spot": {
     "position": "Posizione",
@@ -341,6 +354,7 @@
       "baitcasting": "🎯 Baitcasting",
       "surfcasting": "🌊 Surfcasting",
       "ice-fishing": "🧊 Pesca sul ghiaccio"
-    }
+    },
+    "searchUsers": "Cerca pescatori..."
   }
 }
