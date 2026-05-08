@@ -21,6 +21,7 @@ import { validateImageFile, compressImage } from '@/lib/image-compression';
 import MapAuthGate from '@/components/MapAuthGate';
 import SpotDetailDrawer from '@/components/SpotDetailDrawer';
 import MapLegend from '@/components/MapLegend';
+import ReportIssueDialog from '@/components/ReportIssueDialog';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -53,6 +54,22 @@ const createSpotIcon = (type: string, rating: number) => {
   });
 };
 
+const createReportIcon = () => L.divIcon({
+  className: 'report-marker',
+  html: `<div style="background:#dc2626;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:3px solid white;box-shadow:0 2px 8px rgba(220,38,38,0.5);font-size:16px;font-weight:700;">!</div>`,
+  iconSize: [32, 32],
+  iconAnchor: [16, 16],
+});
+
+interface ReportPin {
+  id: string;
+  type: string;
+  description: string;
+  latitude: number;
+  longitude: number;
+  image_url: string | null;
+}
+
 interface Spot {
   id: string;
   name: string;
@@ -74,6 +91,7 @@ const SpotMap = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<L.LayerGroup | null>(null);
   const [spots, setSpots] = useState<Spot[]>([]);
+  const [reports, setReports] = useState<ReportPin[]>([]);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [spotName, setSpotName] = useState('');
   const [spotType, setSpotType] = useState('river');
@@ -110,13 +128,26 @@ const SpotMap = () => {
 
   useEffect(() => {
     // Gated content: only authenticated users get spot coordinates
-    if (user) fetchSpots();
-    else setSpots([]);
+    if (user) {
+      fetchSpots();
+      fetchReports();
+    } else {
+      setSpots([]);
+      setReports([]);
+    }
   }, [user]);
 
   const fetchSpots = async () => {
     const { data } = await supabase.from('spots').select('*').order('created_at', { ascending: false });
     if (data) setSpots(data as Spot[]);
+  };
+
+  const fetchReports = async () => {
+    const { data } = await supabase
+      .from('reports')
+      .select('id, type, description, latitude, longitude, image_url')
+      .eq('status', 'approved');
+    if (data) setReports(data as ReportPin[]);
   };
 
   useEffect(() => {
@@ -144,7 +175,19 @@ const SpotMap = () => {
       });
       marker.addTo(markersRef.current!);
     });
-  }, [spots, filterType, filterHatch]);
+
+    reports.forEach(rep => {
+      const marker = L.marker([rep.latitude, rep.longitude], { icon: createReportIcon() });
+      const html = `
+        <div style="min-width:200px;font-family:inherit;">
+          <strong style="color:#dc2626;text-transform:uppercase;font-size:11px;">${rep.type}</strong>
+          <p style="margin:4px 0 0 0;font-size:13px;line-height:1.4;">${rep.description.replace(/</g,'&lt;')}</p>
+          ${rep.image_url ? `<img src="${rep.image_url}" alt="report" style="margin-top:6px;width:100%;border-radius:6px;" />` : ''}
+        </div>`;
+      marker.bindPopup(html);
+      marker.addTo(markersRef.current!);
+    });
+  }, [spots, reports, filterType, filterHatch]);
 
   const handlePhotosChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -223,13 +266,16 @@ const SpotMap = () => {
       <div className="flex-1 flex flex-col relative">
         <div className="absolute top-4 left-4 right-4 z-[1000] flex gap-2 flex-wrap">
           {user && (
-            <Button
-              onClick={() => { resetForm(); setShowAddDialog(true); }}
-              size="sm"
-              className="shadow-xl rounded-full"
-            >
-              <Plus className="w-4 h-4 mr-1" /> Aggiungi spot
-            </Button>
+            <>
+              <Button
+                onClick={() => { resetForm(); setShowAddDialog(true); }}
+                size="sm"
+                className="shadow-xl rounded-full"
+              >
+                <Plus className="w-4 h-4 mr-1" /> Aggiungi spot
+              </Button>
+              <ReportIssueDialog />
+            </>
           )}
           <Select value={filterType} onValueChange={setFilterType}>
             <SelectTrigger

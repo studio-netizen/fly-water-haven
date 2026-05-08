@@ -56,48 +56,50 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
 
   const handleSubmit = async () => {
     if (!user || !imageFile) return;
-    setLoading(true);
-    setProgress(20);
-    setProgressLabel('Caricamento...');
 
-    try {
+    // Snapshot form data and close dialog immediately for background upload
+    const snapshot = {
+      file: imageFile,
+      caption,
+      location,
+      species: selectedSpecies,
+      techniques: selectedTechniques,
+      gear: selectedGear,
+    };
+
+    setOpen(false);
+    setCaption('');
+    setLocation(null);
+    setSelectedSpecies([]);
+    setSelectedTechniques([]);
+    setSelectedGear([]);
+    setImageFile(null);
+    setImagePreview(null);
+    setSizeInfo(null);
+
+    const uploadPromise = (async () => {
       const path = `${user.id}/${Date.now()}.webp`;
-      setProgress(55);
-      const { error: uploadError } = await supabase.storage.from('posts').upload(path, imageFile);
+      const { error: uploadError } = await supabase.storage.from('posts').upload(path, snapshot.file);
       if (uploadError) throw uploadError;
-
-      setProgress(80);
       const { data: { publicUrl } } = supabase.storage.from('posts').getPublicUrl(path);
-
       const { error } = await supabase.from('posts').insert({
         user_id: user.id,
         image_url: publicUrl,
-        caption: caption || null,
-        location_tag: location?.name || null,
-        fish_species: selectedSpecies.length > 0 ? selectedSpecies : null,
-        fishing_technique: selectedTechniques.length > 0 ? selectedTechniques : null,
-        gear_used: selectedGear.length > 0 ? selectedGear : null,
+        caption: snapshot.caption || null,
+        location_tag: snapshot.location?.name || null,
+        fish_species: snapshot.species.length > 0 ? snapshot.species : null,
+        fishing_technique: snapshot.techniques.length > 0 ? snapshot.techniques : null,
+        gear_used: snapshot.gear.length > 0 ? snapshot.gear : null,
       });
-
       if (error) throw error;
-      setProgress(100);
-      toast.success('Post condiviso!');
-      setOpen(false);
-      setCaption('');
-      setLocation(null);
-      setSelectedSpecies([]);
-      setSelectedTechniques([]);
-      setSelectedGear([]);
-      setImageFile(null);
-      setImagePreview(null);
-      setSizeInfo(null);
       onPostCreated();
-    } catch {
-      toast.error('Errore nel caricamento. Riprova.');
-    } finally {
-      setLoading(false);
-      setTimeout(() => { setProgress(0); setProgressLabel(''); }, 600);
-    }
+    })();
+
+    toast.promise(uploadPromise, {
+      loading: 'Caricamento post in corso...',
+      success: 'Post pubblicato!',
+      error: 'Errore nel caricamento. Riprova.',
+    });
   };
 
   if (!user) return null;

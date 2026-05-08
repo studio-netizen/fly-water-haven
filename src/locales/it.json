@@ -233,7 +233,22 @@
     "searchPlace": "Cerca località, fiume, lago...",
     "hatchActivity": "Schiuse attive",
     "hatchAll": "Tutte le schiuse",
-    "legend": "Legenda"
+    "legend": "Legenda",
+    "reportIssue": "Segnala problema",
+    "reportTitle": "Segnala un problema ambientale",
+    "reportType": "Tipo di segnalazione",
+    "reportPollution": "Inquinamento",
+    "reportPoaching": "Bracconaggio",
+    "reportOther": "Altro",
+    "reportDescription": "Descrizione",
+    "reportDescPlaceholder": "Descrivi cosa hai osservato...",
+    "reportLocationHelp": "Tocca la mappa o cerca per indicare la posizione",
+    "reportPhoto": "Foto (opzionale)",
+    "reportSubmit": "Invia segnalazione",
+    "reportSending": "Invio...",
+    "reportSent": "Segnalazione inviata agli amministratori per la revisione. Grazie per proteggere le nostre acque!",
+    "reportError": "Errore nell'invio della segnalazione",
+    "reportLegend": "Segnalazione approvata"
   },
   "spot": {
     "position": "Posizione",

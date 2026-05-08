@@ -438,6 +438,54 @@ export type Database = {
         }
         Relationships: []
       }
+      reports: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          latitude: number
+          longitude: number
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          image_url?: string | null
+          latitude: number
+          longitude: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          latitude?: number
+          longitude?: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
           content: string | null

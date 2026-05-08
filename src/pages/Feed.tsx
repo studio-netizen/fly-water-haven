@@ -142,14 +142,32 @@ const Feed = () => {
   const toggleLike = async (postId: string) => {
     if (!user) return;
     const isLiked = likedPosts.has(postId);
-    if (isLiked) {
-      await supabase.from('likes').delete().eq('user_id', user.id).eq('post_id', postId);
-      setLikedPosts(prev => { const n = new Set(prev); n.delete(postId); return n; });
-      setPosts(prev => prev.map(p => p.id === postId ? { ...p, like_count: p.like_count - 1 } : p));
-    } else {
-      await supabase.from('likes').insert({ user_id: user.id, post_id: postId });
-      setLikedPosts(prev => new Set(prev).add(postId));
-      setPosts(prev => prev.map(p => p.id === postId ? { ...p, like_count: p.like_count + 1 } : p));
+
+    // Optimistic update
+    setLikedPosts(prev => {
+      const n = new Set(prev);
+      if (isLiked) n.delete(postId); else n.add(postId);
+      return n;
+    });
+    setPosts(prev => prev.map(p =>
+      p.id === postId ? { ...p, like_count: p.like_count + (isLiked ? -1 : 1) } : p
+    ));
+
+    const { error } = isLiked
+      ? await supabase.from('likes').delete().eq('user_id', user.id).eq('post_id', postId)
+      : await supabase.from('likes').insert({ user_id: user.id, post_id: postId });
+
+    if (error) {
+      // Rollback
+      setLikedPosts(prev => {
+        const n = new Set(prev);
+        if (isLiked) n.add(postId); else n.delete(postId);
+        return n;
+      });
+      setPosts(prev => prev.map(p =>
+        p.id === postId ? { ...p, like_count: p.like_count + (isLiked ? 1 : -1) } : p
+      ));
+      toast.error('Errore. Riprova.');
     }
   };
 

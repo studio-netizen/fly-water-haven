@@ -94,14 +94,20 @@ const PostDetail = () => {
 
   const toggleLike = async () => {
     if (!user || !post) return;
-    if (liked) {
-      await supabase.from('likes').delete().eq('user_id', user.id).eq('post_id', post.id);
-      setLiked(false);
-      setPost(p => p ? { ...p, like_count: p.like_count - 1 } : p);
-    } else {
-      await supabase.from('likes').insert({ user_id: user.id, post_id: post.id });
-      setLiked(true);
-      setPost(p => p ? { ...p, like_count: p.like_count + 1 } : p);
+    const wasLiked = liked;
+
+    // Optimistic update
+    setLiked(!wasLiked);
+    setPost(p => p ? { ...p, like_count: p.like_count + (wasLiked ? -1 : 1) } : p);
+
+    const { error } = wasLiked
+      ? await supabase.from('likes').delete().eq('user_id', user.id).eq('post_id', post.id)
+      : await supabase.from('likes').insert({ user_id: user.id, post_id: post.id });
+
+    if (error) {
+      // Rollback
+      setLiked(wasLiked);
+      setPost(p => p ? { ...p, like_count: p.like_count + (wasLiked ? 1 : -1) } : p);
     }
   };
 

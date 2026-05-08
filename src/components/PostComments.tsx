@@ -67,25 +67,48 @@ const PostComments = ({ postId, commentCount, onCommentAdded }: PostCommentsProp
     e.preventDefault();
     if (!user || !newComment.trim() || loading) return;
 
-    setLoading(true);
-    const { error } = await supabase.from('comments').insert({
-      post_id: postId,
-      user_id: user.id,
-      content: newComment.trim(),
-    });
+    const content = newComment.trim();
+    const tempId = `temp-${Date.now()}`;
 
-    if (error) {
+    // Fetch own profile for optimistic display (cached locally if available)
+    const { data: ownProfile } = await supabase
+      .from('profiles')
+      .select('username, display_name, avatar_url, is_guide')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    const optimistic: Comment = {
+      id: tempId,
+      content,
+      created_at: new Date().toISOString(),
+      user_id: user.id,
+      profiles: ownProfile || null,
+    };
+
+    // Optimistic update
+    setComments(prev => [...prev, optimistic]);
+    setNewComment('');
+    if (!expanded) setExpanded(true);
+    setLoading(true);
+
+    const { data: inserted, error } = await supabase
+      .from('comments')
+      .insert({ post_id: postId, user_id: user.id, content })
+      .select('id, content, created_at, user_id')
+      .single();
+
+    if (error || !inserted) {
+      // Rollback
+      setComments(prev => prev.filter(c => c.id !== tempId));
+      setNewComment(content);
       toast.error('Errore nell\'invio del commento');
     } else {
-      setNewComment('');
-      // Update comment count on the post
+      setComments(prev => prev.map(c => c.id === tempId ? { ...inserted, profiles: ownProfile || null } : c));
       await supabase
         .from('posts')
         .update({ comment_count: commentCount + 1 })
         .eq('id', postId);
       onCommentAdded();
-      fetchComments();
-      if (!expanded) setExpanded(true);
     }
     setLoading(false);
   };
