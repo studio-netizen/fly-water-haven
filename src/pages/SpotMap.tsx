@@ -79,12 +79,16 @@ const SpotMap = () => {
   const [spotType, setSpotType] = useState('river');
   const [spotDesc, setSpotDesc] = useState('');
   const [selectedSpotFish, setSelectedSpotFish] = useState<string[]>([]);
+  const [selectedSpotHatch, setSelectedSpotHatch] = useState<string[]>([]);
   const [spotAccess, setSpotAccess] = useState('');
   const [spotLocation, setSpotLocation] = useState<LocationResult | null>(null);
   const [spotPhotos, setSpotPhotos] = useState<File[]>([]);
   const [spotPhotosPreviews, setSpotPhotosPreviews] = useState<string[]>([]);
   const [filterType, setFilterType] = useState<string>('');
+  const [filterHatch, setFilterHatch] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [activeSpot, setActiveSpot] = useState<Spot | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const photosRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
