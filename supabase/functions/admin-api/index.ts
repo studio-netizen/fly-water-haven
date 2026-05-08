@@ -367,6 +367,46 @@ serve(async (req) => {
         return json(data);
       }
 
+      // ─── Sentinel Reports ───
+      case "get_reports": {
+        const { status } = params as { status?: string };
+        let q = supabase.from("reports").select("*").order("created_at", { ascending: false });
+        if (status) q = q.eq("status", status);
+        const { data: reports } = await q;
+
+        const userIds = Array.from(new Set((reports || []).map((r: any) => r.user_id)));
+        const { data: profs } = userIds.length
+          ? await supabase.from("profiles").select("user_id, username, display_name").in("user_id", userIds)
+          : { data: [] as any[] };
+        const profMap: Record<string, any> = {};
+        (profs || []).forEach((p: any) => { profMap[p.user_id] = p; });
+
+        return json(
+          (reports || []).map((r: any) => ({ ...r, reporter: profMap[r.user_id] || null }))
+        );
+      }
+
+      case "review_report": {
+        const { id, status, admin_notes } = params as { id: string; status: 'approved' | 'rejected'; admin_notes?: string };
+        if (!['approved', 'rejected'].includes(status)) return json({ error: "Invalid status" }, 400);
+        const { error } = await supabase
+          .from("reports")
+          .update({
+            status,
+            admin_notes: admin_notes || null,
+            reviewed_at: new Date().toISOString(),
+          })
+          .eq("id", id);
+        if (error) return json({ error: error.message }, 400);
+        return json({ success: true });
+      }
+
+      case "delete_report": {
+        const { id } = params;
+        await supabase.from("reports").delete().eq("id", id);
+        return json({ success: true });
+      }
+
       default:
         return json({ error: "Unknown action" }, 400);
     }
