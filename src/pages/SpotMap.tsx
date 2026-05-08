@@ -128,13 +128,26 @@ const SpotMap = () => {
 
   useEffect(() => {
     // Gated content: only authenticated users get spot coordinates
-    if (user) fetchSpots();
-    else setSpots([]);
+    if (user) {
+      fetchSpots();
+      fetchReports();
+    } else {
+      setSpots([]);
+      setReports([]);
+    }
   }, [user]);
 
   const fetchSpots = async () => {
     const { data } = await supabase.from('spots').select('*').order('created_at', { ascending: false });
     if (data) setSpots(data as Spot[]);
+  };
+
+  const fetchReports = async () => {
+    const { data } = await supabase
+      .from('reports')
+      .select('id, type, description, latitude, longitude, image_url')
+      .eq('status', 'approved');
+    if (data) setReports(data as ReportPin[]);
   };
 
   useEffect(() => {
