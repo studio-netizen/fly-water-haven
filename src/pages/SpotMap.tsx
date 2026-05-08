@@ -221,18 +221,21 @@ const SpotMap = () => {
       <SEOHead title="Mappa Spot | Flywaters" description="Esplora la mappa dei migliori spot di pesca a mosca in Italia." />
       <DesktopSidebar />
       <div className="flex-1 flex flex-col relative">
-        <div className="absolute top-4 left-4 right-4 z-[1000] flex gap-2">
+        <div className="absolute top-4 left-4 right-4 z-[1000] flex gap-2 flex-wrap">
           {user && (
             <Button
               onClick={() => { resetForm(); setShowAddDialog(true); }}
               size="sm"
-              className="shadow-lg"
+              className="shadow-xl rounded-full"
             >
               <Plus className="w-4 h-4 mr-1" /> Aggiungi spot
             </Button>
           )}
           <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className="w-32 bg-card shadow-lg">
+            <SelectTrigger
+              className="w-36 shadow-xl border-white/40 rounded-full"
+              style={{ background: 'rgba(255,255,255,0.72)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+            >
               <Filter className="w-4 h-4 mr-1" />
               <SelectValue placeholder="Tutti i tipi" />
             </SelectTrigger>
@@ -244,9 +247,27 @@ const SpotMap = () => {
               <SelectItem value="stream">Torrente</SelectItem>
             </SelectContent>
           </Select>
+          <Select value={filterHatch} onValueChange={setFilterHatch}>
+            <SelectTrigger
+              className="w-40 shadow-xl border-white/40 rounded-full"
+              style={{ background: 'rgba(255,255,255,0.72)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+            >
+              <Filter className="w-4 h-4 mr-1" />
+              <SelectValue placeholder="Schiuse" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tutte le schiuse</SelectItem>
+              {HATCH_ACTIVITIES.map(h => (
+                <SelectItem key={h} value={h}>{h}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div ref={mapContainerRef} className="flex-1 z-0" />
+
+        <MapLegend />
+        <SpotDetailDrawer spot={activeSpot} open={drawerOpen} onOpenChange={setDrawerOpen} />
 
         <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
           <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
