@@ -230,7 +230,10 @@
     "saving": "Salvataggio...",
     "seeDetails": "Vedi dettagli",
     "position": "Posizione",
-    "searchPlace": "Cerca località, fiume, lago..."
+    "searchPlace": "Cerca località, fiume, lago...",
+    "hatchActivity": "Schiuse attive",
+    "hatchAll": "Tutte le schiuse",
+    "legend": "Legenda"
   },
   "spot": {
     "position": "Posizione",
