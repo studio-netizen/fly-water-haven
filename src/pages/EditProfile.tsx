@@ -262,6 +262,28 @@ const EditProfile = () => {
               ))}
             </div>
           </div>
+
+          <div>
+            <Label htmlFor="instagram">{t('profile.instagram')}</Label>
+            <Input
+              id="instagram"
+              type="url"
+              value={instagramUrl}
+              onChange={e => setInstagramUrl(e.target.value)}
+              placeholder="https://instagram.com/username"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="website">{t('profile.website')}</Label>
+            <Input
+              id="website"
+              type="url"
+              value={websiteUrl}
+              onChange={e => setWebsiteUrl(e.target.value)}
+              placeholder="https://..."
+            />
+          </div>
         </div>
       </div>
     </div>
