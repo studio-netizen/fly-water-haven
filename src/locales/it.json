@@ -166,7 +166,10 @@
     "emptyReviewsDescOwn": "Visita la mappa, recensisci i fiumi che hai pescato e aiuta la community.",
     "exploreSpots": "Esplora la mappa",
     "emptyReviewsTitleOther": "Nessuna recensione",
-    "emptyReviewsDescOther": "Questo pescatore non ha ancora recensito spot."
+    "emptyReviewsDescOther": "Questo pescatore non ha ancora recensito spot.",
+    "instagram": "Instagram",
+    "website": "Sito web",
+    "userSpots": "Spot condivisi"
   },
   "posts": {
     "addCaption": "Scrivi una didascalia...",
