@@ -230,7 +230,10 @@
     "saving": "Saving...",
     "seeDetails": "See details",
     "position": "Location",
-    "searchPlace": "Search location, river, lake..."
+    "searchPlace": "Search location, river, lake...",
+    "hatchActivity": "Active hatches",
+    "hatchAll": "All hatches",
+    "legend": "Legend"
   },
   "spot": {
     "position": "Location",

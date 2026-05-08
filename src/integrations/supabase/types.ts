@@ -338,6 +338,7 @@ export type Database = {
           fish_species: string[] | null
           fishing_technique: string[] | null
           gear_used: string[] | null
+          hatch_activity: string[] | null
           id: string
           image_url: string
           like_count: number | null
@@ -352,6 +353,7 @@ export type Database = {
           fish_species?: string[] | null
           fishing_technique?: string[] | null
           gear_used?: string[] | null
+          hatch_activity?: string[] | null
           id?: string
           image_url: string
           like_count?: number | null
@@ -366,6 +368,7 @@ export type Database = {
           fish_species?: string[] | null
           fishing_technique?: string[] | null
           gear_used?: string[] | null
+          hatch_activity?: string[] | null
           id?: string
           image_url?: string
           like_count?: number | null
@@ -481,6 +484,7 @@ export type Database = {
           created_by: string | null
           description: string | null
           fish_species: string[] | null
+          hatch_activity: string[] | null
           id: string
           latitude: number
           longitude: number
@@ -497,6 +501,7 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           fish_species?: string[] | null
+          hatch_activity?: string[] | null
           id?: string
           latitude: number
           longitude: number
@@ -513,6 +518,7 @@ export type Database = {
           created_by?: string | null
           description?: string | null
           fish_species?: string[] | null
+          hatch_activity?: string[] | null
           id?: string
           latitude?: number
           longitude?: number

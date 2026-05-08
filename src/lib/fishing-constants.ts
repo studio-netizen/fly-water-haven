@@ -9,6 +9,10 @@ export const FISHING_TECHNIQUES = [
   'Tenkara', 'Pesca al Tocco', 'Spinning', 'Surfcasting',
 ];
 
+export const HATCH_ACTIVITIES = [
+  'Ephemeroptera', 'Trichoptera', 'Plecoptera', 'Terrestrials',
+];
+
 export const FISHING_GEAR = [
   'Canna 2wt', 'Canna 3wt', 'Canna 4wt', 'Canna 5wt',
   'Canna 6wt', 'Canna 7wt', 'Canna 8wt+',

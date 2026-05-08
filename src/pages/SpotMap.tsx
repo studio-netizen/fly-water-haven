@@ -16,9 +16,11 @@ import DesktopSidebar from '@/components/DesktopSidebar';
 import { toast } from 'sonner';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import TagChipSelector from '@/components/TagChipSelector';
-import { FISH_SPECIES } from '@/lib/fishing-constants';
+import { FISH_SPECIES, HATCH_ACTIVITIES } from '@/lib/fishing-constants';
 import { validateImageFile, compressImage } from '@/lib/image-compression';
 import MapAuthGate from '@/components/MapAuthGate';
+import SpotDetailDrawer from '@/components/SpotDetailDrawer';
+import MapLegend from '@/components/MapLegend';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -59,6 +61,8 @@ interface Spot {
   latitude: number;
   longitude: number;
   fish_species: string[] | null;
+  hatch_activity: string[] | null;
+  photos: string[] | null;
   access_info: string | null;
   avg_rating: number;
   review_count: number;
@@ -75,12 +79,16 @@ const SpotMap = () => {
   const [spotType, setSpotType] = useState('river');
   const [spotDesc, setSpotDesc] = useState('');
   const [selectedSpotFish, setSelectedSpotFish] = useState<string[]>([]);
+  const [selectedSpotHatch, setSelectedSpotHatch] = useState<string[]>([]);
   const [spotAccess, setSpotAccess] = useState('');
   const [spotLocation, setSpotLocation] = useState<LocationResult | null>(null);
   const [spotPhotos, setSpotPhotos] = useState<File[]>([]);
   const [spotPhotosPreviews, setSpotPhotosPreviews] = useState<string[]>([]);
   const [filterType, setFilterType] = useState<string>('');
+  const [filterHatch, setFilterHatch] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [activeSpot, setActiveSpot] = useState<Spot | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const photosRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -121,39 +129,22 @@ const SpotMap = () => {
     if (!markersRef.current) return;
     markersRef.current.clearLayers();
 
-    const filteredSpots = filterType && filterType !== 'all' ? spots.filter(s => s.spot_type === filterType) : spots;
+    let filteredSpots = filterType && filterType !== 'all' ? spots.filter(s => s.spot_type === filterType) : spots;
+    if (filterHatch && filterHatch !== 'all') {
+      filteredSpots = filteredSpots.filter(s => s.hatch_activity?.includes(filterHatch));
+    }
 
     filteredSpots.forEach(spot => {
       const marker = L.marker([spot.latitude, spot.longitude], {
         icon: createSpotIcon(spot.spot_type, spot.avg_rating),
       });
-
-      const fishHtml = spot.fish_species?.length
-        ? `<div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap">${spot.fish_species.map(f => `<span style="font-size:11px;background:#f1f5f9;padding:1px 6px;border-radius:4px">${f}</span>`).join('')}</div>`
-        : '';
-
-      const ratingHtml = spot.avg_rating > 0
-        ? `<span style="font-size:11px">⭐ ${Number(spot.avg_rating).toFixed(1)} (${spot.review_count})</span>`
-        : '';
-
-      const typeLabel = SPOT_TYPE_LABELS[spot.spot_type] || spot.spot_type;
-
-      marker.bindPopup(`
-        <div style="min-width:180px">
-          <strong style="font-size:13px">${spot.name}</strong>
-          <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
-            <span style="font-size:11px;background:#e2e8f0;padding:1px 6px;border-radius:4px">${typeLabel}</span>
-            ${ratingHtml}
-          </div>
-          ${spot.description ? `<p style="font-size:11px;margin-top:4px;color:#64748b">${spot.description}</p>` : ''}
-          ${fishHtml}
-          <a href="/spot/${spot.id}" style="display:inline-block;margin-top:8px;font-size:11px;color:#242242;font-weight:600;text-decoration:none">Vedi dettagli →</a>
-        </div>
-      `);
-
+      marker.on('click', () => {
+        setActiveSpot(spot);
+        setDrawerOpen(true);
+      });
       marker.addTo(markersRef.current!);
     });
-  }, [spots, filterType]);
+  }, [spots, filterType, filterHatch]);
 
   const handlePhotosChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -197,6 +188,7 @@ const SpotMap = () => {
         latitude: spotLocation.lat,
         longitude: spotLocation.lng,
         fish_species: selectedSpotFish.length > 0 ? selectedSpotFish : null,
+        hatch_activity: selectedSpotHatch.length > 0 ? selectedSpotHatch : null,
         access_info: spotAccess || null,
         photos: photoUrls.length > 0 ? photoUrls : null,
       });
@@ -216,6 +208,7 @@ const SpotMap = () => {
     setSpotName('');
     setSpotDesc('');
     setSelectedSpotFish([]);
+    setSelectedSpotHatch([]);
     setSpotAccess('');
     setSpotType('river');
     setSpotLocation(null);
@@ -228,18 +221,21 @@ const SpotMap = () => {
       <SEOHead title="Mappa Spot | Flywaters" description="Esplora la mappa dei migliori spot di pesca a mosca in Italia." />
       <DesktopSidebar />
       <div className="flex-1 flex flex-col relative">
-        <div className="absolute top-4 left-4 right-4 z-[1000] flex gap-2">
+        <div className="absolute top-4 left-4 right-4 z-[1000] flex gap-2 flex-wrap">
           {user && (
             <Button
               onClick={() => { resetForm(); setShowAddDialog(true); }}
               size="sm"
-              className="shadow-lg"
+              className="shadow-xl rounded-full"
             >
               <Plus className="w-4 h-4 mr-1" /> Aggiungi spot
             </Button>
           )}
           <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className="w-32 bg-card shadow-lg">
+            <SelectTrigger
+              className="w-36 shadow-xl border-white/40 rounded-full"
+              style={{ background: 'rgba(255,255,255,0.72)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+            >
               <Filter className="w-4 h-4 mr-1" />
               <SelectValue placeholder="Tutti i tipi" />
             </SelectTrigger>
@@ -251,9 +247,27 @@ const SpotMap = () => {
               <SelectItem value="stream">Torrente</SelectItem>
             </SelectContent>
           </Select>
+          <Select value={filterHatch} onValueChange={setFilterHatch}>
+            <SelectTrigger
+              className="w-40 shadow-xl border-white/40 rounded-full"
+              style={{ background: 'rgba(255,255,255,0.72)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}
+            >
+              <Filter className="w-4 h-4 mr-1" />
+              <SelectValue placeholder="Schiuse" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tutte le schiuse</SelectItem>
+              {HATCH_ACTIVITIES.map(h => (
+                <SelectItem key={h} value={h}>{h}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div ref={mapContainerRef} className="flex-1 z-0" />
+
+        <MapLegend />
+        <SpotDetailDrawer spot={activeSpot} open={drawerOpen} onOpenChange={setDrawerOpen} />
 
         <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
           <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
@@ -293,6 +307,7 @@ const SpotMap = () => {
               </div>
 
               <TagChipSelector label="Specie presenti" options={FISH_SPECIES} selected={selectedSpotFish} onChange={setSelectedSpotFish} />
+              <TagChipSelector label="Schiuse / Hatch attive" options={HATCH_ACTIVITIES} selected={selectedSpotHatch} onChange={setSelectedSpotHatch} />
 
               <div className="space-y-1">
                 <Label>Informazioni di accesso</Label>

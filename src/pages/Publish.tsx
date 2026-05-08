@@ -13,7 +13,7 @@ import SEOHead from '@/components/SEOHead';
 import { validateImageFile, compressImage } from '@/lib/image-compression';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import TagChipSelector from '@/components/TagChipSelector';
-import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR } from '@/lib/fishing-constants';
+import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR, HATCH_ACTIVITIES } from '@/lib/fishing-constants';
 
 const Publish = () => {
   const { user } = useAuth();
@@ -24,6 +24,7 @@ const Publish = () => {
   const [selectedSpecies, setSelectedSpecies] = useState<string[]>([]);
   const [selectedTechniques, setSelectedTechniques] = useState<string[]>([]);
   const [selectedGear, setSelectedGear] = useState<string[]>([]);
+  const [selectedHatch, setSelectedHatch] = useState<string[]>([]);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -64,6 +65,7 @@ const Publish = () => {
         fish_species: selectedSpecies.length > 0 ? selectedSpecies : null,
         fishing_technique: selectedTechniques.length > 0 ? selectedTechniques : null,
         gear_used: selectedGear.length > 0 ? selectedGear : null,
+        hatch_activity: selectedHatch.length > 0 ? selectedHatch : null,
       });
 
       if (error) throw error;
@@ -160,6 +162,7 @@ const Publish = () => {
         <TagChipSelector label="Specie ittica" options={FISH_SPECIES} selected={selectedSpecies} onChange={setSelectedSpecies} />
         <TagChipSelector label="Tecnica di pesca" options={FISHING_TECHNIQUES} selected={selectedTechniques} onChange={setSelectedTechniques} />
         <TagChipSelector label="Attrezzatura utilizzata" options={FISHING_GEAR} selected={selectedGear} onChange={setSelectedGear} />
+        <TagChipSelector label="Schiuse / Hatch attive" options={HATCH_ACTIVITIES} selected={selectedHatch} onChange={setSelectedHatch} />
 
         <div className="flex items-center justify-between py-2">
           <div>
