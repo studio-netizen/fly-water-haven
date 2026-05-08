@@ -65,6 +65,7 @@ const Publish = () => {
         fish_species: selectedSpecies.length > 0 ? selectedSpecies : null,
         fishing_technique: selectedTechniques.length > 0 ? selectedTechniques : null,
         gear_used: selectedGear.length > 0 ? selectedGear : null,
+        hatch_activity: selectedHatch.length > 0 ? selectedHatch : null,
       });
 
       if (error) throw error;
