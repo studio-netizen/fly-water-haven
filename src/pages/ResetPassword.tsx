@@ -170,7 +170,7 @@ const ResetPassword = () => {
                     onChange={(e) => setNewPassword(e.target.value)} 
                     className={`${inputClass} pr-10`} 
                     required 
-                    minLength={6} 
+                    minLength={8} 
                   />
                   <button 
                     type="button" 
@@ -197,7 +197,7 @@ const ResetPassword = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)} 
                     className={`${inputClass} pr-10`} 
                     required 
-                    minLength={6} 
+                    minLength={8} 
                   />
                   <button 
                     type="button" 
