@@ -83,29 +83,24 @@ const AuthModal = ({ open, onOpenChange, defaultMode = 'login' }: AuthModalProps
 
   const handleResetPassword = async () => {
     const resetEmail = email.trim();
-    console.log('Reset triggered for:', resetEmail);
-    toast('Invio email di recupero in corso...');
-
     if (!resetEmail) {
       toast.error('Inserisci la tua email prima di continuare');
       return;
     }
 
-    if (!supabase?.auth?.resetPasswordForEmail) {
-      console.error('Supabase auth client is not initialized in AuthModal');
-      toast.error('Impossibile inviare l’email di recupero. Riprova.');
-      return;
-    }
-
     setLoading(true);
     try {
-      const redirectTo = `${window.location.origin}/reset-password`;
+      const redirectTo = 'https://flywaters.app/reset-password';
       const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, { redirectTo });
-      if (error) throw error;
-      toast.success('Email di recupero inviata. Controlla la tua casella di posta.');
+      if (error) {
+        console.error('Password reset failed:', error);
+        toast.error('Si è verificato un errore. Riprova tra qualche minuto.');
+      } else {
+        toast.success('Email inviata! Controlla la tua casella di posta.');
+      }
     } catch (err: any) {
       console.error('Password reset failed:', err);
-      toast.error(err.message || 'Errore durante l’invio dell’email di recupero');
+      toast.error('Si è verificato un errore. Riprova tra qualche minuto.');
     } finally {
       setLoading(false);
     }
