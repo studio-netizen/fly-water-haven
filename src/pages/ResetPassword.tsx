@@ -17,72 +17,77 @@ const ResetPassword = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [linkInvalid, setLinkInvalid] = useState(false);
   const [hasRecoveryToken, setHasRecoveryToken] = useState(false);
+  const [checking, setChecking] = useState(true);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   useEffect(() => {
-    // 1) Check URL hash immediately (token present, not yet consumed by supabase-js)
     const hash = window.location.hash;
+    const search = window.location.search;
     const hasHashToken = hash.includes('type=recovery') || hash.includes('access_token');
+    const hasError = hash.includes('error') || search.includes('error');
 
-    // 2) Listen for PASSWORD_RECOVERY event (supabase-js parses hash async)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && hasHashToken)) {
-        setHasRecoveryToken(true);
-      }
-    });
-
-    // 3) Also check existing session — user may already be in recovery state
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (hasHashToken || session) {
-        setHasRecoveryToken(true);
-      } else {
-        // Wait briefly in case supabase is still parsing the hash
-        const timeout = setTimeout(() => {
-          if (!window.location.hash.includes('access_token') && !hasHashToken) {
-            toast.error(t('resetPassword.invalidLink'));
-            navigate('/auth');
-          }
-        }, 1500);
-        return () => clearTimeout(timeout);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate, t]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (newPassword !== confirmPassword) {
-      toast.error(t('auth.passwordsDontMatch'));
+    if (hasError) {
+      setLinkInvalid(true);
+      setChecking(false);
       return;
     }
 
-    if (newPassword.length < 6) {
-      toast.error(t('resetPassword.passwordTooShort'));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && hasHashToken)) {
+        setHasRecoveryToken(true);
+        setChecking(false);
+      }
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (hasHashToken || session) {
+        setHasRecoveryToken(true);
+        setChecking(false);
+      }
+    });
+
+    const timeout = setTimeout(() => {
+      setChecking(false);
+      if (!hasHashToken) setLinkInvalid(true);
+    }, 2000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (newPassword !== confirmPassword) {
+      toast.error('Le password non corrispondono');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      toast.error('La password deve essere di almeno 8 caratteri');
       return;
     }
 
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword
-      });
-
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) throw error;
 
       setSuccess(true);
-      toast.success(t('resetPassword.success'));
-      
-      // Redirect to login after 3 seconds
+      toast.success('Password aggiornata! Reindirizzamento...');
+
       setTimeout(() => {
-        navigate('/auth');
-      }, 3000);
+        navigate('/feed');
+      }, 2000);
     } catch (err: any) {
-      toast.error(err.message || t('resetPassword.error'));
+      console.error('Update password failed:', err);
+      setLinkInvalid(true);
     } finally {
       setLoading(false);
     }
@@ -91,8 +96,12 @@ const ResetPassword = () => {
   const inputClass =
     'pl-10 bg-white border border-[#242242]/10 rounded-xl focus-visible:ring-[#242242]/30 focus-visible:ring-2 h-12 text-base md:text-sm';
 
-  if (!hasRecoveryToken) {
-    return null; // Will redirect
+  if (checking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#f5f0e8' }}>
+        <div className="w-8 h-8 border-2 border-[#242242]/20 border-t-[#242242] rounded-full animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -108,11 +117,33 @@ const ResetPassword = () => {
           <img src={logoDark} alt="Flywaters" className="h-9" />
         </div>
 
-        {success ? (
+        {linkInvalid ? (
+          <div className="text-center space-y-4">
+            <h1 className="text-xl font-medium text-[#242242]">Link scaduto o non valido</h1>
+            <p className="text-sm text-[#8c8c7a]">Richiedi un nuovo link per reimpostare la password.</p>
+            <Button
+              onClick={() => navigate('/auth')}
+              className="w-full py-3.5 rounded-full text-sm tracking-widest uppercase font-medium bg-[#242242] text-white hover:opacity-90 transition-opacity"
+            >
+              Richiedi un nuovo link
+            </Button>
+          </div>
+        ) : success ? (
           <div className="text-center space-y-4">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
-            <h1 className="text-xl font-medium text-[#242242]">{t('resetPassword.success')}</h1>
-            <p className="text-sm text-[#8c8c7a]">{t('resetPassword.redirecting')}</p>
+            <h1 className="text-xl font-medium text-[#242242]">Password aggiornata!</h1>
+            <p className="text-sm text-[#8c8c7a]">Reindirizzamento...</p>
+          </div>
+        ) : !hasRecoveryToken ? (
+          <div className="text-center space-y-4">
+            <h1 className="text-xl font-medium text-[#242242]">Link scaduto o non valido</h1>
+            <p className="text-sm text-[#8c8c7a]">Richiedi un nuovo link per reimpostare la password.</p>
+            <Button
+              onClick={() => navigate('/auth')}
+              className="w-full py-3.5 rounded-full text-sm tracking-widest uppercase font-medium bg-[#242242] text-white hover:opacity-90 transition-opacity"
+            >
+              Richiedi un nuovo link
+            </Button>
           </div>
         ) : (
           <>
@@ -139,7 +170,7 @@ const ResetPassword = () => {
                     onChange={(e) => setNewPassword(e.target.value)} 
                     className={`${inputClass} pr-10`} 
                     required 
-                    minLength={6} 
+                    minLength={8} 
                   />
                   <button 
                     type="button" 
@@ -166,7 +197,7 @@ const ResetPassword = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)} 
                     className={`${inputClass} pr-10`} 
                     required 
-                    minLength={6} 
+                    minLength={8} 
                   />
                   <button 
                     type="button" 
