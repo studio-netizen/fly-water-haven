@@ -117,11 +117,33 @@ const ResetPassword = () => {
           <img src={logoDark} alt="Flywaters" className="h-9" />
         </div>
 
-        {success ? (
+        {linkInvalid ? (
+          <div className="text-center space-y-4">
+            <h1 className="text-xl font-medium text-[#242242]">Link scaduto o non valido</h1>
+            <p className="text-sm text-[#8c8c7a]">Richiedi un nuovo link per reimpostare la password.</p>
+            <Button
+              onClick={() => navigate('/auth')}
+              className="w-full py-3.5 rounded-full text-sm tracking-widest uppercase font-medium bg-[#242242] text-white hover:opacity-90 transition-opacity"
+            >
+              Richiedi un nuovo link
+            </Button>
+          </div>
+        ) : success ? (
           <div className="text-center space-y-4">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto" />
-            <h1 className="text-xl font-medium text-[#242242]">{t('resetPassword.success')}</h1>
-            <p className="text-sm text-[#8c8c7a]">{t('resetPassword.redirecting')}</p>
+            <h1 className="text-xl font-medium text-[#242242]">Password aggiornata!</h1>
+            <p className="text-sm text-[#8c8c7a]">Reindirizzamento...</p>
+          </div>
+        ) : !hasRecoveryToken ? (
+          <div className="text-center space-y-4">
+            <h1 className="text-xl font-medium text-[#242242]">Link scaduto o non valido</h1>
+            <p className="text-sm text-[#8c8c7a]">Richiedi un nuovo link per reimpostare la password.</p>
+            <Button
+              onClick={() => navigate('/auth')}
+              className="w-full py-3.5 rounded-full text-sm tracking-widest uppercase font-medium bg-[#242242] text-white hover:opacity-90 transition-opacity"
+            >
+              Richiedi un nuovo link
+            </Button>
           </div>
         ) : (
           <>
