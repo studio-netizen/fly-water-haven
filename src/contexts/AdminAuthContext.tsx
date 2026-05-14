@@ -38,14 +38,20 @@ export const AdminAuthProvider = ({ children }: { children: React.ReactNode }) =
           body: JSON.stringify({ email, password }),
         }
       );
-      if (!res.ok) return false;
-      const { token: t, exp } = await res.json();
+      const body = await res.json().catch(() => ({} as any));
+      if (!res.ok) {
+        if (res.status === 500 && typeof body?.error === 'string' && body.error.toLowerCase().includes('non configurato')) {
+          return { ok: false, error: 'Credenziali admin non configurate' };
+        }
+        return { ok: false, error: body?.error || 'Credenziali non valide' };
+      }
+      const { token: t, exp } = body;
       setToken(t);
       localStorage.setItem('admin_token', t);
       localStorage.setItem('admin_token_exp', exp.toString());
-      return true;
+      return { ok: true };
     } catch {
-      return false;
+      return { ok: false, error: 'Errore di connessione. Riprova.' };
     }
   }, []);
 
