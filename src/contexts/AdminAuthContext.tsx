@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 interface AdminAuthContextType {
   isAuthenticated: boolean;
   token: string | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<{ ok: boolean; error?: string }>;
   logout: () => void;
 }
 
