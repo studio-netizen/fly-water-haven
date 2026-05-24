@@ -92,15 +92,9 @@ const EditProfile = () => {
       let newAvatarUrl = avatarUrl;
 
       if (avatarFile) {
-        const filePath = `${user.id}/avatar.webp`;
-        const { error: uploadError } = await supabase.storage
-          .from('avatars')
-          .upload(filePath, avatarFile, { upsert: true });
-
-        if (uploadError) throw uploadError;
-
-        const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(filePath);
-        newAvatarUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+        const { uploadToR2 } = await import('@/lib/r2');
+        const publicUrl = await uploadToR2(avatarFile, 'avatars', { path: 'avatar.webp' });
+        newAvatarUrl = `${publicUrl}?t=${Date.now()}`;
       }
 
       const { error } = await supabase

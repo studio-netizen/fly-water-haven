@@ -55,10 +55,8 @@ const ReportIssueDialog = () => {
     try {
       let imageUrl: string | null = null;
       if (photo) {
-        const path = `${user.id}/${Date.now()}.webp`;
-        const { error: upErr } = await supabase.storage.from('reports').upload(path, photo);
-        if (upErr) throw upErr;
-        imageUrl = supabase.storage.from('reports').getPublicUrl(path).data.publicUrl;
+        const { uploadToR2 } = await import('@/lib/r2');
+        imageUrl = await uploadToR2(photo, 'reports');
       }
       const { error } = await supabase.from('reports').insert({
         user_id: user.id,

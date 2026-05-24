@@ -53,10 +53,7 @@ const Publish = () => {
     if (!user || !imageFile) return;
     setLoading(true);
     try {
-      const path = `${user.id}/${Date.now()}.webp`;
-      const { error: uploadError } = await supabase.storage.from('posts').upload(path, imageFile);
-      if (uploadError) throw uploadError;
-      const { data: { publicUrl } } = supabase.storage.from('posts').getPublicUrl(path);
+      const publicUrl = await uploadToR2(imageFile, 'posts');
 
       const { data: inserted, error } = await supabase.from('posts').insert({
         user_id: user.id,

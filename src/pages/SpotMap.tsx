@@ -222,12 +222,10 @@ const SpotMap = () => {
     if (!user || !spotLocation || !spotName) return;
     setLoading(true);
     try {
+      const { uploadToR2 } = await import('@/lib/r2');
       const photoUrls: string[] = [];
       for (const file of spotPhotos) {
-        const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
-        const { error: uploadError } = await supabase.storage.from('spots').upload(path, file);
-        if (uploadError) throw uploadError;
-        const { data: { publicUrl } } = supabase.storage.from('spots').getPublicUrl(path);
+        const publicUrl = await uploadToR2(file, 'spots');
         photoUrls.push(publicUrl);
       }
 

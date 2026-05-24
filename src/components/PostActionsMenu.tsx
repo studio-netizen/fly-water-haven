@@ -64,10 +64,16 @@ const PostActionsMenu = ({ post, onUpdated }: PostActionsMenuProps) => {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const url = new URL(post.image_url);
-      const pathMatch = url.pathname.match(/\/storage\/v1\/object\/public\/posts\/(.+)/);
-      if (pathMatch) {
-        await supabase.storage.from('posts').remove([pathMatch[1]]);
+      const { deleteFromR2, isR2Url } = await import('@/lib/r2');
+      if (isR2Url(post.image_url)) {
+        await deleteFromR2(post.image_url);
+      } else {
+        // Legacy Supabase Storage cleanup
+        try {
+          const url = new URL(post.image_url);
+          const pathMatch = url.pathname.match(/\/storage\/v1\/object\/public\/posts\/(.+)/);
+          if (pathMatch) await supabase.storage.from('posts').remove([pathMatch[1]]);
+        } catch { /* ignore */ }
       }
       await supabase.from('likes').delete().eq('post_id', post.id);
       await supabase.from('comments').delete().eq('post_id', post.id);
