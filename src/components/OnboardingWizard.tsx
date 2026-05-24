@@ -88,10 +88,9 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
     try {
       let avatarUrl = '';
       if (avatarFile) {
-        const path = `${user.id}/avatar.webp`;
-        await supabase.storage.from('avatars').upload(path, avatarFile, { upsert: true });
-        const { data } = supabase.storage.from('avatars').getPublicUrl(path);
-        avatarUrl = `${data.publicUrl}?t=${Date.now()}`;
+        const { uploadToR2 } = await import('@/lib/r2');
+        const publicUrl = await uploadToR2(avatarFile, 'avatars', { path: 'avatar.webp' });
+        avatarUrl = `${publicUrl}?t=${Date.now()}`;
       }
 
       const updates: Record<string, any> = {

@@ -17,6 +17,8 @@ import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
 import { supabase } from '@/integrations/supabase/client';
 import { compressImage, validateImageFile } from '@/lib/image-compression';
+import { uploadToR2 } from '@/lib/r2';
+import { useAdminAuth } from '@/contexts/AdminAuthContext';
 
 const CATEGORIES = ['Spot', 'Tecniche', 'Specie', 'Attrezzatura', 'Community'];
 
@@ -115,6 +117,7 @@ export default function AdminBlogEditor() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { adminFetch } = useAdminApi();
+  const { token: adminToken } = useAdminAuth();
   const [post, setPost] = useState<PostData>(defaultPost);
   const [loading, setLoading] = useState(!!id);
   const [saving, setSaving] = useState(false);
@@ -184,14 +187,8 @@ export default function AdminBlogEditor() {
     setUploading(true);
     try {
       const result = await compressImage(file, 'default');
-      const path = `blog/${Date.now()}.webp`;
-      const { error } = await supabase.storage.from('posts').upload(path, result.file, {
-        contentType: 'image/webp',
-        upsert: true,
-      });
-      if (error) throw error;
-      const { data: urlData } = supabase.storage.from('posts').getPublicUrl(path);
-      updateField('cover_image_url', urlData.publicUrl);
+      const publicUrl = await uploadToR2(result.file, 'blog', { adminToken: adminToken || undefined });
+      updateField('cover_image_url', publicUrl);
       toast.success('Immagine caricata');
     } catch {
       toast.error('Errore nel caricamento. Riprova.');
