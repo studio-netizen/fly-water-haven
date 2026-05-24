@@ -36,6 +36,7 @@ const AdminSettings = lazy(() => import("./pages/admin/AdminSettings"));
 const AdminBlog = lazy(() => import("./pages/admin/AdminBlog"));
 const AdminBlogEditor = lazy(() => import("./pages/admin/AdminBlogEditor"));
 const AdminReports = lazy(() => import("./pages/admin/AdminReports"));
+const AdminAuditLog = lazy(() => import("./pages/admin/AdminAuditLog"));
 
 const queryClient = new QueryClient();
 
@@ -104,6 +105,7 @@ const App = () => (
                 <Route path="/admin/posts" element={<AdminRoute><AdminPosts /></AdminRoute>} />
                 <Route path="/admin/reports" element={<AdminRoute><AdminReports /></AdminRoute>} />
                 <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
+                <Route path="/admin/audit-log" element={<AdminRoute><AdminAuditLog /></AdminRoute>} />
                 <Route path="/admin/blog" element={<AdminRoute><AdminBlog /></AdminRoute>} />
                 <Route path="/admin/blog/nuovo" element={<AdminRoute><AdminBlogEditor /></AdminRoute>} />
                 <Route path="/admin/blog/:id/modifica" element={<AdminRoute><AdminBlogEditor /></AdminRoute>} />

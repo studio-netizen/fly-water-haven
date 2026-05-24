@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-// duplicate import removed below
+import { useAdminAuth } from '@/contexts/AdminAuthContext';
 import {
   LayoutDashboard,
   Users,
