@@ -15,6 +15,7 @@ import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import TagChipSelector from '@/components/TagChipSelector';
 import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR, HATCH_ACTIVITIES } from '@/lib/fishing-constants';
 import { logAudit } from '@/lib/audit';
+import { uploadToR2 } from '@/lib/r2';
 
 const Publish = () => {
   const { user } = useAuth();

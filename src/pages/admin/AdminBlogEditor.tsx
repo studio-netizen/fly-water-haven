@@ -17,6 +17,8 @@ import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
 import { supabase } from '@/integrations/supabase/client';
 import { compressImage, validateImageFile } from '@/lib/image-compression';
+import { uploadToR2 } from '@/lib/r2';
+import { useAdminAuth } from '@/contexts/AdminAuthContext';
 
 const CATEGORIES = ['Spot', 'Tecniche', 'Specie', 'Attrezzatura', 'Community'];
 
