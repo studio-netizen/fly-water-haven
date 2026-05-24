@@ -1,5 +1,6 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import DOMPurify from 'dompurify';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { Clock, Copy, Check } from 'lucide-react';
