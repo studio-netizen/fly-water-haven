@@ -109,6 +109,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             Ultimo aggiornamento: {new Date().toLocaleString('it-IT')}
           </span>
         </header>
+        <SystemAlerts />
         <main className="flex-1 overflow-auto p-4 md:p-6">{children}</main>
       </div>
     </div>
