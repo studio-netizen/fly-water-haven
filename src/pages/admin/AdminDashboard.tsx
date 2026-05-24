@@ -5,7 +5,39 @@ import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
-import { Users, FileText, MapPin, MessageSquare, Star, TrendingUp, Mail } from 'lucide-react';
+import { Users, FileText, MapPin, MessageSquare, Star, TrendingUp, Mail, Database, HardDrive, Cloud, Calendar } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useSystemMetrics } from './AdminSystem';
+
+function SystemQuickStats() {
+  const { data, loading } = useSystemMetrics();
+  if (loading || !data) {
+    return <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">{Array.from({length:4}).map((_,i)=><Skeleton key={i} className="h-20" />)}</div>;
+  }
+  const mb = (n: number) => (n / 1024 / 1024).toFixed(1);
+  const items = [
+    { icon: Database, label: 'DB Used', value: `${mb(data.db_size_bytes)} MB`, sub: '/ 500 MB' },
+    { icon: HardDrive, label: 'Storage', value: `${mb(data.storage_total_bytes)} MB`, sub: '/ 1024 MB' },
+    { icon: Cloud, label: 'R2 Files', value: `${data.r2.total_files}`, sub: 'file' },
+    { icon: Calendar, label: 'Backup', value: 'Auto', sub: 'via Supabase' },
+  ];
+  return (
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      {items.map((it) => (
+        <Card key={it.label}>
+          <CardContent className="p-4 flex items-center gap-3">
+            <it.icon className="h-5 w-5 text-primary" />
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground">{it.label}</p>
+              <p className="text-lg font-bold leading-tight truncate">{it.value}</p>
+              <p className="text-[11px] text-muted-foreground">{it.sub}</p>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
 
 interface Stats {
   totalUsers: number;
@@ -185,6 +217,8 @@ export default function AdminDashboard() {
           </ResponsiveContainer>
         </CardContent>
       </Card>
+
+      <SystemQuickStats />
     </div>
   );
 }
