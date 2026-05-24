@@ -269,6 +269,7 @@ serve(async (req) => {
         await supabase.from("comments").delete().eq("post_id", id);
         await supabase.from("notifications").delete().eq("post_id", id);
         await supabase.from("posts").delete().eq("id", id);
+        await audit("admin.post_removed", "post", id);
         return json({ success: true });
       }
 
@@ -278,6 +279,7 @@ serve(async (req) => {
         await supabase.from("notifications").delete().eq("spot_id", id);
         await supabase.from("posts").update({ spot_id: null }).eq("spot_id", id);
         await supabase.from("spots").delete().eq("id", id);
+        await audit("admin.spot_removed", "spot", id);
         return json({ success: true });
       }
 
@@ -288,6 +290,12 @@ serve(async (req) => {
         } else {
           await supabase.auth.admin.updateUserById(userId, { ban_duration: "none" });
         }
+        await audit(
+          ban ? "admin.user_disabled" : "admin.user_enabled",
+          "user",
+          userId,
+          { banned: !!ban },
+        );
         return json({ success: true });
       }
 
