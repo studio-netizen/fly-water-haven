@@ -442,6 +442,72 @@ serve(async (req) => {
         return json({ success: true });
       }
 
+      // ─── Audit logs ───
+      case "get_audit_logs": {
+        const {
+          page = 0,
+          pageSize = 50,
+          dateFrom,
+          dateTo,
+          actionFilter,
+          search,
+        } = params as {
+          page?: number;
+          pageSize?: number;
+          dateFrom?: string;
+          dateTo?: string;
+          actionFilter?: string;
+          search?: string;
+        };
+        const from = Math.max(0, page) * pageSize;
+        const to = from + pageSize - 1;
+        let q = supabase
+          .from("audit_logs")
+          .select("*", { count: "exact" })
+          .order("timestamp", { ascending: false })
+          .range(from, to);
+        if (dateFrom) q = q.gte("timestamp", dateFrom);
+        if (dateTo) q = q.lte("timestamp", dateTo);
+        if (actionFilter) q = q.eq("action", actionFilter);
+        if (search) q = q.ilike("actor_email", `%${search}%`);
+        const { data, count, error } = await q;
+        if (error) return json({ error: error.message }, 400);
+        return json({ rows: data || [], total: count || 0 });
+      }
+
+      case "export_audit_logs": {
+        const { dateFrom, dateTo, actionFilter, search } = params as {
+          dateFrom?: string;
+          dateTo?: string;
+          actionFilter?: string;
+          search?: string;
+        };
+        let q = supabase
+          .from("audit_logs")
+          .select("*")
+          .order("timestamp", { ascending: false })
+          .limit(10000);
+        if (dateFrom) q = q.gte("timestamp", dateFrom);
+        if (dateTo) q = q.lte("timestamp", dateTo);
+        if (actionFilter) q = q.eq("action", actionFilter);
+        if (search) q = q.ilike("actor_email", `%${search}%`);
+        const { data, error } = await q;
+        if (error) return json({ error: error.message }, 400);
+        return json({ rows: data || [] });
+      }
+
+      case "log_admin_event": {
+        const { event, resource_type, resource_id, details } = params as {
+          event: string;
+          resource_type: string;
+          resource_id?: string;
+          details?: Record<string, unknown>;
+        };
+        if (!event?.startsWith("admin.")) return json({ error: "Invalid event" }, 400);
+        await audit(event, resource_type || "admin", resource_id, details);
+        return json({ success: true });
+      }
+
       default:
         return json({ error: "Unknown action" }, 400);
     }
