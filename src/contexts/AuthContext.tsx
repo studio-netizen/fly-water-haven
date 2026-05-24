@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { logAudit } from '@/lib/audit';
 
 interface AuthContextType {
   user: User | null;
@@ -73,12 +74,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const isNewUser = newSession.user.created_at &&
             (Date.now() - new Date(newSession.user.created_at).getTime()) < 60000;
           if (isNewUser) {
+            logAudit('user.registered', 'user', newSession.user.id, {
+              provider: newSession.user.app_metadata?.provider,
+            });
             supabase.functions.invoke('send-welcome-email', {
               body: {
                 user_id: newSession.user.id,
                 display_name: newSession.user.user_metadata?.full_name,
               },
             }).catch((err) => console.error('Welcome email error:', err));
+          } else {
+            logAudit('user.login', 'user', newSession.user.id, {
+              provider: newSession.user.app_metadata?.provider,
+            });
           }
         }, 0);
       }
