@@ -10,6 +10,7 @@ import logoDark from '@/assets/flywaters-logo-dark.png';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { italianProvinces } from '@/lib/italian-provinces';
+import { logAudit } from '@/lib/audit';
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
@@ -38,7 +39,10 @@ const Auth = () => {
     try {
       if (activeTab === 'login') {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        if (error) {
+          logAudit('user.login_failed', 'user', null, { reason: error.message }, email);
+          throw error;
+        }
         toast.success(t('auth.welcome'));
         navigate('/');
       } else {
@@ -88,6 +92,7 @@ const Auth = () => {
         console.error('Password reset failed:', error);
         toast.error('Si è verificato un errore. Riprova tra qualche minuto.');
       } else {
+        logAudit('user.password_reset', 'user', null, undefined, resetEmail);
         // Always show success — do not reveal whether the email exists
         toast.success('Email inviata! Controlla la tua casella di posta.');
       }
