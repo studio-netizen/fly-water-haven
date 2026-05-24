@@ -49,6 +49,33 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 
+  const adminEmail = Deno.env.get("ADMIN_EMAIL") || null;
+  const ip_address =
+    req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+    req.headers.get("cf-connecting-ip") ||
+    null;
+  const user_agent = req.headers.get("user-agent")?.slice(0, 500) || null;
+
+  const audit = async (
+    action: string,
+    resource_type: string,
+    resource_id?: string | null,
+    details?: Record<string, unknown>,
+  ) => {
+    try {
+      await supabase.from("audit_logs").insert({
+        actor_email: adminEmail,
+        actor_role: "admin",
+        action,
+        resource_type,
+        resource_id: resource_id ?? null,
+        details: details ?? null,
+        ip_address,
+        user_agent,
+      });
+    } catch {/* ignore */}
+  };
+
   try {
     const { action, ...params } = await req.json();
 
