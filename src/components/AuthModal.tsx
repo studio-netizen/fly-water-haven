@@ -8,6 +8,7 @@ import { Mail, Lock, User, ArrowRight, Eye, EyeOff, MapPin, AtSign } from 'lucid
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import logoDark from '@/assets/flywaters-logo-dark.png';
 import { italianProvinces } from '@/lib/italian-provinces';
+import { logAudit } from '@/lib/audit';
 
 interface AuthModalProps {
   open: boolean;
@@ -46,7 +47,10 @@ const AuthModal = ({ open, onOpenChange, defaultMode = 'login' }: AuthModalProps
     try {
       if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        if (error) {
+          logAudit('user.login_failed', 'user', null, { reason: error.message }, email);
+          throw error;
+        }
         toast.success('Bentornato!');
         onOpenChange(false);
         navigate('/');
@@ -96,6 +100,7 @@ const AuthModal = ({ open, onOpenChange, defaultMode = 'login' }: AuthModalProps
         console.error('Password reset failed:', error);
         toast.error('Si è verificato un errore. Riprova tra qualche minuto.');
       } else {
+        logAudit('user.password_reset', 'user', null, undefined, resetEmail);
         toast.success('Email inviata! Controlla la tua casella di posta.');
       }
     } catch (err: any) {
