@@ -231,7 +231,7 @@ const SpotMap = () => {
         photoUrls.push(publicUrl);
       }
 
-      const { error } = await supabase.from('spots').insert({
+      const { data: inserted, error } = await supabase.from('spots').insert({
         created_by: user.id,
         name: spotName,
         description: spotDesc || null,
@@ -242,8 +242,10 @@ const SpotMap = () => {
         hatch_activity: selectedSpotHatch.length > 0 ? selectedSpotHatch : null,
         access_info: spotAccess || null,
         photos: photoUrls.length > 0 ? photoUrls : null,
-      });
+      }).select('id').single();
       if (error) throw error;
+      const { logAudit } = await import('@/lib/audit');
+      logAudit('spot.created', 'spot', inserted?.id, { spot_type: spotType });
       toast.success('Spot aggiunto!');
       setShowAddDialog(false);
       resetForm();

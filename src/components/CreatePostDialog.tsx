@@ -12,6 +12,7 @@ import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import { validateImageFile, compressImage, formatFileSize } from '@/lib/image-compression';
 import TagChipSelector from '@/components/TagChipSelector';
 import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR } from '@/lib/fishing-constants';
+import { logAudit } from '@/lib/audit';
 
 interface Props {
   onPostCreated: () => void;
@@ -82,7 +83,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
       const { error: uploadError } = await supabase.storage.from('posts').upload(path, snapshot.file);
       if (uploadError) throw uploadError;
       const { data: { publicUrl } } = supabase.storage.from('posts').getPublicUrl(path);
-      const { error } = await supabase.from('posts').insert({
+      const { data: inserted, error } = await supabase.from('posts').insert({
         user_id: user.id,
         image_url: publicUrl,
         caption: snapshot.caption || null,
@@ -90,8 +91,9 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
         fish_species: snapshot.species.length > 0 ? snapshot.species : null,
         fishing_technique: snapshot.techniques.length > 0 ? snapshot.techniques : null,
         gear_used: snapshot.gear.length > 0 ? snapshot.gear : null,
-      });
+      }).select('id').single();
       if (error) throw error;
+      logAudit('post.created', 'post', inserted?.id);
       onPostCreated();
     })();
 

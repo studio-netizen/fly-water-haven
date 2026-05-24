@@ -14,6 +14,7 @@ import { validateImageFile, compressImage } from '@/lib/image-compression';
 import LocationPicker, { LocationResult } from '@/components/LocationPicker';
 import TagChipSelector from '@/components/TagChipSelector';
 import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR, HATCH_ACTIVITIES } from '@/lib/fishing-constants';
+import { logAudit } from '@/lib/audit';
 
 const Publish = () => {
   const { user } = useAuth();
@@ -57,7 +58,7 @@ const Publish = () => {
       if (uploadError) throw uploadError;
       const { data: { publicUrl } } = supabase.storage.from('posts').getPublicUrl(path);
 
-      const { error } = await supabase.from('posts').insert({
+      const { data: inserted, error } = await supabase.from('posts').insert({
         user_id: user.id,
         image_url: publicUrl,
         caption: caption || null,
@@ -66,9 +67,10 @@ const Publish = () => {
         fishing_technique: selectedTechniques.length > 0 ? selectedTechniques : null,
         gear_used: selectedGear.length > 0 ? selectedGear : null,
         hatch_activity: selectedHatch.length > 0 ? selectedHatch : null,
-      });
+      }).select('id').single();
 
       if (error) throw error;
+      logAudit('post.created', 'post', inserted?.id, { has_location: !!location });
       toast.success('Post pubblicato!');
       navigate('/');
     } catch (err: any) {

@@ -204,6 +204,8 @@ const SpotDetail = () => {
       // Optimistic UI: add review to top of list immediately
       if (insertedData) {
         setReviews(prev => [insertedData as unknown as Review, ...prev]);
+        const { logAudit } = await import('@/lib/audit');
+        logAudit('review.created', 'review', (insertedData as any).id, { spot_id: spotId, rating });
       }
       setHasReviewed(true);
       toast.success('Recensione pubblicata!');
