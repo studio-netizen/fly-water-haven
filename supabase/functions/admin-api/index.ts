@@ -80,6 +80,48 @@ serve(async (req) => {
     const { action, ...params } = await req.json();
 
     switch (action) {
+      case "get_system_metrics": {
+        const { data, error } = await supabase.rpc("admin_system_metrics");
+        if (error) return json({ error: error.message }, 500);
+
+        // Count R2-hosted assets (posts.image_url + profiles.avatar_url + spots.photos + reviews.photo_url)
+        const r2Public = Deno.env.get("R2_PUBLIC_URL") || "";
+        let r2Files = 0;
+        let r2BreakdownPosts = 0, r2BreakdownAvatars = 0, r2BreakdownReviews = 0, r2BreakdownSpots = 0;
+        if (r2Public) {
+          const pattern = `%${r2Public.replace(/^https?:\/\//, "").split("/")[0]}%`;
+          const [{ count: cPosts }, { count: cAvatars }, { count: cReviews }] = await Promise.all([
+            supabase.from("posts").select("*", { count: "exact", head: true }).ilike("image_url", pattern),
+            supabase.from("profiles").select("*", { count: "exact", head: true }).ilike("avatar_url", pattern),
+            supabase.from("reviews").select("*", { count: "exact", head: true }).ilike("photo_url", pattern),
+          ]);
+          r2BreakdownPosts = cPosts || 0;
+          r2BreakdownAvatars = cAvatars || 0;
+          r2BreakdownReviews = cReviews || 0;
+          // spots.photos is an array column — fetch and count
+          const { data: spotsWithPhotos } = await supabase.from("spots").select("photos");
+          (spotsWithPhotos || []).forEach((s: { photos: string[] | null }) => {
+            (s.photos || []).forEach((u) => { if (u && u.includes(r2Public)) r2BreakdownSpots += 1; });
+          });
+          r2Files = r2BreakdownPosts + r2BreakdownAvatars + r2BreakdownReviews + r2BreakdownSpots;
+        }
+
+        return json({
+          ...data,
+          r2: {
+            configured: !!r2Public,
+            total_files: r2Files,
+            estimated_bytes: r2Files * 500 * 1024, // ~0.5MB avg
+            breakdown: {
+              posts: r2BreakdownPosts,
+              avatars: r2BreakdownAvatars,
+              reviews: r2BreakdownReviews,
+              spots: r2BreakdownSpots,
+            },
+          },
+        });
+      }
+
       case "get_dashboard_stats": {
         const now = new Date();
         const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();

@@ -13,7 +13,9 @@ import {
   X,
   AlertTriangle,
   ScrollText,
+  Settings2,
 } from 'lucide-react';
+import SystemAlerts from './SystemAlerts';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 
@@ -26,6 +28,7 @@ const navItems = [
   { to: '/admin/reports', icon: AlertTriangle, label: 'Segnalazioni' },
   { to: '/admin/blog', icon: PenLine, label: 'Blog' },
   { to: '/admin/audit-log', icon: ScrollText, label: 'Audit Log' },
+  { to: '/admin/system', icon: Settings2, label: '⚙️ Sistema' },
   { to: '/admin/settings', icon: Settings, label: 'Impostazioni' },
 ];
 
@@ -106,6 +109,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             Ultimo aggiornamento: {new Date().toLocaleString('it-IT')}
           </span>
         </header>
+        <SystemAlerts />
         <main className="flex-1 overflow-auto p-4 md:p-6">{children}</main>
       </div>
     </div>
