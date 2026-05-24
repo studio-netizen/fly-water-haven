@@ -12,6 +12,7 @@ import {
   Menu,
   X,
   AlertTriangle,
+  ScrollText,
 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,7 @@ const navItems = [
   { to: '/admin/posts', icon: Image, label: 'Post' },
   { to: '/admin/reports', icon: AlertTriangle, label: 'Segnalazioni' },
   { to: '/admin/blog', icon: PenLine, label: 'Blog' },
+  { to: '/admin/audit-log', icon: ScrollText, label: 'Audit Log' },
   { to: '/admin/settings', icon: Settings, label: 'Impostazioni' },
 ];
 

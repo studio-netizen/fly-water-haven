@@ -49,6 +49,33 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 
+  const adminEmail = Deno.env.get("ADMIN_EMAIL") || null;
+  const ip_address =
+    req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+    req.headers.get("cf-connecting-ip") ||
+    null;
+  const user_agent = req.headers.get("user-agent")?.slice(0, 500) || null;
+
+  const audit = async (
+    action: string,
+    resource_type: string,
+    resource_id?: string | null,
+    details?: Record<string, unknown>,
+  ) => {
+    try {
+      await supabase.from("audit_logs").insert({
+        actor_email: adminEmail,
+        actor_role: "admin",
+        action,
+        resource_type,
+        resource_id: resource_id ?? null,
+        details: details ?? null,
+        ip_address,
+        user_agent,
+      });
+    } catch {/* ignore */}
+  };
+
   try {
     const { action, ...params } = await req.json();
 
@@ -242,6 +269,7 @@ serve(async (req) => {
         await supabase.from("comments").delete().eq("post_id", id);
         await supabase.from("notifications").delete().eq("post_id", id);
         await supabase.from("posts").delete().eq("id", id);
+        await audit("admin.post_removed", "post", id);
         return json({ success: true });
       }
 
@@ -251,6 +279,7 @@ serve(async (req) => {
         await supabase.from("notifications").delete().eq("spot_id", id);
         await supabase.from("posts").update({ spot_id: null }).eq("spot_id", id);
         await supabase.from("spots").delete().eq("id", id);
+        await audit("admin.spot_removed", "spot", id);
         return json({ success: true });
       }
 
@@ -261,6 +290,12 @@ serve(async (req) => {
         } else {
           await supabase.auth.admin.updateUserById(userId, { ban_duration: "none" });
         }
+        await audit(
+          ban ? "admin.user_disabled" : "admin.user_enabled",
+          "user",
+          userId,
+          { banned: !!ban },
+        );
         return json({ success: true });
       }
 
@@ -404,6 +439,72 @@ serve(async (req) => {
       case "delete_report": {
         const { id } = params;
         await supabase.from("reports").delete().eq("id", id);
+        return json({ success: true });
+      }
+
+      // ─── Audit logs ───
+      case "get_audit_logs": {
+        const {
+          page = 0,
+          pageSize = 50,
+          dateFrom,
+          dateTo,
+          actionFilter,
+          search,
+        } = params as {
+          page?: number;
+          pageSize?: number;
+          dateFrom?: string;
+          dateTo?: string;
+          actionFilter?: string;
+          search?: string;
+        };
+        const from = Math.max(0, page) * pageSize;
+        const to = from + pageSize - 1;
+        let q = supabase
+          .from("audit_logs")
+          .select("*", { count: "exact" })
+          .order("timestamp", { ascending: false })
+          .range(from, to);
+        if (dateFrom) q = q.gte("timestamp", dateFrom);
+        if (dateTo) q = q.lte("timestamp", dateTo);
+        if (actionFilter) q = q.eq("action", actionFilter);
+        if (search) q = q.ilike("actor_email", `%${search}%`);
+        const { data, count, error } = await q;
+        if (error) return json({ error: error.message }, 400);
+        return json({ rows: data || [], total: count || 0 });
+      }
+
+      case "export_audit_logs": {
+        const { dateFrom, dateTo, actionFilter, search } = params as {
+          dateFrom?: string;
+          dateTo?: string;
+          actionFilter?: string;
+          search?: string;
+        };
+        let q = supabase
+          .from("audit_logs")
+          .select("*")
+          .order("timestamp", { ascending: false })
+          .limit(10000);
+        if (dateFrom) q = q.gte("timestamp", dateFrom);
+        if (dateTo) q = q.lte("timestamp", dateTo);
+        if (actionFilter) q = q.eq("action", actionFilter);
+        if (search) q = q.ilike("actor_email", `%${search}%`);
+        const { data, error } = await q;
+        if (error) return json({ error: error.message }, 400);
+        return json({ rows: data || [] });
+      }
+
+      case "log_admin_event": {
+        const { event, resource_type, resource_id, details } = params as {
+          event: string;
+          resource_type: string;
+          resource_id?: string;
+          details?: Record<string, unknown>;
+        };
+        if (!event?.startsWith("admin.")) return json({ error: "Invalid event" }, 400);
+        await audit(event, resource_type || "admin", resource_id, details);
         return json({ success: true });
       }
 
