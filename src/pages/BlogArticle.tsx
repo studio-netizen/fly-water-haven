@@ -149,7 +149,7 @@ const BlogArticle = () => {
             <div
               className="prose prose-lg max-w-none [&_h2]:text-xl [&_h2]:md:text-2xl [&_h2]:font-bold [&_h2]:font-serif [&_h2]:mb-4 [&_h2]:mt-10 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:font-serif [&_h3]:mb-3 [&_h3]:mt-8 [&_p]:text-[#242242]/80 [&_p]:leading-[1.8] [&_p]:mb-4"
               style={{ fontSize: '18px', lineHeight: '1.8' }}
-              dangerouslySetInnerHTML={{ __html: article.body_html }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.body_html, { USE_PROFILES: { html: true } }) }}
             />
           )}
 
