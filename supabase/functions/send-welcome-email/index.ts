@@ -148,6 +148,22 @@ serve(async (req) => {
       });
     }
 
+    // Dedupe: refuse if a welcome email was already successfully sent for this user.
+    // This prevents abuse of the endpoint to spam users by replaying valid UUIDs.
+    const { data: existing } = await supabase
+      .from("welcome_emails")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("status", "sent")
+      .limit(1)
+      .maybeSingle();
+    if (existing) {
+      return new Response(JSON.stringify({ skipped: true, reason: "already_sent" }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // Get user email from auth
     const { data: { user }, error: userError } = await supabase.auth.admin.getUserById(userId);
     if (userError || !user?.email) {
