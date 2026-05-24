@@ -126,14 +126,15 @@ Deno.serve(async (req) => {
       region: "auto",
     });
 
-    const url = `${endpoint.replace(/\/$/, "")}/${bucket}/${key}`;
-    // Sign as a query-string presigned PUT URL valid for 5 minutes.
+    const baseUrl = `${endpoint.replace(/\/$/, "")}/${bucket}/${key}`;
+    const url = new URL(baseUrl);
+    url.searchParams.set("X-Amz-Expires", "300");
     const signed = await aws.sign(
-      new Request(url, {
+      new Request(url.toString(), {
         method: "PUT",
         headers: { "content-type": contentType },
       }),
-      { aws: { signQuery: true }, headers: { "x-amz-expires": "300" } as any },
+      { aws: { signQuery: true } },
     );
 
     return new Response(
