@@ -42,18 +42,36 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const endpoint = Deno.env.get("R2_ENDPOINT")!;
-    const accessKeyId = Deno.env.get("R2_ACCESS_KEY_ID")!;
-    const secretAccessKey = Deno.env.get("R2_SECRET_ACCESS_KEY")!;
-    const bucket = Deno.env.get("R2_BUCKET_NAME")!;
-    const publicBase = Deno.env.get("R2_PUBLIC_URL")!.replace(/\/$/, "");
+    const endpoint = Deno.env.get("R2_ENDPOINT");
+    const accessKeyId = Deno.env.get("R2_ACCESS_KEY_ID");
+    const secretAccessKey = Deno.env.get("R2_SECRET_ACCESS_KEY");
+    const bucket = Deno.env.get("R2_BUCKET_NAME");
+    const publicBaseRaw = Deno.env.get("R2_PUBLIC_URL");
 
-    if (!endpoint || !accessKeyId || !secretAccessKey || !bucket || !publicBase) {
-      return new Response(JSON.stringify({ error: "R2 not configured" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    console.log("R2 env presence:", {
+      endpoint: !!endpoint,
+      accessKeyId: !!accessKeyId,
+      secretAccessKey: !!secretAccessKey,
+      bucket: !!bucket,
+      publicBase: !!publicBaseRaw,
+    });
+
+    if (!endpoint || !accessKeyId || !secretAccessKey || !bucket || !publicBaseRaw) {
+      return new Response(
+        JSON.stringify({
+          error: "R2 not configured",
+          missing: {
+            R2_ENDPOINT: !endpoint,
+            R2_ACCESS_KEY_ID: !accessKeyId,
+            R2_SECRET_ACCESS_KEY: !secretAccessKey,
+            R2_BUCKET_NAME: !bucket,
+            R2_PUBLIC_URL: !publicBaseRaw,
+          },
+        }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
     }
+    const publicBase = publicBaseRaw.replace(/\/$/, "");
 
     const body = await req.json();
     const folder = String(body.folder || "");
