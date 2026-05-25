@@ -40,7 +40,9 @@ function sanitizeName(name: string): string {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { status: 200, headers: corsHeaders });
+  }
 
   try {
     const endpoint = Deno.env.get("R2_ENDPOINT");
