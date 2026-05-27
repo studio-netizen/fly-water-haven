@@ -53,6 +53,7 @@ const Auth = () => {
           setLoading(false);
           return;
         }
+        const consentTimestamp = new Date().toISOString();
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -62,11 +63,16 @@ const Auth = () => {
           },
         });
         if (error) throw error;
-        // If guide badge requested and user is already authenticated (auto-confirm), update profile
-        if (requestGuideBadge && data.user) {
+        if (data.user) {
+          const profileUpdate: Record<string, unknown> = {
+            terms_accepted_at: consentTimestamp,
+            privacy_accepted_at: consentTimestamp,
+            marketing_consent: marketingConsent,
+          };
+          if (requestGuideBadge) profileUpdate.guide_status = 'requested';
           supabase
             .from('profiles')
-            .update({ guide_status: 'requested' })
+            .update(profileUpdate)
             .eq('user_id', data.user.id)
             .then(() => {});
         }
