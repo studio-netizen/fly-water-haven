@@ -205,4 +205,17 @@
   .ig-grid-cell:focus-visible .ig-grid-overlay {
     @apply opacity-100;
   }
+
+  /* Push Iubenda badge above the bottom navigation bar */
+  #iubenda-cs-banner,
+  .iubenda-tp-btn,
+  [class*="iubenda"] {
+    bottom: 80px !important;
+    z-index: 40 !important;
+  }
+
+  /* Safe area padding for bottom navigation */
+  .bottom-nav {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  }
 }

@@ -17,7 +17,7 @@ const BottomNav = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-t border-black/[0.08] lg:hidden" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+    <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-t border-black/[0.08] lg:hidden">
       <div className="max-w-lg mx-auto flex items-center justify-around h-16 px-2">
         {links.map(({ to, icon: Icon, label, isCenter }) => {
           const isActive = location.pathname === to || (to === '/' && location.pathname === '/');
