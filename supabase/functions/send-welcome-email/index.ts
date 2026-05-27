@@ -200,7 +200,8 @@ serve(async (req) => {
       });
     }
 
-    const name = displayName || username || user.email.split("@")[0];
+    const rawName = displayName || username || user.email.split("@")[0];
+    const name = sanitizeName(String(rawName));
     const html = buildWelcomeHtml(name);
 
     const resendRes = await fetch("https://api.resend.com/emails", {
