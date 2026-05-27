@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useTranslation } from 'react-i18next';
 import OnboardingWizard from '@/components/OnboardingWizard';
+import { getOptimizedImageUrl, getImageSrcSet } from '@/lib/image-url';
 
 interface Post {
   id: string;
