@@ -24,13 +24,15 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
+  const [marketingConsent, setMarketingConsent] = useState(false);
   const [requestGuideBadge, setRequestGuideBadge] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const passwordsMatch = password === confirmPassword;
-  const canRegister = firstName && lastName && username && email && password && confirmPassword && passwordsMatch && privacyAccepted;
+  const canRegister = firstName && lastName && username && email && password && confirmPassword && passwordsMatch && privacyAccepted && ageConfirmed;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
