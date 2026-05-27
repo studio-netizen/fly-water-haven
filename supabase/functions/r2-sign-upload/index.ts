@@ -60,18 +60,16 @@ Deno.serve(async (req) => {
     });
 
     if (!endpoint || !accessKeyId || !secretAccessKey || !bucket || !publicBaseRaw) {
+      console.error("R2 misconfigured", {
+        endpoint: !!endpoint,
+        accessKeyId: !!accessKeyId,
+        secretAccessKey: !!secretAccessKey,
+        bucket: !!bucket,
+        publicBase: !!publicBaseRaw,
+      });
       return new Response(
-        JSON.stringify({
-          error: "R2 not configured",
-          missing: {
-            R2_ENDPOINT: !endpoint,
-            R2_ACCESS_KEY_ID: !accessKeyId,
-            R2_SECRET_ACCESS_KEY: !secretAccessKey,
-            R2_BUCKET_NAME: !bucket,
-            R2_PUBLIC_URL: !publicBaseRaw,
-          },
-        }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        JSON.stringify({ error: "Storage service unavailable" }),
+        { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
     const publicBase = publicBaseRaw.replace(/\/$/, "");
