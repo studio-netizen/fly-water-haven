@@ -214,6 +214,13 @@
     z-index: 40 !important;
   }
 
+  /* Hide Iubenda floating privacy button on mobile */
+  @media (max-width: 768px) {
+    .iubenda-tp-btn[data-tp-float="bottom-right"] {
+      display: none !important;
+    }
+  }
+
   /* Safe area padding for bottom navigation */
   .bottom-nav {
     padding-bottom: calc(16px + env(safe-area-inset-bottom));
