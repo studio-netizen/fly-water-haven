@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { validateImageFile, compressImage } from '@/lib/image-compression';
 import L from 'leaflet';
 import { useEffect } from 'react';
+import ConsentGate from '@/components/ConsentGate';
 
 const FISHING_TAGS = [
   'Mosca Secca', 'Ninfa', 'Emerger', 'Streamer', 'Tenkara',
