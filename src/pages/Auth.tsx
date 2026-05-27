@@ -24,13 +24,15 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
+  const [marketingConsent, setMarketingConsent] = useState(false);
   const [requestGuideBadge, setRequestGuideBadge] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const passwordsMatch = password === confirmPassword;
-  const canRegister = firstName && lastName && username && email && password && confirmPassword && passwordsMatch && privacyAccepted;
+  const canRegister = firstName && lastName && username && email && password && confirmPassword && passwordsMatch && privacyAccepted && ageConfirmed;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,6 +53,7 @@ const Auth = () => {
           setLoading(false);
           return;
         }
+        const consentTimestamp = new Date().toISOString();
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -60,11 +63,16 @@ const Auth = () => {
           },
         });
         if (error) throw error;
-        // If guide badge requested and user is already authenticated (auto-confirm), update profile
-        if (requestGuideBadge && data.user) {
+        if (data.user) {
+          const profileUpdate: Record<string, unknown> = {
+            terms_accepted_at: consentTimestamp,
+            privacy_accepted_at: consentTimestamp,
+            marketing_consent: marketingConsent,
+          };
+          if (requestGuideBadge) profileUpdate.guide_status = 'requested';
           supabase
             .from('profiles')
-            .update({ guide_status: 'requested' })
+            .update(profileUpdate)
             .eq('user_id', data.user.id)
             .then(() => {});
         }
@@ -277,16 +285,33 @@ const Auth = () => {
                 </span>
               </label>
 
-              {/* Privacy checkbox */}
-              <label className="flex items-start gap-2.5 cursor-pointer pt-1">
-                <input type="checkbox" checked={privacyAccepted} onChange={(e) => setPrivacyAccepted(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-[#242242]/20 text-[#242242] focus:ring-[#242242]/30 accent-[#242242]" />
-                <span className="text-xs text-[#8c8c7a] leading-relaxed">
-                  {t('auth.acceptTermsPrefix')}{' '}
-                  <a href="https://www.iubenda.com/privacy-policy/53958448" target="_blank" rel="noopener noreferrer" className="text-[#242242] underline hover:no-underline">{t('auth.privacyPolicy')}</a>
-                  {' '}{t('auth.and')}{' '}
-                  <a href="https://www.iubenda.com/privacy-policy/53958448/cookie-policy" target="_blank" rel="noopener noreferrer" className="text-[#242242] underline hover:no-underline">{t('auth.cookiePolicy')}</a>
-                </span>
-              </label>
+              {/* GDPR consent checkboxes */}
+              <div className="space-y-2.5 pt-2 border-t border-[#242242]/10 mt-2">
+                <label className="flex items-start gap-2.5 cursor-pointer pt-2">
+                  <input type="checkbox" checked={privacyAccepted} onChange={(e) => setPrivacyAccepted(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-[#242242]/20 text-[#242242] focus:ring-[#242242]/30 accent-[#242242]" required />
+                  <span className="text-xs text-[#8c8c7a] leading-relaxed">
+                    Ho letto e accetto i{' '}
+                    <a href="https://www.iubenda.com/termini-e-condizioni/53958448" target="_blank" rel="noopener noreferrer" className="text-[#242242] underline hover:no-underline">Termini di Servizio</a>
+                    {' '}e la{' '}
+                    <a href="https://www.iubenda.com/privacy-policy/53958448" target="_blank" rel="noopener noreferrer" className="text-[#242242] underline hover:no-underline">Privacy Policy</a>
+                    <span className="text-red-500"> *</span>
+                  </span>
+                </label>
+
+                <label className="flex items-start gap-2.5 cursor-pointer">
+                  <input type="checkbox" checked={ageConfirmed} onChange={(e) => setAgeConfirmed(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-[#242242]/20 text-[#242242] focus:ring-[#242242]/30 accent-[#242242]" required />
+                  <span className="text-xs text-[#8c8c7a] leading-relaxed">
+                    Confermo di avere almeno 16 anni<span className="text-red-500"> *</span>
+                  </span>
+                </label>
+
+                <label className="flex items-start gap-2.5 cursor-pointer">
+                  <input type="checkbox" checked={marketingConsent} onChange={(e) => setMarketingConsent(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-[#242242]/20 text-[#242242] focus:ring-[#242242]/30 accent-[#242242]" />
+                  <span className="text-xs text-[#8c8c7a] leading-relaxed">
+                    Acconsento a ricevere comunicazioni promozionali via email
+                  </span>
+                </label>
+              </div>
             </>
           )}
 
