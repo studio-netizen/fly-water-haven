@@ -115,10 +115,30 @@ Hai ricevuto questa email perché ti sei registrato su flywaters.app
 </html>`;
 }
 
+function sanitizeName(raw: string): string {
+  // Strip HTML tags and encode dangerous characters to prevent HTML injection
+  return raw
+    .replace(/<[^>]*>/g, "")
+    .replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!))
+    .slice(0, 80);
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
+
+  // Require service-role authorization: this function is only callable from
+  // trusted internal triggers (database webhooks / other edge functions).
+  const authHeader = req.headers.get("authorization") || "";
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+  if (!serviceKey || !authHeader.includes(serviceKey)) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), {
+      status: 403,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
 
   const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
   if (!RESEND_API_KEY) {
@@ -180,7 +200,8 @@ serve(async (req) => {
       });
     }
 
-    const name = displayName || username || user.email.split("@")[0];
+    const rawName = displayName || username || user.email.split("@")[0];
+    const name = sanitizeName(String(rawName));
     const html = buildWelcomeHtml(name);
 
     const resendRes = await fetch("https://api.resend.com/emails", {
