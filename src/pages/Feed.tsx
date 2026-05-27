@@ -344,12 +344,21 @@ const Feed = () => {
                   )}
                 </div>
 
-                <button onClick={() => navigate(`/post/${post.id}`)} className="block w-full aspect-[4/5] bg-muted">
+                <button onClick={() => navigate(`/post/${post.id}`)} className="block w-full aspect-[4/5] bg-muted overflow-hidden">
                   <img
-                    src={post.image_url}
+                    src={getOptimizedImageUrl(post.image_url, 800, 75)}
+                    srcSet={getImageSrcSet(post.image_url, [400, 800, 1200], 75)}
+                    sizes="(max-width: 768px) 100vw, 600px"
                     alt={`Foto di pesca a mosca condivisa da ${post.profiles?.username || 'pescatore'} su Flywaters`}
                     className="w-full h-full object-cover rounded-t-card"
-                    loading={idx < 3 ? "eager" : "lazy"}
+                    loading={idx === 0 ? 'eager' : 'lazy'}
+                    fetchPriority={idx === 0 ? 'high' : 'auto'}
+                    decoding="async"
+                    style={{
+                      backgroundImage: `url(${getOptimizedImageUrl(post.image_url, 20, 30)})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
                   />
                 </button>
 
