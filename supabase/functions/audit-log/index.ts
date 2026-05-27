@@ -33,13 +33,11 @@ serve(async (req) => {
       resource_type,
       resource_id,
       details,
-      email: emailOverride,
     } = body as {
       action?: string;
       resource_type?: string;
       resource_id?: string;
       details?: Record<string, unknown>;
-      email?: string;
     };
 
     if (!action || !ALLOWED_ACTIONS.has(action)) {
@@ -59,21 +57,26 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const admin = createClient(supabaseUrl, serviceRoleKey);
 
-    // Try to resolve actor from JWT in Authorization header
-    let actor_id: string | null = null;
-    let actor_email: string | null = null;
+    // Require a valid Supabase JWT — actor is ALWAYS derived from the verified
+    // token, never from client-supplied body fields. This prevents log poisoning.
     const auth = req.headers.get("Authorization");
-    if (auth?.startsWith("Bearer ")) {
-      const token = auth.slice(7);
-      const { data } = await admin.auth.getUser(token);
-      if (data?.user) {
-        actor_id = data.user.id;
-        actor_email = data.user.email ?? null;
-      }
+    if (!auth?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
-    if (!actor_email && emailOverride && typeof emailOverride === "string") {
-      actor_email = emailOverride.slice(0, 320);
+    const token = auth.slice(7);
+    const { data: userData, error: userErr } = await admin.auth.getUser(token);
+    if (userErr || !userData?.user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
+    const actor_id: string = userData.user.id;
+    const actor_email: string | null = userData.user.email ?? null;
+
 
     const ip_address =
       req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
