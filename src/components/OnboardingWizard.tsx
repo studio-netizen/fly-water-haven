@@ -121,6 +121,7 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex flex-col" style={{ backgroundColor: '#f5f0e8', color: '#242242' }}>
+      <ConsentGate />
       {/* Progress dots */}
       <div className="flex items-center justify-center gap-2 pt-8 pb-4">
         {[0, 1, 2].map(i => (
