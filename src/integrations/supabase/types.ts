@@ -446,7 +446,10 @@ export type Database = {
           id: string
           instagram_url: string | null
           is_guide: boolean
+          marketing_consent: boolean
           onboarding_completed: boolean
+          privacy_accepted_at: string | null
+          terms_accepted_at: string | null
           updated_at: string
           user_id: string
           username: string | null
@@ -462,7 +465,10 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           is_guide?: boolean
+          marketing_consent?: boolean
           onboarding_completed?: boolean
+          privacy_accepted_at?: string | null
+          terms_accepted_at?: string | null
           updated_at?: string
           user_id: string
           username?: string | null
@@ -478,7 +484,10 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           is_guide?: boolean
+          marketing_consent?: boolean
           onboarding_completed?: boolean
+          privacy_accepted_at?: string | null
+          terms_accepted_at?: string | null
           updated_at?: string
           user_id?: string
           username?: string | null
