@@ -26,7 +26,7 @@ const ConsentGate = ({ onAccepted }: { onAccepted?: () => void }) => {
     let cancelled = false;
     (async () => {
       const { data } = await supabase
-        .from('profiles')
+        .from('user_consents')
         .select('terms_accepted_at')
         .eq('user_id', user.id)
         .maybeSingle();
@@ -44,13 +44,13 @@ const ConsentGate = ({ onAccepted }: { onAccepted?: () => void }) => {
     setSaving(true);
     const ts = new Date().toISOString();
     const { error } = await supabase
-      .from('profiles')
-      .update({
+      .from('user_consents')
+      .upsert({
+        user_id: user.id,
         terms_accepted_at: ts,
         privacy_accepted_at: ts,
         marketing_consent: marketingConsent,
-      })
-      .eq('user_id', user.id);
+      }, { onConflict: 'user_id' });
     setSaving(false);
     if (error) {
       toast.error('Impossibile salvare i consensi. Riprova.');
