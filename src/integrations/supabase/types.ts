@@ -446,10 +446,7 @@ export type Database = {
           id: string
           instagram_url: string | null
           is_guide: boolean
-          marketing_consent: boolean
           onboarding_completed: boolean
-          privacy_accepted_at: string | null
-          terms_accepted_at: string | null
           updated_at: string
           user_id: string
           username: string | null
@@ -465,10 +462,7 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           is_guide?: boolean
-          marketing_consent?: boolean
           onboarding_completed?: boolean
-          privacy_accepted_at?: string | null
-          terms_accepted_at?: string | null
           updated_at?: string
           user_id: string
           username?: string | null
@@ -484,10 +478,7 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           is_guide?: boolean
-          marketing_consent?: boolean
           onboarding_completed?: boolean
-          privacy_accepted_at?: string | null
-          terms_accepted_at?: string | null
           updated_at?: string
           user_id?: string
           username?: string | null
@@ -632,6 +623,33 @@ export type Database = {
           review_count?: number | null
           spot_type?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_consents: {
+        Row: {
+          created_at: string
+          marketing_consent: boolean
+          privacy_accepted_at: string | null
+          terms_accepted_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          marketing_consent?: boolean
+          privacy_accepted_at?: string | null
+          terms_accepted_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          marketing_consent?: boolean
+          privacy_accepted_at?: string | null
+          terms_accepted_at?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
