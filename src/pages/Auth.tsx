@@ -64,17 +64,22 @@ const Auth = () => {
         });
         if (error) throw error;
         if (data.user) {
-          const profileUpdate: Record<string, unknown> = {
-            terms_accepted_at: consentTimestamp,
-            privacy_accepted_at: consentTimestamp,
-            marketing_consent: marketingConsent,
-          };
-          if (requestGuideBadge) profileUpdate.guide_status = 'requested';
           supabase
-            .from('profiles')
-            .update(profileUpdate)
-            .eq('user_id', data.user.id)
+            .from('user_consents')
+            .upsert({
+              user_id: data.user.id,
+              terms_accepted_at: consentTimestamp,
+              privacy_accepted_at: consentTimestamp,
+              marketing_consent: marketingConsent,
+            }, { onConflict: 'user_id' })
             .then(() => {});
+          if (requestGuideBadge) {
+            supabase
+              .from('profiles')
+              .update({ guide_status: 'requested' })
+              .eq('user_id', data.user.id)
+              .then(() => {});
+          }
         }
         toast.success(t('auth.checkEmail'));
       }
