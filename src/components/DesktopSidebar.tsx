@@ -77,6 +77,9 @@ const DesktopSidebar = () => {
         })}
       </nav>
 
+      <SidebarWidgets />
+
+
       {user && profile && (
         <div className="border-t border-black/[0.08] pt-4 mt-4">
           <div className="flex items-center gap-3 px-2 mb-3">
