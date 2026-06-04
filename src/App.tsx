@@ -21,6 +21,8 @@ import Contatti from "./pages/Contatti";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./components/admin/AdminLayout";
 import ResetPassword from "./pages/ResetPassword";
+import InstallaApp from "./pages/InstallaApp";
+import InstallBanner from "./components/InstallBanner";
 
 // Lazy load heavy pages
 const SpotMap = lazy(() => import("./pages/SpotMap"));
@@ -112,9 +114,11 @@ const App = () => (
                 <Route path="/admin/blog/nuovo" element={<AdminRoute><AdminBlogEditor /></AdminRoute>} />
                 <Route path="/admin/blog/:id/modifica" element={<AdminRoute><AdminBlogEditor /></AdminRoute>} />
                 <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/installa-app" element={<InstallaApp />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
+            <InstallBanner />
           </BrowserRouter>
         </TooltipProvider>
       </AdminAuthProvider>
