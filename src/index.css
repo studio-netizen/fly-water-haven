@@ -208,8 +208,6 @@
 
   /* Iubenda badge mobile positioning is handled in index.html via JS
      so it sits above the bottom navigation bar on small viewports. */
-    }
-  }
 
   /* Safe area padding for bottom navigation */
   .bottom-nav {
