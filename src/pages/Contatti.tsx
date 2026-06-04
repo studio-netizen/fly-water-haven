@@ -197,6 +197,7 @@ const Contatti = () => {
           <img src={logoWhite} alt="Flywaters" className="h-6" />
           <div className="flex gap-8 text-xs tracking-wide text-[#f5f0e8]/60">
             <Link to="/blog" className="hover:text-[#f5f0e8] transition-colors">Blog</Link>
+            <Link to="/installa-app" className="hover:text-[#f5f0e8] transition-colors">Installa l'app</Link>
             <Link to="/contatti" className="hover:text-[#f5f0e8] transition-colors">Contatti</Link>
             <a href="https://www.iubenda.com/privacy-policy/53958448" target="_blank" rel="noopener noreferrer" className="hover:text-[#f5f0e8] transition-colors">Privacy Policy</a>
             <a href="https://www.iubenda.com/privacy-policy/53958448/cookie-policy" target="_blank" rel="noopener noreferrer" className="hover:text-[#f5f0e8] transition-colors">Cookie Policy</a>

@@ -387,6 +387,7 @@ const Landing = () => {
           </p>
           <div className="flex gap-8 text-xs tracking-wide text-[#f5f0e8]/60">
             <a href="/blog" className="hover:text-[#f5f0e8] transition-colors">{t('nav.blog')}</a>
+            <a href="/installa-app" className="hover:text-[#f5f0e8] transition-colors">Installa l'app</a>
             <a href="/contatti" className="hover:text-[#f5f0e8] transition-colors">{t('nav.contacts')}</a>
             <a href="https://www.iubenda.com/privacy-policy/53958448" className="iubenda-white iubenda-noiframe iubenda-embed hover:text-[#f5f0e8] transition-colors" title="Privacy Policy">Privacy Policy</a>
             <a href="https://www.iubenda.com/privacy-policy/53958448/cookie-policy" className="iubenda-white iubenda-noiframe iubenda-embed hover:text-[#f5f0e8] transition-colors" title="Cookie Policy">Cookie Policy</a>
