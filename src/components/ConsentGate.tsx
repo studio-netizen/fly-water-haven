@@ -51,6 +51,12 @@ const ConsentGate = ({ onAccepted }: { onAccepted?: () => void }) => {
         privacy_accepted_at: ts,
         marketing_consent: marketingConsent,
       }, { onConflict: 'user_id' });
+    if (!error) {
+      await supabase
+        .from('profiles')
+        .update({ age_confirmed: true })
+        .eq('user_id', user.id);
+    }
     setSaving(false);
     if (error) {
       toast.error('Impossibile salvare i consensi. Riprova.');

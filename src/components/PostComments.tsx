@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Send } from 'lucide-react';
 import { toast } from 'sonner';
 import GuideAvatar from '@/components/GuideAvatar';
+import { formatTimeIt } from '@/lib/format-time';
 
 interface Comment {
   id: string;
@@ -113,14 +114,7 @@ const PostComments = ({ postId, commentCount, onCommentAdded }: PostCommentsProp
     setLoading(false);
   };
 
-  const formatTime = (date: string) => {
-    const diff = Date.now() - new Date(date).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 60) return `${mins}m`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h`;
-    return `${Math.floor(hrs / 24)}g`;
-  };
+  const formatTime = (date: string) => formatTimeIt(date);
 
   return (
     <div className="px-4 pb-3">

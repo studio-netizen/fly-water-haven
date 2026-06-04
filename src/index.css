@@ -206,20 +206,8 @@
     @apply opacity-100;
   }
 
-  /* Push Iubenda badge above the bottom navigation bar */
-  #iubenda-cs-banner,
-  .iubenda-tp-btn,
-  [class*="iubenda"] {
-    bottom: 80px !important;
-    z-index: 40 !important;
-  }
-
-  /* Hide Iubenda floating privacy button on mobile */
-  @media (max-width: 768px) {
-    .iubenda-tp-btn[data-tp-float="bottom-right"] {
-      display: none !important;
-    }
-  }
+  /* Iubenda badge mobile positioning is handled in index.html via JS
+     so it sits above the bottom navigation bar on small viewports. */
 
   /* Safe area padding for bottom navigation */
   .bottom-nav {

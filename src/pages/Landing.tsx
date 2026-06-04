@@ -95,7 +95,7 @@ const Landing = () => {
               <>
                 <button
                   onClick={() => openAuth('login')}
-                  className="hidden sm:inline-block px-5 py-2 rounded-full text-xs tracking-widest uppercase font-medium text-white hover:opacity-85 transition-opacity"
+                  className="px-5 py-2 rounded-full text-xs tracking-widest uppercase font-medium text-white border border-white/40 hover:bg-white/10 transition-colors"
                 >
                   {t('landing.login')}
                 </button>

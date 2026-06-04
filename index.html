@@ -93,6 +93,23 @@
     <!-- Iubenda -->
     <script type="text/javascript" src="https://cdn.iubenda.com/iubenda.js"></script>
     <script type="text/javascript" src="https://embeds.iubenda.com/widgets/1d5ccc8a-764a-41b8-81df-9f37cd08e126.js"></script>
+
+    <!-- Move Iubenda floating privacy button above the bottom nav on mobile -->
+    <script>
+      (function () {
+        function moveIubenda() {
+          if (window.innerWidth <= 768) {
+            document.querySelectorAll('.iubenda-tp-btn').forEach(function (btn) {
+              btn.style.cssText = 'bottom: 80px !important; z-index: 40 !important;';
+            });
+          }
+        }
+        window.addEventListener('load', moveIubenda);
+        window.addEventListener('resize', moveIubenda);
+        setTimeout(moveIubenda, 2000);
+        setTimeout(moveIubenda, 4000);
+      })();
+    </script>
   </head>
 
   <body>

@@ -9,6 +9,7 @@ import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import UserSearch from '@/components/UserSearch';
+import SidebarWidgets from '@/components/SidebarWidgets';
 
 const DesktopSidebar = () => {
   const { user, signOut } = useAuth();
@@ -75,6 +76,9 @@ const DesktopSidebar = () => {
           );
         })}
       </nav>
+
+      <SidebarWidgets />
+
 
       {user && profile && (
         <div className="border-t border-black/[0.08] pt-4 mt-4">

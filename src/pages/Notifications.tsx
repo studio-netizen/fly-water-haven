@@ -8,6 +8,7 @@ import { Heart, MessageCircle, Star, UserPlus, CheckCheck, Shield, X } from 'luc
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
+import { formatTimeIt } from '@/lib/format-time';
 
 const ICONS: Record<string, any> = {
   like: Heart,
@@ -47,14 +48,7 @@ const Notifications = () => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
-  const formatTime = (date: string) => {
-    const diff = Date.now() - new Date(date).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 60) return `${mins}m`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h`;
-    return `${Math.floor(hrs / 24)}g`;
-  };
+  const formatTime = (date: string) => formatTimeIt(date);
 
   const getMessage = (type: string) => {
     switch (type) {

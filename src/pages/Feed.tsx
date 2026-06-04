@@ -17,6 +17,7 @@ import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useTranslation } from 'react-i18next';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import { getOptimizedImageUrl, getImageSrcSet } from '@/lib/image-url';
+import { formatTimeIt } from '@/lib/format-time';
 
 interface Post {
   id: string;
@@ -193,14 +194,7 @@ const Feed = () => {
     }
   };
 
-  const formatTime = (date: string) => {
-    const diff = Date.now() - new Date(date).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 60) return `${mins}m`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h`;
-    return `${Math.floor(hrs / 24)}g`;
-  };
+  const formatTime = (date: string) => formatTimeIt(date);
 
   return (
     <AppLayout>
