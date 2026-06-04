@@ -73,13 +73,13 @@ const Auth = () => {
               marketing_consent: marketingConsent,
             }, { onConflict: 'user_id' })
             .then(() => {});
-          if (requestGuideBadge) {
-            supabase
-              .from('profiles')
-              .update({ guide_status: 'requested' })
-              .eq('user_id', data.user.id)
-              .then(() => {});
-          }
+          const profileUpdate: Record<string, any> = { age_confirmed: true };
+          if (requestGuideBadge) profileUpdate.guide_status = 'requested';
+          supabase
+            .from('profiles')
+            .update(profileUpdate)
+            .eq('user_id', data.user.id)
+            .then(() => {});
         }
         toast.success(t('auth.checkEmail'));
       }
