@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { fetchUserBadges, type UserBadges as UserBadgesType } from '@/lib/badges';
 import UserBadges from '@/components/UserBadges';
 import ProfileSpotsMiniMap from '@/components/ProfileSpotsMiniMap';
+import { sanitizeHttpUrl } from '@/lib/sanitize-url';
 
 const Profile = () => {
   const { userId: paramUserId } = useParams<{ userId: string }>();
