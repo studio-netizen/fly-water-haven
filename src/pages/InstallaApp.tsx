@@ -20,7 +20,7 @@ const InstallaApp = () => {
   return (
     <div className="min-h-screen bg-[#f5f0e8]">
       <Helmet>
-        <title>Installa Flywaters sul tuo telefono — App gratis</title>
+        <title>Installa Flywaters sul tuo smartphone — App gratis</title>
         <meta name="description" content="Installa Flywaters sulla schermata home del tuo iPhone o Android in pochi secondi. Niente App Store, leggera e sempre aggiornata." />
         <link rel="canonical" href="https://flywaters.app/installa-app" />
       </Helmet>
@@ -32,7 +32,7 @@ const InstallaApp = () => {
       <header className="px-6 pt-8 pb-16 max-w-3xl mx-auto text-center">
         <p className="text-xs tracking-[0.3em] uppercase text-[#8c8c7a] mb-4">Web App</p>
         <h1 className="text-4xl md:text-5xl font-bold text-[#242242] tracking-tight mb-6" style={{ letterSpacing: "-0.02em" }}>
-          Installa Flywaters sul tuo telefono
+          Installa Flywaters sul tuo smartphone
         </h1>
         <p className="text-lg text-[#5a5a52] leading-relaxed">
           Accedi alla community di pesca a mosca direttamente dalla tua schermata home — gratis, leggera e veloce.
@@ -43,7 +43,7 @@ const InstallaApp = () => {
         <div className="grid md:grid-cols-3 gap-6">
           {[
             { icon: Package, title: "Nessun download dallo store", desc: "Niente App Store, niente Google Play. Si installa in 5 secondi direttamente dal browser." },
-            { icon: Zap, title: "Leggera e veloce", desc: "Pesa meno di 1MB rispetto ai 50–100MB di un'app tradizionale. Non occupa spazio sul telefono." },
+            { icon: Zap, title: "Leggera e veloce", desc: "Pesa meno di 1MB rispetto ai 50–100MB di un'app tradizionale. Non occupa spazio sullo smartphone." },
             { icon: RefreshCw, title: "Sempre aggiornata", desc: "Si aggiorna automaticamente senza che tu debba fare nulla. Hai sempre l'ultima versione." },
           ].map(({ icon: Icon, title, desc }) => (
             <Card key={title} className="p-6">
