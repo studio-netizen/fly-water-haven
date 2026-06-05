@@ -206,6 +206,8 @@ const Feed = () => {
   return (
     <AppLayout>
       <SEOHead title={`Feed | Flywaters`} description={t('seo.defaultDescription')} />
+      <WelcomeBanner />
+
       {/* Mobile header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
@@ -345,23 +347,24 @@ const Feed = () => {
                   )}
                 </div>
 
-                <button onClick={() => navigate(`/post/${post.id}`)} className="block w-full aspect-[4/5] bg-muted overflow-hidden">
-                  <img
+                <div className="block w-full aspect-[4/5] bg-muted overflow-hidden">
+                  <ZoomableImage
                     src={getOptimizedImageUrl(post.image_url, 800, 75)}
                     srcSet={getImageSrcSet(post.image_url, [400, 800, 1200], 75)}
                     sizes="(max-width: 768px) 100vw, 600px"
                     alt={`Foto di pesca a mosca condivisa da ${post.profiles?.username || 'pescatore'} su Flywaters`}
-                    className="w-full h-full object-cover rounded-t-card"
                     loading={idx === 0 ? 'eager' : 'lazy'}
                     fetchPriority={idx === 0 ? 'high' : 'auto'}
                     decoding="async"
+                    className="rounded-t-card"
                     style={{
                       backgroundImage: `url(${getOptimizedImageUrl(post.image_url, 20, 30)})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                     }}
+                    onSingleTap={() => navigate(`/post/${post.id}`)}
                   />
-                </button>
+                </div>
 
                 <div className="px-4 pt-3 pb-1">
                   <div className="flex items-center gap-4 mb-2">

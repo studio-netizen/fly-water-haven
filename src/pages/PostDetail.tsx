@@ -256,10 +256,9 @@ const PostDetail = () => {
 
           {/* Image */}
           <div className="aspect-[4/5] bg-muted">
-            <img
+            <ZoomableImage
               src={post.image_url}
               alt={`Foto di pesca a mosca condivisa da ${post.profiles?.username || 'pescatore'} su Flywaters`}
-              className="w-full h-full object-cover"
               loading="eager"
             />
           </div>
