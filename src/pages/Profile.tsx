@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { fetchUserBadges, type UserBadges as UserBadgesType } from '@/lib/badges';
 import UserBadges from '@/components/UserBadges';
 import ProfileSpotsMiniMap from '@/components/ProfileSpotsMiniMap';
+import { sanitizeHttpUrl } from '@/lib/sanitize-url';
 
 const Profile = () => {
   const { userId: paramUserId } = useParams<{ userId: string }>();
@@ -227,20 +228,25 @@ const Profile = () => {
           {badges && (badges.explorer || badges.sentinel) && (
             <div className="mt-2"><UserBadges badges={badges} /></div>
           )}
-          {(profile.instagram_url || profile.website_url) && (
-            <div className="flex gap-3 mt-2 justify-center">
-              {profile.instagram_url && (
-                <a href={profile.instagram_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground" aria-label="Instagram">
-                  <Instagram className="w-4 h-4" />
-                </a>
-              )}
-              {profile.website_url && (
-                <a href={profile.website_url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground" aria-label="Website">
-                  <Globe className="w-4 h-4" />
-                </a>
-              )}
-            </div>
-          )}
+          {(() => {
+            const safeInstagram = sanitizeHttpUrl(profile.instagram_url);
+            const safeWebsite = sanitizeHttpUrl(profile.website_url);
+            if (!safeInstagram && !safeWebsite) return null;
+            return (
+              <div className="flex gap-3 mt-2 justify-center">
+                {safeInstagram && (
+                  <a href={safeInstagram} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground" aria-label="Instagram">
+                    <Instagram className="w-4 h-4" />
+                  </a>
+                )}
+                {safeWebsite && (
+                  <a href={safeWebsite} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground" aria-label="Website">
+                    <Globe className="w-4 h-4" />
+                  </a>
+                )}
+              </div>
+            );
+          })()}
         </div>
 
         {/* Prominent counter cards (visual hierarchy) */}

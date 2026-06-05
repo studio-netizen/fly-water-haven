@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import SEOHead from '@/components/SEOHead';
 import { validateImageFile, compressImage } from '@/lib/image-compression';
+import { sanitizeHttpUrl } from '@/lib/sanitize-url';
 
 const FISHING_TYPES = [
   { value: 'fly-fishing', label: '🎣 Pesca a mosca' },
@@ -105,8 +106,8 @@ const EditProfile = () => {
           bio: bio.trim(),
           avatar_url: newAvatarUrl,
           fishing_types: fishingTypes,
-          instagram_url: instagramUrl.trim() || null,
-          website_url: websiteUrl.trim() || null,
+          instagram_url: sanitizeHttpUrl(instagramUrl),
+          website_url: sanitizeHttpUrl(websiteUrl),
         } as any)
         .eq('user_id', user.id);
 
