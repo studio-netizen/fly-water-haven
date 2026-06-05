@@ -11,6 +11,7 @@ import PostComments from '@/components/PostComments';
 import PostActionsMenu from '@/components/PostActionsMenu';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
+import ZoomableImage from '@/components/ZoomableImage';
 import { toast } from 'sonner';
 
 interface PostData {
@@ -124,9 +125,14 @@ const PostDetail = () => {
 
   const handleShare = async () => {
     if (!post) return;
-    const url = `${window.location.origin}/post/${post.id}`;
+    const url = `https://flywaters.app/post/${post.id}`;
+    const username = post.profiles?.username || 'Pescatore';
     if (navigator.share) {
-      await navigator.share({ title: 'Flywaters', text: post.caption || 'Guarda questo post!', url });
+      await navigator.share({
+        title: `${username} su Flywaters`,
+        text: post.caption || 'Guarda questa cattura su Flywaters!',
+        url,
+      });
     } else {
       await navigator.clipboard.writeText(url);
       toast.success('Link copiato!');
@@ -250,10 +256,9 @@ const PostDetail = () => {
 
           {/* Image */}
           <div className="aspect-[4/5] bg-muted">
-            <img
+            <ZoomableImage
               src={post.image_url}
               alt={`Foto di pesca a mosca condivisa da ${post.profiles?.username || 'pescatore'} su Flywaters`}
-              className="w-full h-full object-cover"
               loading="eager"
             />
           </div>

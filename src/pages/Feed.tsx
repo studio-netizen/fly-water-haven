@@ -12,6 +12,8 @@ import { Badge } from '@/components/ui/badge';
 import GuideAvatar from '@/components/GuideAvatar';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
+import WelcomeBanner from '@/components/WelcomeBanner';
+import ZoomableImage from '@/components/ZoomableImage';
 import { toast } from 'sonner';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useTranslation } from 'react-i18next';
@@ -185,9 +187,14 @@ const Feed = () => {
   };
 
   const handleShare = async (post: Post) => {
-    const url = `${window.location.origin}/post/${post.id}`;
+    const url = `https://flywaters.app/post/${post.id}`;
+    const username = post.profiles?.username || 'Pescatore';
     if (navigator.share) {
-      await navigator.share({ title: 'Flywaters', text: post.caption || t('feed.checkThisPost'), url });
+      await navigator.share({
+        title: `${username} su Flywaters`,
+        text: post.caption || 'Guarda questa cattura su Flywaters!',
+        url,
+      });
     } else {
       await navigator.clipboard.writeText(url);
       toast(t('feed.linkCopied'));
@@ -199,6 +206,8 @@ const Feed = () => {
   return (
     <AppLayout>
       <SEOHead title={`Feed | Flywaters`} description={t('seo.defaultDescription')} />
+      <WelcomeBanner />
+
       {/* Mobile header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
@@ -338,23 +347,24 @@ const Feed = () => {
                   )}
                 </div>
 
-                <button onClick={() => navigate(`/post/${post.id}`)} className="block w-full aspect-[4/5] bg-muted overflow-hidden">
-                  <img
+                <div className="block w-full aspect-[4/5] bg-muted overflow-hidden">
+                  <ZoomableImage
                     src={getOptimizedImageUrl(post.image_url, 800, 75)}
                     srcSet={getImageSrcSet(post.image_url, [400, 800, 1200], 75)}
                     sizes="(max-width: 768px) 100vw, 600px"
                     alt={`Foto di pesca a mosca condivisa da ${post.profiles?.username || 'pescatore'} su Flywaters`}
-                    className="w-full h-full object-cover rounded-t-card"
                     loading={idx === 0 ? 'eager' : 'lazy'}
                     fetchPriority={idx === 0 ? 'high' : 'auto'}
                     decoding="async"
+                    className="rounded-t-card"
                     style={{
                       backgroundImage: `url(${getOptimizedImageUrl(post.image_url, 20, 30)})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                     }}
+                    onSingleTap={() => navigate(`/post/${post.id}`)}
                   />
-                </button>
+                </div>
 
                 <div className="px-4 pt-3 pb-1">
                   <div className="flex items-center gap-4 mb-2">
@@ -408,7 +418,7 @@ const Feed = () => {
             ))}
 
             {suggestedUsers.length > 0 && posts.length >= 3 && (
-              <div className="border-b border-border py-6 px-4">
+              <div id="suggested-anglers" className="border-b border-border py-6 px-4">
                 <p className="text-sm font-semibold text-foreground mb-4">{t('feed.suggestedForYou')}</p>
                 <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
                   {suggestedUsers.map(su => (
