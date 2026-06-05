@@ -187,9 +187,14 @@ const Feed = () => {
   };
 
   const handleShare = async (post: Post) => {
-    const url = `${window.location.origin}/post/${post.id}`;
+    const url = `https://flywaters.app/post/${post.id}`;
+    const username = post.profiles?.username || 'Pescatore';
     if (navigator.share) {
-      await navigator.share({ title: 'Flywaters', text: post.caption || t('feed.checkThisPost'), url });
+      await navigator.share({
+        title: `${username} su Flywaters`,
+        text: post.caption || 'Guarda questa cattura su Flywaters!',
+        url,
+      });
     } else {
       await navigator.clipboard.writeText(url);
       toast(t('feed.linkCopied'));
