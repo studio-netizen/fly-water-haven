@@ -418,7 +418,7 @@ const Feed = () => {
             ))}
 
             {suggestedUsers.length > 0 && posts.length >= 3 && (
-              <div className="border-b border-border py-6 px-4">
+              <div id="suggested-anglers" className="border-b border-border py-6 px-4">
                 <p className="text-sm font-semibold text-foreground mb-4">{t('feed.suggestedForYou')}</p>
                 <div className="flex gap-4 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
                   {suggestedUsers.map(su => (
