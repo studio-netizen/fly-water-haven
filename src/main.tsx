@@ -4,6 +4,18 @@ import App from "./App.tsx";
 import "./index.css";
 import "./i18n";
 
+// Microsoft Clarity — only in production when project ID is configured
+const clarityId = import.meta.env.VITE_CLARITY_PROJECT_ID;
+if (clarityId && import.meta.env.PROD) {
+  const w = window as any;
+  w.clarity = w.clarity || function () { (w.clarity.q = w.clarity.q || []).push(arguments); };
+  const s = document.createElement("script");
+  s.async = true;
+  s.src = "https://www.clarity.ms/tag/" + clarityId;
+  const t = document.getElementsByTagName("script")[0];
+  t.parentNode?.insertBefore(s, t);
+}
+
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>
     <App />

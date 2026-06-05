@@ -11,6 +11,7 @@ import PostComments from '@/components/PostComments';
 import PostActionsMenu from '@/components/PostActionsMenu';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
+import ZoomableImage from '@/components/ZoomableImage';
 import { toast } from 'sonner';
 
 interface PostData {

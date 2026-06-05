@@ -12,6 +12,8 @@ import { Badge } from '@/components/ui/badge';
 import GuideAvatar from '@/components/GuideAvatar';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
+import WelcomeBanner from '@/components/WelcomeBanner';
+import ZoomableImage from '@/components/ZoomableImage';
 import { toast } from 'sonner';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useTranslation } from 'react-i18next';
