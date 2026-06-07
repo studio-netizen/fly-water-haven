@@ -45,8 +45,8 @@ const PostDetail = () => {
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
-    if (postId) fetchPost();
-  }, [postId]);
+    if (postId && user) fetchPost();
+  }, [postId, user]);
 
   useEffect(() => {
     if (user && post) {
