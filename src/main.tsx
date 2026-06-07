@@ -11,6 +11,7 @@ if (clarityId && import.meta.env.PROD) {
   w.clarity = w.clarity || function () { (w.clarity.q = w.clarity.q || []).push(arguments); };
   const s = document.createElement("script");
   s.async = true;
+  s.defer = true;
   s.src = "https://www.clarity.ms/tag/" + clarityId;
   const t = document.getElementsByTagName("script")[0];
   t.parentNode?.insertBefore(s, t);
