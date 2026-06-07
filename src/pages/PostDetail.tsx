@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Heart, MessageCircle, Share2, MapPin, ArrowLeft } from 'lucide-react';
@@ -13,6 +13,8 @@ import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
 import ZoomableImage from '@/components/ZoomableImage';
 import { toast } from 'sonner';
+import logoImg from '@/assets/flywaters-logo-dark.png';
+import heroImg from '@/assets/hero-mosca-club.jpg';
 
 interface PostData {
   id: string;
