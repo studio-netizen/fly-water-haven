@@ -205,6 +205,7 @@ const PostDetail = () => {
 
   if (loading) {
     return (
+      <AppLayout>
         <div className="max-w-2xl mx-auto">
           <div className="bg-card">
             <div className="flex items-center gap-3 px-4 py-3">
