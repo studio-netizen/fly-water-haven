@@ -186,7 +186,7 @@ export default function AdminBlogEditor() {
     if (err) { toast.error(err); return; }
     setUploading(true);
     try {
-      const result = await compressImage(file, 'default');
+      const result = await compressImage(file, 'blog');
       const publicUrl = await uploadToR2(result.file, 'blog', { adminToken: adminToken || undefined });
       updateField('cover_image_url', publicUrl);
       toast.success('Immagine caricata');
