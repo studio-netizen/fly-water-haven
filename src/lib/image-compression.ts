@@ -11,7 +11,7 @@ export interface CompressionResult {
 
 const defaultOptions = {
   maxSizeMB: 1.5,
-  maxWidthOrHeight: 2048,
+  maxWidthOrHeight: 1920,
   useWebWorker: true,
   fileType: 'image/webp' as const,
   initialQuality: 0.82,
@@ -20,6 +20,14 @@ const defaultOptions = {
 const avatarOptions = {
   maxSizeMB: 0.3,
   maxWidthOrHeight: 400,
+  useWebWorker: true,
+  fileType: 'image/webp' as const,
+  initialQuality: 0.85,
+};
+
+const blogOptions = {
+  maxSizeMB: 1.0,
+  maxWidthOrHeight: 1200,
   useWebWorker: true,
   fileType: 'image/webp' as const,
   initialQuality: 0.85,
@@ -43,10 +51,11 @@ export function formatFileSize(bytes: number): string {
 
 export async function compressImage(
   file: File,
-  type: 'default' | 'avatar' = 'default'
+  type: 'default' | 'avatar' | 'blog' = 'default'
 ): Promise<CompressionResult> {
   const originalSize = file.size;
-  const options = type === 'avatar' ? avatarOptions : defaultOptions;
+  const options =
+    type === 'avatar' ? avatarOptions : type === 'blog' ? blogOptions : defaultOptions;
 
   try {
     const compressed = await imageCompression(file, options);
