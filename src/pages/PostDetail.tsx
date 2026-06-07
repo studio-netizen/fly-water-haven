@@ -149,9 +149,62 @@ const PostDetail = () => {
     });
   };
 
+  // Lead wall for anonymous users — never expose post data
+  if (!user) {
+    return (
+      <>
+        <SEOHead
+          title="Accedi per vedere questa cattura | Flywaters"
+          description="Unisciti alla community italiana di pesca a mosca. Registrazione gratuita."
+          canonical={`https://flywaters.app/post/${postId}`}
+        />
+        <div
+          className="fixed inset-0 z-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${heroImg})`,
+            filter: 'blur(20px) brightness(0.4)',
+            transform: 'scale(1.1)',
+          }}
+          aria-hidden="true"
+        />
+        <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-10">
+          <div className="w-full max-w-sm bg-card rounded-2xl shadow-2xl p-6 text-center">
+            <img src={logoImg} alt="Flywaters" className="h-10 mx-auto mb-5" />
+            <h1 className="text-xl font-bold text-foreground mb-2">
+              🎣 Accedi per vedere questa cattura
+            </h1>
+            <p className="text-sm text-muted-foreground mb-6">
+              Unisciti alla community italiana di pesca a mosca — è gratis
+            </p>
+            <div className="flex flex-col gap-2">
+              <Button
+                onClick={() => navigate(`/auth?mode=register&next=/post/${postId}`)}
+                className="rounded-full w-full"
+              >
+                Registrati gratis
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => navigate(`/auth?mode=login&next=/post/${postId}`)}
+                className="rounded-full w-full"
+              >
+                Accedi
+              </Button>
+            </div>
+            <Link
+              to="/"
+              className="block mt-5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Scopri Flywaters →
+            </Link>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   if (loading) {
     return (
-      <AppLayout>
         <div className="max-w-2xl mx-auto">
           <div className="bg-card">
             <div className="flex items-center gap-3 px-4 py-3">
