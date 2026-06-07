@@ -51,10 +51,11 @@ export function formatFileSize(bytes: number): string {
 
 export async function compressImage(
   file: File,
-  type: 'default' | 'avatar' = 'default'
+  type: 'default' | 'avatar' | 'blog' = 'default'
 ): Promise<CompressionResult> {
   const originalSize = file.size;
-  const options = type === 'avatar' ? avatarOptions : defaultOptions;
+  const options =
+    type === 'avatar' ? avatarOptions : type === 'blog' ? blogOptions : defaultOptions;
 
   try {
     const compressed = await imageCompression(file, options);
