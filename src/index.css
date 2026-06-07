@@ -129,6 +129,13 @@
     @apply bg-background text-foreground font-sans;
   }
 
+  /* iOS safe area: push fixed top bars below the status bar */
+  header,
+  nav,
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
   /* Patagonia typography system */
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold;
