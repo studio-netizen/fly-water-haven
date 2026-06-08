@@ -448,6 +448,7 @@ export type Database = {
           instagram_url: string | null
           is_guide: boolean
           onboarding_completed: boolean
+          referred_by: string | null
           updated_at: string
           user_id: string
           username: string | null
@@ -465,6 +466,7 @@ export type Database = {
           instagram_url?: string | null
           is_guide?: boolean
           onboarding_completed?: boolean
+          referred_by?: string | null
           updated_at?: string
           user_id: string
           username?: string | null
@@ -482,6 +484,7 @@ export type Database = {
           instagram_url?: string | null
           is_guide?: boolean
           onboarding_completed?: boolean
+          referred_by?: string | null
           updated_at?: string
           user_id?: string
           username?: string | null
@@ -571,6 +574,35 @@ export type Database = {
             columns: ["spot_id"]
             isOneToOne: false
             referencedRelation: "spots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saved_posts: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_posts_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
             referencedColumns: ["id"]
           },
         ]
