@@ -394,7 +394,7 @@ const Profile = () => {
               </div>
             )}
           </div>
-        ) : (
+        ) : activeTab === 'spots' ? (
           <div className="space-y-3 py-4">
             {reviews.map(r => (
               <div key={r.id} className="flex items-start gap-3 px-1">
@@ -433,8 +433,53 @@ const Profile = () => {
               </div>
             )}
           </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-[2px] pb-4">
+            {savedPosts.map(post => (
+              <button
+                key={post.id}
+                onClick={() => navigate(`/post/${post.id}`)}
+                className="ig-grid-cell relative aspect-square bg-muted overflow-hidden group focus:outline-none"
+                aria-label="Apri post salvato"
+              >
+                <img
+                  src={post.image_url}
+                  alt="Post salvato"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  loading="lazy"
+                />
+                <div className="ig-grid-overlay text-white">
+                  <span className="flex items-center gap-1.5 font-semibold text-sm">
+                    <Heart className="w-5 h-5 fill-white" />
+                    {post.like_count ?? 0}
+                  </span>
+                  <span className="flex items-center gap-1.5 font-semibold text-sm">
+                    <MessageCircle className="w-5 h-5 fill-white" />
+                    {post.comment_count ?? 0}
+                  </span>
+                </div>
+              </button>
+            ))}
+            {savedPosts.length === 0 && (
+              <div className="col-span-3 py-10 px-4">
+                <div className="rounded-xl border border-dashed border-border bg-muted/30 p-8 text-center shadow-sm">
+                  <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                    <Bookmark className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-foreground mb-1">Nessun post salvato ancora</h3>
+                  <p className="text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
+                    Salva i post che ti ispirano!
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
+
+      {isOwnProfile && profile?.username && (
+        <InviteShareDialog open={inviteOpen} onOpenChange={setInviteOpen} username={profile.username} />
+      )}
 
       {modalType && userId && (
         <FollowersModal open={!!modalType} onClose={() => setModalType(null)} userId={userId} type={modalType} />
