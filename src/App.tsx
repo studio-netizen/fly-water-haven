@@ -23,6 +23,7 @@ import AdminLayout from "./components/admin/AdminLayout";
 import ResetPassword from "./pages/ResetPassword";
 import InstallaApp from "./pages/InstallaApp";
 import InstallBanner from "./components/InstallBanner";
+import SearchPage from "./pages/Search";
 
 // Lazy load heavy pages
 const SpotMap = lazy(() => import("./pages/SpotMap"));
