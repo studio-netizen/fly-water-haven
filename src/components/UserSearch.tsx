@@ -39,7 +39,8 @@ const UserSearch = ({ variant = 'sidebar', onPick }: Props) => {
           value={query}
           onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
           onFocus={() => setOpen(true)}
-          placeholder={t('common.searchUsers') || 'Cerca pescatori...'}
+          onKeyDown={(e) => { if (e.key === 'Enter' && query.trim()) { navigate(`/cerca?q=${encodeURIComponent(query.trim())}`); setOpen(false); onPick?.(); } }}
+          placeholder={t('common.searchUsers') || 'Cerca pescatori, spot...'}
           className="w-full h-9 pl-9 pr-8 text-sm rounded-full bg-muted/50 border border-transparent focus:bg-background focus:border-[#242242] outline-none transition-colors"
         />
         {query && (
