@@ -279,25 +279,34 @@ const Profile = () => {
           <StatCard value={stats.following} label={t('profile.following')} onClick={() => setModalType('following')} />
         </div>
 
-        <div className="flex gap-2 pb-4 justify-center">
+        <div className="flex flex-col gap-2 pb-4 items-center">
           {isOwnProfile ? (
-            <Button
-              variant="outline"
-              className="h-9 text-sm font-semibold rounded-full w-auto"
-              style={{ padding: '10px 32px', borderRadius: 9999 }}
-              onClick={() => navigate('/profile/edit')}
-            >
-              {t('profile.editProfile')}
-            </Button>
-          ) : user ? (
             <>
+              <Button
+                variant="outline"
+                className="h-9 text-sm font-semibold rounded-full w-auto"
+                style={{ padding: '10px 32px', borderRadius: 9999 }}
+                onClick={() => navigate('/profile/edit')}
+              >
+                {t('profile.editProfile')}
+              </Button>
+              <Button
+                variant="ghost"
+                className="h-9 text-sm font-semibold rounded-full w-auto gap-1.5 text-[#242242]"
+                onClick={() => setInviteOpen(true)}
+              >
+                <UserPlus className="w-4 h-4" /> Invita un amico
+              </Button>
+            </>
+          ) : user ? (
+            <div className="flex gap-2 w-full justify-center">
               <Button variant={isFollowing ? 'outline' : 'default'} className="flex-1 h-9 text-sm font-semibold" onClick={toggleFollow}>
                 {isFollowing ? t('feed.followingBtn') : t('feed.follow')}
               </Button>
               <Button variant="outline" className="flex-1 h-9 text-sm font-semibold" onClick={() => navigate(`/messages/${userId}`)}>
                 {t('profile.message')}
               </Button>
-            </>
+            </div>
           ) : null}
         </div>
 
