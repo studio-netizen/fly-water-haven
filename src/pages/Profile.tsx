@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import GuideAvatar, { GoldenFlyInline } from '@/components/GuideAvatar';
 import { Button } from '@/components/ui/button';
-import { Grid3X3, MapPin, Pencil, Star, ArrowLeft, LogOut, Heart, MessageCircle, Camera, Plus, Sparkles, Instagram, Globe } from 'lucide-react';
+import { Grid3X3, MapPin, Pencil, Star, ArrowLeft, LogOut, Heart, MessageCircle, Camera, Plus, Sparkles, Instagram, Globe, Bookmark, UserPlus } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import FollowersModal from '@/components/FollowersModal';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import { fetchUserBadges, type UserBadges as UserBadgesType } from '@/lib/badges
 import UserBadges from '@/components/UserBadges';
 import ProfileSpotsMiniMap from '@/components/ProfileSpotsMiniMap';
 import { sanitizeHttpUrl } from '@/lib/sanitize-url';
+import InviteShareDialog from '@/components/InviteShareDialog';
 
 const Profile = () => {
   const { userId: paramUserId } = useParams<{ userId: string }>();
