@@ -50,8 +50,19 @@ const Profile = () => {
       fetchReviews();
       fetchUserBadges(userId).then(setBadges);
       if (user && !isOwnProfile) checkFollowing();
+      if (user && isOwnProfile) fetchSavedPosts();
     }
   }, [userId, user]);
+
+  const fetchSavedPosts = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from('saved_posts')
+      .select('post_id, posts:posts!saved_posts_post_id_fkey(id, image_url, like_count, comment_count, created_at)')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+    if (data) setSavedPosts(data.map((r: any) => r.posts).filter(Boolean));
+  };
 
   const fetchProfile = async () => {
     setProfileLoading(true);
