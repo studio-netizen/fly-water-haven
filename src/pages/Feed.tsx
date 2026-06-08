@@ -212,14 +212,19 @@ const Feed = () => {
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <img src={logoImg} alt="Flywaters — La community italiana per la pesca a mosca" className="h-7" />
-          <button onClick={() => navigate('/messages')} className="relative p-1">
-            <Send className="w-5 h-5 text-foreground" />
-            {unreadMessages > 0 && (
-              <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
-                {unreadMessages > 9 ? '9+' : unreadMessages}
-              </span>
-            )}
-          </button>
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate('/cerca')} className="p-1" aria-label="Cerca">
+              <Search className="w-5 h-5 text-foreground" />
+            </button>
+            <button onClick={() => navigate('/messages')} className="relative p-1" aria-label="Messaggi">
+              <Send className="w-5 h-5 text-foreground" />
+              {unreadMessages > 0 && (
+                <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                  {unreadMessages > 9 ? '9+' : unreadMessages}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
