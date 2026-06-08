@@ -379,8 +379,17 @@ const Feed = () => {
                     )}
                   </div>
                   <span className="text-xs text-muted-foreground">{formatTime(post.created_at)}</span>
+                  <button
+                    onClick={() => toggleSave(post.id)}
+                    className="p-1 -mr-1"
+                    aria-label={saved.has(post.id) ? 'Rimuovi dai salvati' : 'Salva post'}
+                  >
+                    {saved.has(post.id)
+                      ? <BookmarkCheck className="w-5 h-5 fill-[#242242] text-[#242242]" />
+                      : <Bookmark className="w-5 h-5 text-foreground" />}
+                  </button>
                   {post.user_id === user?.id && (
-                    <PostActionsMenu post={post} onUpdated={fetchPosts} />
+                    <PostActionsMenu post={post} onUpdated={() => fetchPosts(0, true)} />
                   )}
                 </div>
 
