@@ -24,6 +24,7 @@ import ResetPassword from "./pages/ResetPassword";
 import InstallaApp from "./pages/InstallaApp";
 import InstallBanner from "./components/InstallBanner";
 import SearchPage from "./pages/Search";
+import Invite from "./pages/Invite";
 
 // Lazy load heavy pages
 const SpotMap = lazy(() => import("./pages/SpotMap"));
