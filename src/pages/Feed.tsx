@@ -50,11 +50,15 @@ interface SuggestedUser {
   post_count: number;
 }
 
+const PAGE_SIZE = 10;
+
 const Feed = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [feedMode, setFeedMode] = useState<'forYou' | 'following'>('forYou');
@@ -62,13 +66,14 @@ const Feed = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const unreadMessages = useUnreadMessages();
   const { t } = useTranslation();
+  const { saved, toggleSave } = useSavedPosts();
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!user) return;
     fetchFollowedUsers();
     fetchLikedPosts();
     fetchSuggestedUsers();
-    // Check onboarding status
     supabase.from('profiles').select('onboarding_completed').eq('user_id', user.id).single()
       .then(({ data }) => {
         if (data && !data.onboarding_completed) setShowOnboarding(true);
@@ -77,7 +82,9 @@ const Feed = () => {
 
   useEffect(() => {
     if (!user) return;
-    fetchPosts();
+    setPosts([]);
+    setHasMore(true);
+    fetchPosts(0, true);
   }, [user, feedMode, followedUsers]);
 
   if (authLoading) return (
@@ -92,26 +99,50 @@ const Feed = () => {
     return <OnboardingWizard onComplete={() => setShowOnboarding(false)} />;
   }
 
-  const fetchPosts = async () => {
-    setLoading(true);
+  const fetchPosts = async (offset: number, replace = false) => {
+    if (replace) setLoading(true); else setLoadingMore(true);
+
+    if (feedMode === 'following' && followedUsers.size === 0) {
+      setPosts([]); setHasMore(false); setLoading(false); setLoadingMore(false);
+      return;
+    }
+
     let query = supabase
       .from('posts')
       .select('*, profiles!posts_user_id_profiles_fkey(username, display_name, avatar_url, is_guide)')
       .order('created_at', { ascending: false })
-      .limit(50);
+      .range(offset, offset + PAGE_SIZE - 1);
 
-    if (feedMode === 'following' && followedUsers.size > 0) {
+    if (feedMode === 'following') {
       query = query.in('user_id', Array.from(followedUsers));
-    } else if (feedMode === 'following') {
-      setPosts([]);
-      setLoading(false);
-      return;
     }
 
     const { data, error } = await query;
-    if (!error && data) setPosts(data as unknown as Post[]);
+    if (!error && data) {
+      const batch = data as unknown as Post[];
+      setPosts(prev => replace ? batch : [...prev, ...batch]);
+      setHasMore(batch.length === PAGE_SIZE);
+    } else if (error) {
+      setHasMore(false);
+    }
     setLoading(false);
+    setLoadingMore(false);
   };
+
+  const loadMore = useCallback(() => {
+    if (loading || loadingMore || !hasMore) return;
+    fetchPosts(posts.length);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, loadingMore, hasMore, posts.length, feedMode, followedUsers]);
+
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) loadMore();
+    }, { rootMargin: '300px' });
+    obs.observe(sentinelRef.current);
+    return () => obs.disconnect();
+  }, [loadMore]);
 
   const fetchLikedPosts = async () => {
     if (!user) return;
