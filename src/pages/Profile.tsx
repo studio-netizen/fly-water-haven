@@ -56,12 +56,21 @@ const Profile = () => {
 
   const fetchSavedPosts = async () => {
     if (!user) return;
-    const { data } = await supabase
+    const { data: rows } = await supabase
       .from('saved_posts')
-      .select('post_id, posts:posts!saved_posts_post_id_fkey(id, image_url, like_count, comment_count, created_at)')
+      .select('post_id, created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
-    if (data) setSavedPosts(data.map((r: any) => r.posts).filter(Boolean));
+    if (!rows?.length) { setSavedPosts([]); return; }
+    const ids = rows.map((r: any) => r.post_id);
+    const { data: ps } = await supabase
+      .from('posts')
+      .select('id, image_url, like_count, comment_count')
+      .in('id', ids);
+    if (ps) {
+      const map = new Map(ps.map((p: any) => [p.id, p]));
+      setSavedPosts(ids.map((id) => map.get(id)).filter(Boolean));
+    }
   };
 
   const fetchProfile = async () => {
