@@ -53,7 +53,7 @@ const UserSearch = ({ variant = 'sidebar', onPick }: Props) => {
           </button>
         )}
       </div>
-      {open && results.length > 0 && (
+      {open && query.trim().length >= 1 && (
         <div className="absolute z-50 left-0 right-0 mt-1 rounded-xl bg-background border border-border shadow-lg overflow-hidden">
           {results.map((u) => (
             <button
@@ -75,6 +75,12 @@ const UserSearch = ({ variant = 'sidebar', onPick }: Props) => {
               </div>
             </button>
           ))}
+          <button
+            onClick={() => { navigate(`/cerca?q=${encodeURIComponent(query.trim())}`); setOpen(false); onPick?.(); }}
+            className="block w-full text-left px-3 py-2 text-xs font-semibold text-[#242242] hover:bg-muted/60 border-t border-border"
+          >
+            Cerca "{query.trim()}" in pescatori, spot e post →
+          </button>
         </div>
       )}
     </div>
