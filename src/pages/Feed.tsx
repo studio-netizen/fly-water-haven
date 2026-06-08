@@ -87,18 +87,6 @@ const Feed = () => {
     fetchPosts(0, true);
   }, [user, feedMode, followedUsers]);
 
-  if (authLoading) return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-    </div>
-  );
-
-  if (!user) return <Landing />;
-
-  if (showOnboarding && user) {
-    return <OnboardingWizard onComplete={() => setShowOnboarding(false)} />;
-  }
-
   const fetchPosts = async (offset: number, replace = false) => {
     if (replace) setLoading(true); else setLoadingMore(true);
 
@@ -143,6 +131,19 @@ const Feed = () => {
     obs.observe(sentinelRef.current);
     return () => obs.disconnect();
   }, [loadMore]);
+
+  if (authLoading) return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+    </div>
+  );
+
+  if (!user) return <Landing />;
+
+  if (showOnboarding && user) {
+    return <OnboardingWizard onComplete={() => setShowOnboarding(false)} />;
+  }
+
 
   const fetchLikedPosts = async () => {
     if (!user) return;
