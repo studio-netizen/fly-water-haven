@@ -333,6 +333,16 @@ const Profile = () => {
           >
             <Star className="w-4 h-4" /> {t('profile.reviewedSpots')}
           </button>
+          {isOwnProfile && (
+            <button
+              onClick={() => setActiveTab('saved')}
+              className={`flex-1 py-3 flex items-center justify-center gap-1.5 text-xs uppercase tracking-wide border-b-2 transition-colors ${
+                activeTab === 'saved' ? 'border-foreground text-foreground font-semibold' : 'border-transparent text-muted-foreground'
+              }`}
+            >
+              <Bookmark className="w-4 h-4" /> Salvati
+            </button>
+          )}
         </div>
 
         {activeTab === 'posts' ? (
