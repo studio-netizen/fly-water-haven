@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import Landing from './Landing';
 import { supabase } from '@/integrations/supabase/client';
-import { Heart, MessageCircle, Share2, MapPin, Send } from 'lucide-react';
+import { Heart, MessageCircle, Share2, MapPin, Send, Search } from 'lucide-react';
 import PostActionsMenu from '@/components/PostActionsMenu';
 import PostComments from '@/components/PostComments';
 import logoImg from '@/assets/flywaters-logo-dark.png';
