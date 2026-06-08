@@ -499,6 +499,24 @@ const Feed = () => {
                 </div>
               </div>
             )}
+
+            {/* Infinite scroll sentinel + loader / end-of-feed */}
+            <div ref={sentinelRef} />
+            {loadingMore && (
+              <div className="flex justify-center items-center gap-1.5 py-6">
+                <span className="w-2 h-2 rounded-full bg-[#242242] animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-2 h-2 rounded-full bg-[#242242] animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-2 h-2 rounded-full bg-[#242242] animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            )}
+            {!loadingMore && !hasMore && posts.length > 0 && (
+              <div className="text-center py-8 px-4 text-sm text-muted-foreground">
+                🎣 Hai visto tutto!{' '}
+                <Link to="/map" className="font-semibold text-[#242242] underline">
+                  Aggiungi il tuo primo spot.
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </div>
