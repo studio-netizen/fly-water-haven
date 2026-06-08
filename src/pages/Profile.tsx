@@ -32,11 +32,13 @@ const Profile = () => {
   const [profileNotFound, setProfileNotFound] = useState(false);
   const [posts, setPosts] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
+  const [savedPosts, setSavedPosts] = useState<any[]>([]);
   const [stats, setStats] = useState({ posts: 0, followers: 0, following: 0 });
   const [isFollowing, setIsFollowing] = useState(false);
-  const [activeTab, setActiveTab] = useState<'posts' | 'spots'>('posts');
+  const [activeTab, setActiveTab] = useState<'posts' | 'spots' | 'saved'>('posts');
   const [modalType, setModalType] = useState<'followers' | 'following' | null>(null);
   const [badges, setBadges] = useState<UserBadgesType | null>(null);
+  const [inviteOpen, setInviteOpen] = useState(false);
   const isOwnProfile = user?.id === userId;
   const { t } = useTranslation();
 
