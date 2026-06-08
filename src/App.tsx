@@ -116,6 +116,7 @@ const App = () => (
                 <Route path="/admin/blog/:id/modifica" element={<AdminRoute><AdminBlogEditor /></AdminRoute>} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/installa-app" element={<InstallaApp />} />
+                <Route path="/cerca" element={<SearchPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
