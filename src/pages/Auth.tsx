@@ -75,11 +75,18 @@ const Auth = () => {
             .then(() => {});
           const profileUpdate: Record<string, any> = { age_confirmed: true };
           if (requestGuideBadge) profileUpdate.guide_status = 'requested';
+          let referredBy: string | null = null;
+          try { referredBy = localStorage.getItem('flywaters_referred_by'); } catch {}
+          if (referredBy) profileUpdate.referred_by = referredBy;
           supabase
             .from('profiles')
             .update(profileUpdate)
             .eq('user_id', data.user.id)
-            .then(() => {});
+            .then(() => {
+              if (referredBy) {
+                try { localStorage.removeItem('flywaters_referred_by'); } catch {}
+              }
+            });
         }
         toast.success(t('auth.checkEmail'));
       }

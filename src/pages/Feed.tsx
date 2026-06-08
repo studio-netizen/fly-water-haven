@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import Landing from './Landing';
 import { supabase } from '@/integrations/supabase/client';
-import { Heart, MessageCircle, Share2, MapPin, Send, Search } from 'lucide-react';
+import { Heart, MessageCircle, Share2, MapPin, Send, Search, Bookmark, BookmarkCheck } from 'lucide-react';
+import { useSavedPosts } from '@/hooks/useSavedPosts';
 import PostActionsMenu from '@/components/PostActionsMenu';
 import PostComments from '@/components/PostComments';
 import logoImg from '@/assets/flywaters-logo-dark.png';
@@ -49,11 +50,15 @@ interface SuggestedUser {
   post_count: number;
 }
 
+const PAGE_SIZE = 10;
+
 const Feed = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [feedMode, setFeedMode] = useState<'forYou' | 'following'>('forYou');
@@ -61,13 +66,14 @@ const Feed = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const unreadMessages = useUnreadMessages();
   const { t } = useTranslation();
+  const { saved, toggleSave } = useSavedPosts();
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!user) return;
     fetchFollowedUsers();
     fetchLikedPosts();
     fetchSuggestedUsers();
-    // Check onboarding status
     supabase.from('profiles').select('onboarding_completed').eq('user_id', user.id).single()
       .then(({ data }) => {
         if (data && !data.onboarding_completed) setShowOnboarding(true);
@@ -76,7 +82,9 @@ const Feed = () => {
 
   useEffect(() => {
     if (!user) return;
-    fetchPosts();
+    setPosts([]);
+    setHasMore(true);
+    fetchPosts(0, true);
   }, [user, feedMode, followedUsers]);
 
   if (authLoading) return (
@@ -91,26 +99,50 @@ const Feed = () => {
     return <OnboardingWizard onComplete={() => setShowOnboarding(false)} />;
   }
 
-  const fetchPosts = async () => {
-    setLoading(true);
+  const fetchPosts = async (offset: number, replace = false) => {
+    if (replace) setLoading(true); else setLoadingMore(true);
+
+    if (feedMode === 'following' && followedUsers.size === 0) {
+      setPosts([]); setHasMore(false); setLoading(false); setLoadingMore(false);
+      return;
+    }
+
     let query = supabase
       .from('posts')
       .select('*, profiles!posts_user_id_profiles_fkey(username, display_name, avatar_url, is_guide)')
       .order('created_at', { ascending: false })
-      .limit(50);
+      .range(offset, offset + PAGE_SIZE - 1);
 
-    if (feedMode === 'following' && followedUsers.size > 0) {
+    if (feedMode === 'following') {
       query = query.in('user_id', Array.from(followedUsers));
-    } else if (feedMode === 'following') {
-      setPosts([]);
-      setLoading(false);
-      return;
     }
 
     const { data, error } = await query;
-    if (!error && data) setPosts(data as unknown as Post[]);
+    if (!error && data) {
+      const batch = data as unknown as Post[];
+      setPosts(prev => replace ? batch : [...prev, ...batch]);
+      setHasMore(batch.length === PAGE_SIZE);
+    } else if (error) {
+      setHasMore(false);
+    }
     setLoading(false);
+    setLoadingMore(false);
   };
+
+  const loadMore = useCallback(() => {
+    if (loading || loadingMore || !hasMore) return;
+    fetchPosts(posts.length);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, loadingMore, hasMore, posts.length, feedMode, followedUsers]);
+
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) loadMore();
+    }, { rootMargin: '300px' });
+    obs.observe(sentinelRef.current);
+    return () => obs.disconnect();
+  }, [loadMore]);
 
   const fetchLikedPosts = async () => {
     if (!user) return;
@@ -347,8 +379,17 @@ const Feed = () => {
                     )}
                   </div>
                   <span className="text-xs text-muted-foreground">{formatTime(post.created_at)}</span>
+                  <button
+                    onClick={() => toggleSave(post.id)}
+                    className="p-1 -mr-1"
+                    aria-label={saved.has(post.id) ? 'Rimuovi dai salvati' : 'Salva post'}
+                  >
+                    {saved.has(post.id)
+                      ? <BookmarkCheck className="w-5 h-5 fill-[#242242] text-[#242242]" />
+                      : <Bookmark className="w-5 h-5 text-foreground" />}
+                  </button>
                   {post.user_id === user?.id && (
-                    <PostActionsMenu post={post} onUpdated={fetchPosts} />
+                    <PostActionsMenu post={post} onUpdated={() => fetchPosts(0, true)} />
                   )}
                 </div>
 
@@ -417,7 +458,7 @@ const Feed = () => {
                 <PostComments
                   postId={post.id}
                   commentCount={post.comment_count}
-                  onCommentAdded={fetchPosts}
+                  onCommentAdded={() => fetchPosts(0, true)}
                 />
               </article>
             ))}
@@ -456,6 +497,24 @@ const Feed = () => {
                     </div>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {/* Infinite scroll sentinel + loader / end-of-feed */}
+            <div ref={sentinelRef} />
+            {loadingMore && (
+              <div className="flex justify-center items-center gap-1.5 py-6">
+                <span className="w-2 h-2 rounded-full bg-[#242242] animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-2 h-2 rounded-full bg-[#242242] animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-2 h-2 rounded-full bg-[#242242] animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            )}
+            {!loadingMore && !hasMore && posts.length > 0 && (
+              <div className="text-center py-8 px-4 text-sm text-muted-foreground">
+                🎣 Hai visto tutto!{' '}
+                <Link to="/map" className="font-semibold text-[#242242] underline">
+                  Aggiungi il tuo primo spot.
+                </Link>
               </div>
             )}
           </div>

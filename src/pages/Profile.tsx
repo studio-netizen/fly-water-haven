@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import GuideAvatar, { GoldenFlyInline } from '@/components/GuideAvatar';
 import { Button } from '@/components/ui/button';
-import { Grid3X3, MapPin, Pencil, Star, ArrowLeft, LogOut, Heart, MessageCircle, Camera, Plus, Sparkles, Instagram, Globe } from 'lucide-react';
+import { Grid3X3, MapPin, Pencil, Star, ArrowLeft, LogOut, Heart, MessageCircle, Camera, Plus, Sparkles, Instagram, Globe, Bookmark, UserPlus } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import FollowersModal from '@/components/FollowersModal';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import { fetchUserBadges, type UserBadges as UserBadgesType } from '@/lib/badges
 import UserBadges from '@/components/UserBadges';
 import ProfileSpotsMiniMap from '@/components/ProfileSpotsMiniMap';
 import { sanitizeHttpUrl } from '@/lib/sanitize-url';
+import InviteShareDialog from '@/components/InviteShareDialog';
 
 const Profile = () => {
   const { userId: paramUserId } = useParams<{ userId: string }>();
@@ -31,11 +32,13 @@ const Profile = () => {
   const [profileNotFound, setProfileNotFound] = useState(false);
   const [posts, setPosts] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
+  const [savedPosts, setSavedPosts] = useState<any[]>([]);
   const [stats, setStats] = useState({ posts: 0, followers: 0, following: 0 });
   const [isFollowing, setIsFollowing] = useState(false);
-  const [activeTab, setActiveTab] = useState<'posts' | 'spots'>('posts');
+  const [activeTab, setActiveTab] = useState<'posts' | 'spots' | 'saved'>('posts');
   const [modalType, setModalType] = useState<'followers' | 'following' | null>(null);
   const [badges, setBadges] = useState<UserBadgesType | null>(null);
+  const [inviteOpen, setInviteOpen] = useState(false);
   const isOwnProfile = user?.id === userId;
   const { t } = useTranslation();
 
@@ -47,8 +50,28 @@ const Profile = () => {
       fetchReviews();
       fetchUserBadges(userId).then(setBadges);
       if (user && !isOwnProfile) checkFollowing();
+      if (user && isOwnProfile) fetchSavedPosts();
     }
   }, [userId, user]);
+
+  const fetchSavedPosts = async () => {
+    if (!user) return;
+    const { data: rows } = await supabase
+      .from('saved_posts')
+      .select('post_id, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+    if (!rows?.length) { setSavedPosts([]); return; }
+    const ids = rows.map((r: any) => r.post_id);
+    const { data: ps } = await supabase
+      .from('posts')
+      .select('id, image_url, like_count, comment_count')
+      .in('id', ids);
+    if (ps) {
+      const map = new Map(ps.map((p: any) => [p.id, p]));
+      setSavedPosts(ids.map((id) => map.get(id)).filter(Boolean));
+    }
+  };
 
   const fetchProfile = async () => {
     setProfileLoading(true);
@@ -256,25 +279,34 @@ const Profile = () => {
           <StatCard value={stats.following} label={t('profile.following')} onClick={() => setModalType('following')} />
         </div>
 
-        <div className="flex gap-2 pb-4 justify-center">
+        <div className="flex flex-col gap-2 pb-4 items-center">
           {isOwnProfile ? (
-            <Button
-              variant="outline"
-              className="h-9 text-sm font-semibold rounded-full w-auto"
-              style={{ padding: '10px 32px', borderRadius: 9999 }}
-              onClick={() => navigate('/profile/edit')}
-            >
-              {t('profile.editProfile')}
-            </Button>
-          ) : user ? (
             <>
+              <Button
+                variant="outline"
+                className="h-9 text-sm font-semibold rounded-full w-auto"
+                style={{ padding: '10px 32px', borderRadius: 9999 }}
+                onClick={() => navigate('/profile/edit')}
+              >
+                {t('profile.editProfile')}
+              </Button>
+              <Button
+                variant="ghost"
+                className="h-9 text-sm font-semibold rounded-full w-auto gap-1.5 text-[#242242]"
+                onClick={() => setInviteOpen(true)}
+              >
+                <UserPlus className="w-4 h-4" /> Invita un amico
+              </Button>
+            </>
+          ) : user ? (
+            <div className="flex gap-2 w-full justify-center">
               <Button variant={isFollowing ? 'outline' : 'default'} className="flex-1 h-9 text-sm font-semibold" onClick={toggleFollow}>
                 {isFollowing ? t('feed.followingBtn') : t('feed.follow')}
               </Button>
               <Button variant="outline" className="flex-1 h-9 text-sm font-semibold" onClick={() => navigate(`/messages/${userId}`)}>
                 {t('profile.message')}
               </Button>
-            </>
+            </div>
           ) : null}
         </div>
 
@@ -301,6 +333,16 @@ const Profile = () => {
           >
             <Star className="w-4 h-4" /> {t('profile.reviewedSpots')}
           </button>
+          {isOwnProfile && (
+            <button
+              onClick={() => setActiveTab('saved')}
+              className={`flex-1 py-3 flex items-center justify-center gap-1.5 text-xs uppercase tracking-wide border-b-2 transition-colors ${
+                activeTab === 'saved' ? 'border-foreground text-foreground font-semibold' : 'border-transparent text-muted-foreground'
+              }`}
+            >
+              <Bookmark className="w-4 h-4" /> Salvati
+            </button>
+          )}
         </div>
 
         {activeTab === 'posts' ? (
@@ -352,7 +394,7 @@ const Profile = () => {
               </div>
             )}
           </div>
-        ) : (
+        ) : activeTab === 'spots' ? (
           <div className="space-y-3 py-4">
             {reviews.map(r => (
               <div key={r.id} className="flex items-start gap-3 px-1">
@@ -391,8 +433,53 @@ const Profile = () => {
               </div>
             )}
           </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-[2px] pb-4">
+            {savedPosts.map(post => (
+              <button
+                key={post.id}
+                onClick={() => navigate(`/post/${post.id}`)}
+                className="ig-grid-cell relative aspect-square bg-muted overflow-hidden group focus:outline-none"
+                aria-label="Apri post salvato"
+              >
+                <img
+                  src={post.image_url}
+                  alt="Post salvato"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  loading="lazy"
+                />
+                <div className="ig-grid-overlay text-white">
+                  <span className="flex items-center gap-1.5 font-semibold text-sm">
+                    <Heart className="w-5 h-5 fill-white" />
+                    {post.like_count ?? 0}
+                  </span>
+                  <span className="flex items-center gap-1.5 font-semibold text-sm">
+                    <MessageCircle className="w-5 h-5 fill-white" />
+                    {post.comment_count ?? 0}
+                  </span>
+                </div>
+              </button>
+            ))}
+            {savedPosts.length === 0 && (
+              <div className="col-span-3 py-10 px-4">
+                <div className="rounded-xl border border-dashed border-border bg-muted/30 p-8 text-center shadow-sm">
+                  <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                    <Bookmark className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-foreground mb-1">Nessun post salvato ancora</h3>
+                  <p className="text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
+                    Salva i post che ti ispirano!
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
+
+      {isOwnProfile && profile?.username && (
+        <InviteShareDialog open={inviteOpen} onOpenChange={setInviteOpen} username={profile.username} />
+      )}
 
       {modalType && userId && (
         <FollowersModal open={!!modalType} onClose={() => setModalType(null)} userId={userId} type={modalType} />

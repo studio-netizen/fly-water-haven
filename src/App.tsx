@@ -24,6 +24,7 @@ import ResetPassword from "./pages/ResetPassword";
 import InstallaApp from "./pages/InstallaApp";
 import InstallBanner from "./components/InstallBanner";
 import SearchPage from "./pages/Search";
+import Invite from "./pages/Invite";
 
 // Lazy load heavy pages
 const SpotMap = lazy(() => import("./pages/SpotMap"));
@@ -117,6 +118,7 @@ const App = () => (
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/installa-app" element={<InstallaApp />} />
                 <Route path="/cerca" element={<SearchPage />} />
+                <Route path="/invito/:username" element={<Invite />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
