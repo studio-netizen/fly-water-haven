@@ -17,11 +17,11 @@ type Species = {
   bestRegionsKey: string;
 };
 
-// Minimal SVG fish silhouette placeholder
+// Minimal green SVG fish silhouette fallback
 const fishPlaceholder =
   "data:image/svg+xml;utf8," +
   encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'><path fill='%23242242' d='M10 50 C 40 10, 110 10, 150 50 C 110 90, 40 90, 10 50 Z M150 50 l 35 -25 v 50 z' opacity='0.85'/><circle cx='40' cy='45' r='4' fill='%23f5f0e8'/></svg>`
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'><path fill='%234a7c59' d='M10 50 C 40 10, 110 10, 150 50 C 110 90, 40 90, 10 50 Z M150 50 l 35 -25 v 50 z' opacity='0.9'/><circle cx='40' cy='45' r='4' fill='%23f5f0e8'/></svg>`
   );
 
 const SPECIES: Species[] = [
@@ -32,7 +32,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 2,
     difficultyKey: 'intermediate',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Salmo_trutta_Trout.jpg/320px-Salmo_trutta_Trout.jpg',
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Salmo_trutta_Trout_transparent.png/320px-Salmo_trutta_Trout_transparent.png',
     bestFlies: ['Adams', 'Pheasant Tail', 'Elk Hair Caddis'],
     bestMonthsKey: 'monthsMarchOct',
     bestRegionsKey: 'regionsAlpsApennines',
@@ -44,7 +44,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏔️',
     difficulty: 3,
     difficultyKey: 'technical',
-    img: fishPlaceholder,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Salmo_marmoratus.jpg/320px-Salmo_marmoratus.jpg',
     bestFlies: ['Streamer Zonker', 'Woolly Bugger', 'Stonefly Nymph'],
     bestMonthsKey: 'monthsAprSep',
     bestRegionsKey: 'regionsFriuliVeneto',
@@ -92,7 +92,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏔️',
     difficulty: 3,
     difficultyKey: 'technical',
-    img: fishPlaceholder,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Salvelinus_alpinus.jpg/320px-Salvelinus_alpinus.jpg',
     bestFlies: ['Booby Fly', 'Damsel Nymph', 'Bloodworm'],
     bestMonthsKey: 'monthsJulySep',
     bestRegionsKey: 'regionsHighAlpineLakes',
@@ -116,7 +116,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 1,
     difficultyKey: 'easy',
-    img: fishPlaceholder,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Squalius_cephalus.jpg/320px-Squalius_cephalus.jpg',
     bestFlies: ['Foam Beetle', 'Hopper', 'Sedge'],
     bestMonthsKey: 'monthsMayAug',
     bestRegionsKey: 'regionsCentralNorthItaly',
@@ -128,7 +128,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 2,
     difficultyKey: 'intermediate',
-    img: fishPlaceholder,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Barbus_barbus.jpg/320px-Barbus_barbus.jpg',
     bestFlies: ['Heavy Czech Nymph', 'Stonefly', 'Caddis Larva'],
     bestMonthsKey: 'monthsAprOct',
     bestRegionsKey: 'regionsLargeRivers',
@@ -140,7 +140,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 3,
     difficultyKey: 'technical',
-    img: fishPlaceholder,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Cyprinus_carpio.jpg/320px-Cyprinus_carpio.jpg',
     bestFlies: ['Carp Crab', 'Hybrid Damsel', 'Mulberry Fly'],
     bestMonthsKey: 'monthsMayAug',
     bestRegionsKey: 'regionsLowlands',
