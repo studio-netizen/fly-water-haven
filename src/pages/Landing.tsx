@@ -21,6 +21,7 @@ import spotNatisone from '@/assets/spot-torrente-natisone.jpg';
 import spotMella from '@/assets/spot-torrente-mella.jpeg';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import SpeciesSection from '@/components/landing/SpeciesSection';
 
 const slow = (delay = 0) => ({
   hidden: { opacity: 0, y: 20 },
@@ -340,6 +341,9 @@ const Landing = () => {
           </div>
         </div>
       </section>
+
+      {/* ─── FLY FISHING SPECIES ─── */}
+      <SpeciesSection />
 
       {/* ─── FEATURED SPOTS ─── */}
       <section className="py-20 md:py-32 px-6 border-t border-[#242242]/10">
