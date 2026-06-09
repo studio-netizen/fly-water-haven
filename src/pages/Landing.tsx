@@ -342,6 +342,9 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* ─── FLY FISHING SPECIES ─── */}
+      <SpeciesSection />
+
       {/* ─── FEATURED SPOTS ─── */}
       <section className="py-20 md:py-32 px-6 border-t border-[#242242]/10">
         <div className="max-w-7xl mx-auto">
