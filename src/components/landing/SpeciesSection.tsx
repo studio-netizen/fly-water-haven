@@ -17,11 +17,11 @@ type Species = {
   bestRegionsKey: string;
 };
 
-// Minimal SVG fish silhouette placeholder
+// Minimal green SVG fish silhouette fallback
 const fishPlaceholder =
   "data:image/svg+xml;utf8," +
   encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'><path fill='%23242242' d='M10 50 C 40 10, 110 10, 150 50 C 110 90, 40 90, 10 50 Z M150 50 l 35 -25 v 50 z' opacity='0.85'/><circle cx='40' cy='45' r='4' fill='%23f5f0e8'/></svg>`
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'><path fill='%234a7c59' d='M10 50 C 40 10, 110 10, 150 50 C 110 90, 40 90, 10 50 Z M150 50 l 35 -25 v 50 z' opacity='0.9'/><circle cx='40' cy='45' r='4' fill='%23f5f0e8'/></svg>`
   );
 
 const SPECIES: Species[] = [
@@ -32,7 +32,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 2,
     difficultyKey: 'intermediate',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Salmo_trutta_Trout.jpg/320px-Salmo_trutta_Trout.jpg',
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Salmo_trutta_Trout_transparent.png/320px-Salmo_trutta_Trout_transparent.png',
     bestFlies: ['Adams', 'Pheasant Tail', 'Elk Hair Caddis'],
     bestMonthsKey: 'monthsMarchOct',
     bestRegionsKey: 'regionsAlpsApennines',
@@ -44,7 +44,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏔️',
     difficulty: 3,
     difficultyKey: 'technical',
-    img: fishPlaceholder,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Salmo_marmoratus.jpg/320px-Salmo_marmoratus.jpg',
     bestFlies: ['Streamer Zonker', 'Woolly Bugger', 'Stonefly Nymph'],
     bestMonthsKey: 'monthsAprSep',
     bestRegionsKey: 'regionsFriuliVeneto',
@@ -92,7 +92,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏔️',
     difficulty: 3,
     difficultyKey: 'technical',
-    img: fishPlaceholder,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Salvelinus_alpinus.jpg/320px-Salvelinus_alpinus.jpg',
     bestFlies: ['Booby Fly', 'Damsel Nymph', 'Bloodworm'],
     bestMonthsKey: 'monthsJulySep',
     bestRegionsKey: 'regionsHighAlpineLakes',
@@ -116,7 +116,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 1,
     difficultyKey: 'easy',
-    img: fishPlaceholder,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Squalius_cephalus.jpg/320px-Squalius_cephalus.jpg',
     bestFlies: ['Foam Beetle', 'Hopper', 'Sedge'],
     bestMonthsKey: 'monthsMayAug',
     bestRegionsKey: 'regionsCentralNorthItaly',
@@ -128,7 +128,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 2,
     difficultyKey: 'intermediate',
-    img: fishPlaceholder,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Barbus_barbus.jpg/320px-Barbus_barbus.jpg',
     bestFlies: ['Heavy Czech Nymph', 'Stonefly', 'Caddis Larva'],
     bestMonthsKey: 'monthsAprOct',
     bestRegionsKey: 'regionsLargeRivers',
@@ -140,7 +140,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 3,
     difficultyKey: 'technical',
-    img: fishPlaceholder,
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Cyprinus_carpio.jpg/320px-Cyprinus_carpio.jpg',
     bestFlies: ['Carp Crab', 'Hybrid Damsel', 'Mulberry Fly'],
     bestMonthsKey: 'monthsMayAug',
     bestRegionsKey: 'regionsLowlands',
@@ -198,15 +198,19 @@ const SpeciesSection = () => {
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: (i % 3) * 0.08 }}
               whileHover={{ y: -4 }}
-              className="relative text-left bg-white rounded-2xl p-5 pr-28 md:pr-32 pt-8 overflow-visible shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-shadow duration-200"
-              aria-label={t(`landing.species.list.${s.key}.name`)}
+              className="group relative h-full flex flex-col text-left bg-white rounded-2xl p-5 pr-[130px] pt-10 overflow-visible shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition-shadow duration-200"
             >
               <img
                 src={s.img}
-                alt={t(`landing.species.list.${s.key}.name`)}
+                alt=""
+                aria-hidden="true"
                 loading="lazy"
-                className="absolute -top-4 right-3 w-24 h-24 md:w-28 md:h-28 object-contain"
-                style={{ filter: 'saturate(0.85)' }}
+                onError={(e) => {
+                  const el = e.currentTarget;
+                  if (el.src !== fishPlaceholder) el.src = fishPlaceholder;
+                }}
+                className="absolute -top-5 -right-2 w-[140px] h-[100px] object-contain pointer-events-none"
+                style={{ filter: 'saturate(0.85) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
               />
               <h3 className="text-lg md:text-xl font-bold font-serif leading-tight mb-1 text-[#242242]">
                 {t(`landing.species.list.${s.key}.name`)}
@@ -222,7 +226,7 @@ const SpeciesSection = () => {
                   <span className="ml-1">{t(`landing.species.difficulty.${s.difficultyKey}`)}</span>
                 </span>
               </div>
-              <p className="text-sm leading-relaxed text-[#8c8c7a]">
+              <p className="text-sm leading-relaxed text-[#8c8c7a] mt-auto">
                 {t(`landing.species.list.${s.key}.desc`)}
               </p>
             </motion.button>
