@@ -198,15 +198,19 @@ const SpeciesSection = () => {
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: (i % 3) * 0.08 }}
               whileHover={{ y: -4 }}
-              className="relative text-left bg-white rounded-2xl p-5 pr-28 md:pr-32 pt-8 overflow-visible shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-shadow duration-200"
-              aria-label={t(`landing.species.list.${s.key}.name`)}
+              className="group relative h-full flex flex-col text-left bg-white rounded-2xl p-5 pr-[130px] pt-10 overflow-visible shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition-shadow duration-200"
             >
               <img
                 src={s.img}
-                alt={t(`landing.species.list.${s.key}.name`)}
+                alt=""
+                aria-hidden="true"
                 loading="lazy"
-                className="absolute -top-4 right-3 w-24 h-24 md:w-28 md:h-28 object-contain"
-                style={{ filter: 'saturate(0.85)' }}
+                onError={(e) => {
+                  const el = e.currentTarget;
+                  if (el.src !== fishPlaceholder) el.src = fishPlaceholder;
+                }}
+                className="absolute -top-5 -right-2 w-[140px] h-[100px] object-contain pointer-events-none"
+                style={{ filter: 'saturate(0.85) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
               />
               <h3 className="text-lg md:text-xl font-bold font-serif leading-tight mb-1 text-[#242242]">
                 {t(`landing.species.list.${s.key}.name`)}
@@ -222,7 +226,7 @@ const SpeciesSection = () => {
                   <span className="ml-1">{t(`landing.species.difficulty.${s.difficultyKey}`)}</span>
                 </span>
               </div>
-              <p className="text-sm leading-relaxed text-[#8c8c7a]">
+              <p className="text-sm leading-relaxed text-[#8c8c7a] mt-auto">
                 {t(`landing.species.list.${s.key}.desc`)}
               </p>
             </motion.button>
