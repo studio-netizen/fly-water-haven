@@ -56,6 +56,97 @@
       "springDesc": "The season of hatches. Rivers in full flow, green meadows and the first dry flies of the year.",
       "summerDesc": "Golden lakes at sunset, long sessions with light gear. The perfect time to explore.",
       "autumnDesc": "Golden foliage along the streams, low and clear waters. The season of spawning char and the last hatches before winter."
+    },
+    "species": {
+      "label": "THE SPECIES",
+      "title": "What you can fly fish in Italy",
+      "subtitle": "From marble trout to grayling — discover the most sought-after species by Italian fly fishers",
+      "ctaLead": "Find spots to catch these species",
+      "ctaButton": "Explore the map",
+      "bestFlies": "Best flies",
+      "bestSeason": "Best season",
+      "bestRegions": "Best regions",
+      "searchSpots": "Find spots for {{name}}",
+      "difficulty": {
+        "easy": "Easy",
+        "intermediate": "Intermediate",
+        "technical": "Technical"
+      },
+      "habitats": {
+        "streamRiver": "Stream/River",
+        "alpineRiver": "Alpine river",
+        "lakeRiver": "Lake/River",
+        "fastRiver": "Fast river",
+        "alpineStream": "Alpine stream",
+        "alpineLake": "Alpine lake",
+        "lakeSlowRiver": "Lake/Slow river",
+        "river": "River"
+      },
+      "months": {
+        "monthsMarchOct": "March - October",
+        "monthsAprSep": "April - September",
+        "monthsAllYear": "All year round",
+        "monthsMayOct": "May - October",
+        "monthsJuneSep": "June - September",
+        "monthsJulySep": "July - September",
+        "monthsOctApr": "October - April",
+        "monthsMayAug": "May - August",
+        "monthsAprOct": "April - October"
+      },
+      "regions": {
+        "regionsAlpsApennines": "Alps, Apennines, spring creeks",
+        "regionsFriuliVeneto": "Friuli, Veneto, Trentino, Lombardy",
+        "regionsAllItaly": "All of Italy, lakes and reserves",
+        "regionsTrentinoFriuli": "Trentino, Friuli, Veneto",
+        "regionsHighAlps": "High alpine valleys, Aosta Valley, Trentino",
+        "regionsHighAlpineLakes": "High-altitude Alpine lakes",
+        "regionsPoLakes": "Po basin, pre-Alpine lakes",
+        "regionsCentralNorthItaly": "Central and northern Italy",
+        "regionsLargeRivers": "Large rivers: Po, Adda, Ticino, Tiber",
+        "regionsLowlands": "Po valley lowlands, lakes and canals"
+      },
+      "list": {
+        "brownTrout": {
+          "name": "Brown Trout",
+          "desc": "The most common trout in Italian rivers. Responds well to dry fly during spring hatches."
+        },
+        "marbleTrout": {
+          "name": "Marble Trout",
+          "desc": "Endemic to the Po basin. Can exceed 10kg, it is the most coveted catch for Italian fly fishers."
+        },
+        "rainbowTrout": {
+          "name": "Rainbow Trout",
+          "desc": "Introduced from North America, it is the ideal species for those starting fly fishing."
+        },
+        "grayling": {
+          "name": "Grayling",
+          "desc": "The dry fly fish par excellence. Its explosive surface rises are unforgettable."
+        },
+        "brookTrout": {
+          "name": "Brook Trout",
+          "desc": "Lives in the coldest and cleanest Alpine waters. Extraordinary colors, powerful fight."
+        },
+        "arcticChar": {
+          "name": "Arctic Char",
+          "desc": "Inhabitant of high-altitude Alpine lakes. Requires specific techniques and long hikes."
+        },
+        "pike": {
+          "name": "Pike",
+          "desc": "The apex predator of Italian waters. Caught with large streamers."
+        },
+        "chub": {
+          "name": "Chub",
+          "desc": "Often underestimated, the chub is an excellent dry fly fish during summer months."
+        },
+        "barbel": {
+          "name": "Barbel",
+          "desc": "Bottom-dwelling fish that responds well to heavy nymphs. Tenacious and resilient fighter."
+        },
+        "carp": {
+          "name": "Carp",
+          "desc": "Sight fishing for carp is one of the most exciting fly fishing challenges in the lowlands."
+        }
+      }
     }
   },
   "feed": {

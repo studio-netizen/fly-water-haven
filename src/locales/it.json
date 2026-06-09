@@ -56,6 +56,97 @@
       "springDesc": "La stagione delle schiuse. Fiumi in piena, prati verdi e le prime mosche secche dell'anno.",
       "summerDesc": "Laghi dorati al tramonto, sessioni lunghe con attrezzatura leggera. Il momento perfetto per esplorare.",
       "autumnDesc": "Fogliame dorato lungo i torrenti, acque basse e trasparenti. La stagione dei salmerini in frega e delle ultime schiuse prima dell'inverno."
+    },
+    "species": {
+      "label": "LE SPECIE",
+      "title": "Cosa puoi pescare a mosca in Italia",
+      "subtitle": "Dalla trota marmorata al temolo — scopri le specie più ambite dai fly fisher italiani",
+      "ctaLead": "Trova spot dove pescare queste specie",
+      "ctaButton": "Esplora la mappa",
+      "bestFlies": "Mosche consigliate",
+      "bestSeason": "Stagione migliore",
+      "bestRegions": "Regioni migliori",
+      "searchSpots": "Cerca spot per {{name}}",
+      "difficulty": {
+        "easy": "Facile",
+        "intermediate": "Intermedio",
+        "technical": "Tecnico"
+      },
+      "habitats": {
+        "streamRiver": "Torrente/Fiume",
+        "alpineRiver": "Fiume alpino",
+        "lakeRiver": "Lago/Fiume",
+        "fastRiver": "Fiume veloce",
+        "alpineStream": "Torrente alpino",
+        "alpineLake": "Lago alpino",
+        "lakeSlowRiver": "Lago/Fiume lento",
+        "river": "Fiume"
+      },
+      "months": {
+        "monthsMarchOct": "Marzo - Ottobre",
+        "monthsAprSep": "Aprile - Settembre",
+        "monthsAllYear": "Tutto l'anno",
+        "monthsMayOct": "Maggio - Ottobre",
+        "monthsJuneSep": "Giugno - Settembre",
+        "monthsJulySep": "Luglio - Settembre",
+        "monthsOctApr": "Ottobre - Aprile",
+        "monthsMayAug": "Maggio - Agosto",
+        "monthsAprOct": "Aprile - Ottobre"
+      },
+      "regions": {
+        "regionsAlpsApennines": "Alpi, Appennini, fiumi di risorgiva",
+        "regionsFriuliVeneto": "Friuli, Veneto, Trentino, Lombardia",
+        "regionsAllItaly": "Tutta Italia, laghi e riserve",
+        "regionsTrentinoFriuli": "Trentino, Friuli, Veneto",
+        "regionsHighAlps": "Alte valli alpine, Valle d'Aosta, Trentino",
+        "regionsHighAlpineLakes": "Laghi d'alta quota delle Alpi",
+        "regionsPoLakes": "Bacino del Po, laghi prealpini",
+        "regionsCentralNorthItaly": "Italia centro-settentrionale",
+        "regionsLargeRivers": "Grandi fiumi: Po, Adda, Ticino, Tevere",
+        "regionsLowlands": "Pianura Padana, laghi e canali"
+      },
+      "list": {
+        "brownTrout": {
+          "name": "Trota Fario",
+          "desc": "La trota più diffusa nei fiumi italiani. Risponde bene alla mosca secca durante le schiuse primaverili."
+        },
+        "marbleTrout": {
+          "name": "Trota Marmorata",
+          "desc": "Endemica del bacino del Po. Può superare i 10kg, è la preda più ambita dai fly fisher italiani."
+        },
+        "rainbowTrout": {
+          "name": "Trota Iridea",
+          "desc": "Introdotta dall'America del Nord, è la specie ideale per chi inizia la pesca a mosca."
+        },
+        "grayling": {
+          "name": "Temolo",
+          "desc": "Il pesce della mosca secca per eccellenza. Le sue alzate esplosive in superficie sono indimenticabili."
+        },
+        "brookTrout": {
+          "name": "Salmerino di Fonte",
+          "desc": "Vive nelle acque più fredde e pulite delle Alpi. Colori straordinari, combattimento potente."
+        },
+        "arcticChar": {
+          "name": "Salmerino Alpino",
+          "desc": "Abitante dei laghi alpini d'alta quota. Richiede tecniche specifiche e lunghe camminate."
+        },
+        "pike": {
+          "name": "Luccio",
+          "desc": "Il predatore per eccellenza delle acque italiane. Si cattura con streamer di grandi dimensioni."
+        },
+        "chub": {
+          "name": "Cavedano",
+          "desc": "Spesso sottovalutato, il cavedano è un ottimo pesce da mosca secca nei mesi estivi."
+        },
+        "barbel": {
+          "name": "Barbo",
+          "desc": "Pesce di fondo che risponde bene alle ninfe pesanti. Combattente tenace e resistente."
+        },
+        "carp": {
+          "name": "Carpa",
+          "desc": "Il sight fishing alla carpa è una delle sfide più emozionanti della pesca a mosca in pianura."
+        }
+      }
     }
   },
   "feed": {
