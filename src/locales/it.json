@@ -147,6 +147,66 @@
           "desc": "Il sight fishing alla carpa è una delle sfide più emozionanti della pesca a mosca in pianura."
         }
       }
+    },
+    "entomology": {
+      "label": "ENTOMOLOGIA",
+      "title": "Conosci gli insetti, cattura più pesci",
+      "subtitle": "La pesca a mosca è l'arte di imitare la natura. Scopri gli insetti che fanno scattare le alzate.",
+      "ctaLead": "Abbina gli insetti alle mosche giuste — esplora gli spot",
+      "ctaButton": "Vai alla mappa",
+      "recommendedFlies": "Mosche consigliate per imitarli",
+      "hatchPeriod": "Periodo di schiusa in Italia",
+      "searchHatches": "Cerca spot con schiuse attive",
+      "variousOrders": "Vari ordini",
+      "seasons": {
+        "spring": "Primavera",
+        "summer": "Estate",
+        "autumn": "Autunno",
+        "winter": "Inverno",
+        "springSummer": "Primavera/Estate",
+        "winterSpring": "Inverno/Primavera",
+        "springSummerAutumn": "Primavera/Estate/Autunno",
+        "yearRound": "Tutto l'anno"
+      },
+      "importance": {
+        "primary": "Fondamentale",
+        "important": "Importante",
+        "secondary": "Secondario"
+      },
+      "list": {
+        "mayflies": {
+          "name": "Effimere",
+          "lifeCycle": "Le regine della pesca a mosca secca. Le loro schiuse scatenano le alzate più spettacolari. Il ciclo dura da uno a tre anni: ninfa acquatica, sub-imago (dun) e imago (spinner) volanti che vivono solo poche ore per riprodursi."
+        },
+        "caddisflies": {
+          "name": "Tricotteri",
+          "lifeCycle": "Presenti tutto l'anno, sono la principale fonte di cibo per trote e temoli. Le larve costruiscono astucci protettivi di sassolini o detriti vegetali, poi schiudono in pupa e adulto in massa nelle sere d'estate."
+        },
+        "stoneflies": {
+          "name": "Plecotteri",
+          "lifeCycle": "Indicatori di acque pulite. Le loro schiuse invernali sono fondamentali per il temolo. Le ninfe vivono fino a tre anni sotto i sassi delle correnti più ossigenate prima di emergere strisciando sulla riva."
+        },
+        "trueFlies": {
+          "name": "Ditteri",
+          "lifeCycle": "Chironomidi e simulidi — spesso ignorati ma responsabili delle alzate più difficili. Schiudono in superficie in grandi quantità, costringendo i pesci a una selettività estrema su imitazioni minute."
+        },
+        "terrestrials": {
+          "name": "Terrestri",
+          "lifeCycle": "Formiche, cavallette, bruchi — cadono in acqua nei mesi estivi e scatenano alzate improvvise. Non hanno un ciclo acquatico, ma diventano protagonisti durante venti caldi e temporali estivi."
+        },
+        "dragonflies": {
+          "name": "Libellule",
+          "lifeCycle": "Le ninfe di libellula sono una preda importante per lucci e trote di grossa taglia. Vivono fino a due anni sul fondo di laghi e acque ferme, predando attivamente girini e piccoli pesci."
+        },
+        "beetles": {
+          "name": "Coleotteri",
+          "lifeCycle": "I coleotteri acquatici sono spesso ignorati ma possono scatenare alzate selettive. Vivono sia in acqua (ditiscidi) sia a terra, finendo nei fiumi spinti dal vento o dalla vegetazione riparia."
+        },
+        "alderflies": {
+          "name": "Megalotteri",
+          "lifeCycle": "Le loro larve acquatiche sono tra le ninfe più imitate dai costruttori di mosche. Vivono per oltre un anno nel fango e tra i sassi, poi emergono in primavera come adulti dal volo lento e maldestro."
+        }
+      }
     }
   },
   "feed": {
