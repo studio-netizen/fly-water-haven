@@ -147,6 +147,66 @@
           "desc": "Sight fishing for carp is one of the most exciting fly fishing challenges in the lowlands."
         }
       }
+    },
+    "entomology": {
+      "label": "ENTOMOLOGY",
+      "title": "Know the insects, catch more fish",
+      "subtitle": "Fly fishing is the art of imitating nature. Discover the insects that trigger rises.",
+      "ctaLead": "Match the insects to the right flies — explore the spots",
+      "ctaButton": "Go to the map",
+      "recommendedFlies": "Recommended flies to imitate them",
+      "hatchPeriod": "Hatch period in Italy",
+      "searchHatches": "Find spots with active hatches",
+      "variousOrders": "Various orders",
+      "seasons": {
+        "spring": "Spring",
+        "summer": "Summer",
+        "autumn": "Autumn",
+        "winter": "Winter",
+        "springSummer": "Spring/Summer",
+        "winterSpring": "Winter/Spring",
+        "springSummerAutumn": "Spring/Summer/Autumn",
+        "yearRound": "Year round"
+      },
+      "importance": {
+        "primary": "Essential",
+        "important": "Important",
+        "secondary": "Secondary"
+      },
+      "list": {
+        "mayflies": {
+          "name": "Mayflies",
+          "lifeCycle": "The queens of dry fly fishing. Their hatches trigger the most spectacular rises. The life cycle lasts one to three years: aquatic nymph, sub-imago (dun) and flying imago (spinner) that lives only a few hours to reproduce."
+        },
+        "caddisflies": {
+          "name": "Caddisflies",
+          "lifeCycle": "Present year-round, they are the main food source for trout and grayling. Larvae build protective cases from pebbles or plant debris, then emerge as pupae and adults in mass on summer evenings."
+        },
+        "stoneflies": {
+          "name": "Stoneflies",
+          "lifeCycle": "Indicators of clean water. Their winter hatches are crucial for grayling. Nymphs live for up to three years under the rocks of well-oxygenated currents before crawling onto the bank to emerge."
+        },
+        "trueFlies": {
+          "name": "True Flies",
+          "lifeCycle": "Chironomids and simulids — often ignored but responsible for the most difficult rises. They hatch in large numbers on the surface, forcing fish into extreme selectivity on tiny imitations."
+        },
+        "terrestrials": {
+          "name": "Terrestrials",
+          "lifeCycle": "Ants, grasshoppers, caterpillars — fall into the water in summer and trigger sudden rises. They have no aquatic cycle but become protagonists during warm winds and summer storms."
+        },
+        "dragonflies": {
+          "name": "Dragonflies",
+          "lifeCycle": "Dragonfly nymphs are an important prey for pike and large trout. They live for up to two years on the bottom of lakes and still waters, actively preying on tadpoles and small fish."
+        },
+        "beetles": {
+          "name": "Beetles",
+          "lifeCycle": "Aquatic beetles are often overlooked but can trigger selective rises. They live both in water (diving beetles) and on land, ending up in rivers blown by wind or fallen from riparian vegetation."
+        },
+        "alderflies": {
+          "name": "Alderflies",
+          "lifeCycle": "Their aquatic larvae are among the most imitated nymphs by fly tiers. They live for over a year in mud and among rocks, then emerge in spring as slow, clumsy-flying adults."
+        }
+      }
     }
   },
   "feed": {
