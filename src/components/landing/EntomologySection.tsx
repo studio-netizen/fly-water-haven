@@ -14,6 +14,7 @@ type Insect = {
   importance: Importance;
   importanceKey: 'primary' | 'important' | 'secondary';
   img: string;
+  alt: string;
   flies: string[];
   monthsActive: number[]; // 1..12
 };
@@ -33,7 +34,8 @@ const INSECTS: Insect[] = [
     seasonKey: 'springSummer',
     importance: 3,
     importanceKey: 'primary',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Baetis_rhodani.jpg/200px-Baetis_rhodani.jpg',
+    img: '/images/insects/mayfly.png',
+    alt: 'Mayfly - Ephemeroptera illustration',
     flies: ['Adams', 'Pheasant Tail', 'CDC Dun', 'Sparkle Dun'],
     monthsActive: [3, 4, 5, 6, 7, 8, 9],
   },
@@ -44,7 +46,8 @@ const INSECTS: Insect[] = [
     seasonKey: 'yearRound',
     importance: 3,
     importanceKey: 'primary',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Rhyacophila_dorsalis.jpg/200px-Rhyacophila_dorsalis.jpg',
+    img: '/images/insects/caddisfly.png',
+    alt: 'Caddisfly - Trichoptera illustration',
     flies: ['Elk Hair Caddis', 'CDC Caddis', 'Sedge', 'Caddis Pupa'],
     monthsActive: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   },
@@ -55,7 +58,8 @@ const INSECTS: Insect[] = [
     seasonKey: 'winterSpring',
     importance: 2,
     importanceKey: 'important',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Perla_marginata01.jpg/200px-Perla_marginata01.jpg',
+    img: '/images/insects/stonefly.png',
+    alt: 'Stonefly - Plecoptera illustration',
     flies: ['Stonefly Nymph', 'Kaufmann Stone', 'Yellow Sally', 'Pteronarcys'],
     monthsActive: [1, 2, 3, 4, 5, 11, 12],
   },
@@ -66,7 +70,8 @@ const INSECTS: Insect[] = [
     seasonKey: 'springSummerAutumn',
     importance: 2,
     importanceKey: 'important',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Chironomus_plumosus01.jpg/200px-Chironomus_plumosus01.jpg',
+    img: '/images/insects/midge.png',
+    alt: 'Midge - Diptera illustration',
     flies: ['Griffith\'s Gnat', 'Buzzer', 'Black Midge', 'Simulium'],
     monthsActive: [3, 4, 5, 6, 7, 8, 9, 10, 11],
   },
@@ -77,7 +82,8 @@ const INSECTS: Insect[] = [
     seasonKey: 'summer',
     importance: 2,
     importanceKey: 'important',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Formica_rufa_Pekka_Malinen.jpg/200px-Formica_rufa_Pekka_Malinen.jpg',
+    img: '/images/insects/black-ant.png',
+    alt: 'Black Ant - terrestrial insect illustration',
     flies: ['Foam Ant', 'Hopper', 'Foam Beetle', 'Chernobyl'],
     monthsActive: [6, 7, 8, 9],
   },
@@ -88,7 +94,8 @@ const INSECTS: Insect[] = [
     seasonKey: 'summer',
     importance: 1,
     importanceKey: 'secondary',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Anax_imperator_qtl1.jpg/200px-Anax_imperator_qtl1.jpg',
+    img: '/images/insects/dragonfly.png',
+    alt: 'Dragonfly - Odonata illustration',
     flies: ['Damsel Nymph', 'Dragon Nymph', 'Booby Damsel'],
     monthsActive: [5, 6, 7, 8, 9],
   },
@@ -99,7 +106,8 @@ const INSECTS: Insect[] = [
     seasonKey: 'summer',
     importance: 1,
     importanceKey: 'secondary',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Dytiscus_marginalis_top.jpg/200px-Dytiscus_marginalis_top.jpg',
+    img: '/images/insects/beetle.png',
+    alt: 'Beetle - Coleoptera illustration',
     flies: ['Foam Beetle', 'Coch-y-Bonddu', 'Black Beetle'],
     monthsActive: [6, 7, 8, 9],
   },
@@ -110,7 +118,8 @@ const INSECTS: Insect[] = [
     seasonKey: 'spring',
     importance: 2,
     importanceKey: 'important',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Sialis_lutaria_01.jpg/200px-Sialis_lutaria_01.jpg',
+    img: '/images/insects/alderfly.png',
+    alt: 'Alderfly - Megaloptera illustration',
     flies: ['Alder Larva', 'Hellgrammite', 'Black Sedge'],
     monthsActive: [4, 5, 6],
   },
@@ -166,22 +175,22 @@ const EntomologySection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: (i % 4) * 0.06 }}
-              whileHover={{ scale: 1.03 }}
-              className="group relative flex flex-col text-left bg-[#f8f5f0] rounded-2xl p-4 border border-[#242242]/10 aspect-square overflow-hidden"
+              whileHover={{ y: -4 }}
+              className="group relative h-full flex flex-col text-left rounded-2xl p-4 border border-[#242242]/10 overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-shadow duration-200"
               style={{ backgroundColor: '#fdfaf5' }}
             >
-              <div className="flex-1 flex items-center justify-center mb-3">
+              <div className="flex justify-center mb-3">
                 <img
                   src={it.img}
-                  alt=""
-                  aria-hidden="true"
+                  alt={it.alt}
                   loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     const el = e.currentTarget;
                     if (el.src !== insectPlaceholder) el.src = insectPlaceholder;
                   }}
-                  className="max-h-[70%] max-w-[80%] object-contain"
-                  style={{ filter: 'saturate(0.85)' }}
+                  className="mx-auto"
+                  style={{ width: '80%', maxWidth: '200px', height: 'auto', objectFit: 'contain', filter: 'saturate(0.9)' }}
                 />
               </div>
               <h3 className="text-sm md:text-base font-bold font-serif leading-tight text-[#242242]">
@@ -240,13 +249,15 @@ const EntomologySection = () => {
 
               <img
                 src={selected.img}
-                alt={t(`landing.entomology.list.${selected.key}.name`)}
+                alt={selected.alt}
+                loading="lazy"
+                decoding="async"
                 onError={(e) => {
                   const el = e.currentTarget;
                   if (el.src !== insectPlaceholder) el.src = insectPlaceholder;
                 }}
                 className="w-full h-48 md:h-64 object-contain mb-4"
-                style={{ filter: 'saturate(0.85)' }}
+                style={{ filter: 'saturate(0.9)' }}
               />
 
               <h3 className="text-2xl md:text-3xl font-bold font-serif text-[#242242] mb-1">

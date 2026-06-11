@@ -12,6 +12,7 @@ type Species = {
   difficulty: 1 | 2 | 3;
   difficultyKey: 'easy' | 'intermediate' | 'technical';
   img: string;
+  alt: string;
   bestFlies: string[];
   bestMonthsKey: string;
   bestRegionsKey: string;
@@ -32,7 +33,8 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 2,
     difficultyKey: 'intermediate',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Salmo_trutta_Trout_transparent.png/320px-Salmo_trutta_Trout_transparent.png',
+    img: '/images/fish/brown-trout.png',
+    alt: 'Brown Trout - Salmo trutta fario illustration',
     bestFlies: ['Adams', 'Pheasant Tail', 'Elk Hair Caddis'],
     bestMonthsKey: 'monthsMarchOct',
     bestRegionsKey: 'regionsAlpsApennines',
@@ -44,7 +46,8 @@ const SPECIES: Species[] = [
     habitatIcon: '🏔️',
     difficulty: 3,
     difficultyKey: 'technical',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Salmo_marmoratus.jpg/320px-Salmo_marmoratus.jpg',
+    img: '/images/fish/marble-trout.png',
+    alt: 'Marble Trout - Salmo marmoratus illustration',
     bestFlies: ['Streamer Zonker', 'Woolly Bugger', 'Stonefly Nymph'],
     bestMonthsKey: 'monthsAprSep',
     bestRegionsKey: 'regionsFriuliVeneto',
@@ -56,7 +59,8 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 1,
     difficultyKey: 'easy',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Rainbow_trout_transparent.png/320px-Rainbow_trout_transparent.png',
+    img: '/images/fish/rainbow-trout.png',
+    alt: 'Rainbow Trout - Oncorhynchus mykiss illustration',
     bestFlies: ['Hare\'s Ear', 'San Juan Worm', 'Parachute Adams'],
     bestMonthsKey: 'monthsAllYear',
     bestRegionsKey: 'regionsAllItaly',
@@ -68,7 +72,8 @@ const SPECIES: Species[] = [
     habitatIcon: '🏔️',
     difficulty: 3,
     difficultyKey: 'technical',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Thymallus_thymallus.jpg/320px-Thymallus_thymallus.jpg',
+    img: '/images/fish/grayling.png',
+    alt: 'Grayling - Thymallus thymallus illustration',
     bestFlies: ['CDC Dun', 'Klinkhammer', 'Tricot'],
     bestMonthsKey: 'monthsMayOct',
     bestRegionsKey: 'regionsTrentinoFriuli',
@@ -80,7 +85,8 @@ const SPECIES: Species[] = [
     habitatIcon: '🏔️',
     difficulty: 2,
     difficultyKey: 'intermediate',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Salvelinus_fontinalis.jpg/320px-Salvelinus_fontinalis.jpg',
+    img: '/images/fish/brook-trout.png',
+    alt: 'Brook Trout - Salvelinus fontinalis illustration',
     bestFlies: ['Royal Wulff', 'Humpy', 'Caddis Pupa'],
     bestMonthsKey: 'monthsJuneSep',
     bestRegionsKey: 'regionsHighAlps',
@@ -92,7 +98,8 @@ const SPECIES: Species[] = [
     habitatIcon: '🏔️',
     difficulty: 3,
     difficultyKey: 'technical',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Salvelinus_alpinus.jpg/320px-Salvelinus_alpinus.jpg',
+    img: '/images/fish/arctic-char.png',
+    alt: 'Arctic Char - Salvelinus alpinus illustration',
     bestFlies: ['Booby Fly', 'Damsel Nymph', 'Bloodworm'],
     bestMonthsKey: 'monthsJulySep',
     bestRegionsKey: 'regionsHighAlpineLakes',
@@ -104,7 +111,8 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 2,
     difficultyKey: 'intermediate',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Esox_lucius_2.jpg/320px-Esox_lucius_2.jpg',
+    img: '/images/fish/pike.png',
+    alt: 'Pike - Esox lucius illustration',
     bestFlies: ['Pike Bunny', 'Deceiver', 'Game Changer'],
     bestMonthsKey: 'monthsOctApr',
     bestRegionsKey: 'regionsPoLakes',
@@ -116,7 +124,8 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 1,
     difficultyKey: 'easy',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Squalius_cephalus.jpg/320px-Squalius_cephalus.jpg',
+    img: '/images/fish/chub.png',
+    alt: 'Chub - Squalius cephalus illustration',
     bestFlies: ['Foam Beetle', 'Hopper', 'Sedge'],
     bestMonthsKey: 'monthsMayAug',
     bestRegionsKey: 'regionsCentralNorthItaly',
@@ -128,7 +137,8 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 2,
     difficultyKey: 'intermediate',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Barbus_barbus.jpg/320px-Barbus_barbus.jpg',
+    img: '/images/fish/barbel.png',
+    alt: 'Barbel - Barbus barbus illustration',
     bestFlies: ['Heavy Czech Nymph', 'Stonefly', 'Caddis Larva'],
     bestMonthsKey: 'monthsAprOct',
     bestRegionsKey: 'regionsLargeRivers',
@@ -140,7 +150,8 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 3,
     difficultyKey: 'technical',
-    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Cyprinus_carpio.jpg/320px-Cyprinus_carpio.jpg',
+    img: '/images/fish/common-carp.png',
+    alt: 'Common Carp - Cyprinus carpio illustration',
     bestFlies: ['Carp Crab', 'Hybrid Damsel', 'Mulberry Fly'],
     bestMonthsKey: 'monthsMayAug',
     bestRegionsKey: 'regionsLowlands',
@@ -202,15 +213,15 @@ const SpeciesSection = () => {
             >
               <img
                 src={s.img}
-                alt=""
-                aria-hidden="true"
+                alt={s.alt}
                 loading="lazy"
+                decoding="async"
                 onError={(e) => {
                   const el = e.currentTarget;
                   if (el.src !== fishPlaceholder) el.src = fishPlaceholder;
                 }}
-                className="absolute -top-5 -right-2 w-[140px] h-[100px] object-contain pointer-events-none"
-                style={{ filter: 'saturate(0.85) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
+                className="absolute pointer-events-none"
+                style={{ top: '-15px', right: '-10px', width: '160px', height: 'auto', objectFit: 'contain', filter: 'saturate(0.9) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
               />
               <h3 className="text-lg md:text-xl font-bold font-serif leading-tight mb-1 text-[#242242]">
                 {t(`landing.species.list.${s.key}.name`)}
@@ -273,9 +284,15 @@ const SpeciesSection = () => {
 
               <img
                 src={selected.img}
-                alt={t(`landing.species.list.${selected.key}.name`)}
+                alt={selected.alt}
+                loading="lazy"
+                decoding="async"
+                onError={(e) => {
+                  const el = e.currentTarget;
+                  if (el.src !== fishPlaceholder) el.src = fishPlaceholder;
+                }}
                 className="w-full h-48 md:h-64 object-contain mb-4"
-                style={{ filter: 'saturate(0.85)' }}
+                style={{ filter: 'saturate(0.9)' }}
               />
 
               <h3 className="text-2xl md:text-3xl font-bold font-serif text-[#242242] mb-1">
