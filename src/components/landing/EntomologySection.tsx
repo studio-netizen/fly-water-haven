@@ -185,10 +185,7 @@ const EntomologySection = () => {
                   alt={it.alt}
                   loading="lazy"
                   decoding="async"
-                  onError={(e) => {
-                    const el = e.currentTarget;
-                    if (el.src !== insectPlaceholder) el.src = insectPlaceholder;
-                  }}
+                  onError={handleIllustrationError}
                   className="mx-auto"
                   style={{ width: '80%', maxWidth: '200px', height: 'auto', objectFit: 'contain', filter: 'saturate(0.9)' }}
                 />
@@ -252,10 +249,7 @@ const EntomologySection = () => {
                 alt={selected.alt}
                 loading="lazy"
                 decoding="async"
-                onError={(e) => {
-                  const el = e.currentTarget;
-                  if (el.src !== insectPlaceholder) el.src = insectPlaceholder;
-                }}
+                onError={handleIllustrationError}
                 className="w-full h-48 md:h-64 object-contain mb-4"
                 style={{ filter: 'saturate(0.9)' }}
               />

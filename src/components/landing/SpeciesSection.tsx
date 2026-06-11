@@ -216,10 +216,7 @@ const SpeciesSection = () => {
                 alt={s.alt}
                 loading="lazy"
                 decoding="async"
-                onError={(e) => {
-                  const el = e.currentTarget;
-                  if (el.src !== fishPlaceholder) el.src = fishPlaceholder;
-                }}
+                onError={handleIllustrationError}
                 className="absolute pointer-events-none"
                 style={{ top: '-15px', right: '-10px', width: '160px', height: 'auto', objectFit: 'contain', filter: 'saturate(0.9) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
               />
@@ -287,10 +284,7 @@ const SpeciesSection = () => {
                 alt={selected.alt}
                 loading="lazy"
                 decoding="async"
-                onError={(e) => {
-                  const el = e.currentTarget;
-                  if (el.src !== fishPlaceholder) el.src = fishPlaceholder;
-                }}
+                onError={handleIllustrationError}
                 className="w-full h-48 md:h-64 object-contain mb-4"
                 style={{ filter: 'saturate(0.9)' }}
               />
