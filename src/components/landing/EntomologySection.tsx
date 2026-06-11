@@ -175,8 +175,8 @@ const EntomologySection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: (i % 4) * 0.06 }}
-              whileHover={{ scale: 1.03 }}
-              className="group relative flex flex-col text-left bg-[#f8f5f0] rounded-2xl p-4 border border-[#242242]/10 aspect-square overflow-hidden"
+              whileHover={{ y: -4 }}
+              className="group relative h-full flex flex-col text-left rounded-2xl p-4 border border-[#242242]/10 overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-shadow duration-200"
               style={{ backgroundColor: '#fdfaf5' }}
             >
               <div className="flex justify-center mb-3">
