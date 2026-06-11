@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
+import { handleIllustrationError } from './illustrationFallback';
 
 type Importance = 1 | 2 | 3;
 
