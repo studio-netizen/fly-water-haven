@@ -33,7 +33,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 2,
     difficultyKey: 'intermediate',
-    img: '/images/fish/brown-trout.png',
+    img: '/brown-trout.png',
     alt: 'Brown Trout - Salmo trutta fario illustration',
     bestFlies: ['Adams', 'Pheasant Tail', 'Elk Hair Caddis'],
     bestMonthsKey: 'monthsMarchOct',
