@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
+import { handleIllustrationError } from './illustrationFallback';
 
 type Importance = 1 | 2 | 3;
 
@@ -34,7 +35,7 @@ const INSECTS: Insect[] = [
     seasonKey: 'springSummer',
     importance: 3,
     importanceKey: 'primary',
-    img: '/images/insects/mayfly.png',
+    img: '/insects/mayfly.png',
     alt: 'Mayfly - Ephemeroptera illustration',
     flies: ['Adams', 'Pheasant Tail', 'CDC Dun', 'Sparkle Dun'],
     monthsActive: [3, 4, 5, 6, 7, 8, 9],
@@ -46,7 +47,7 @@ const INSECTS: Insect[] = [
     seasonKey: 'yearRound',
     importance: 3,
     importanceKey: 'primary',
-    img: '/images/insects/caddisfly.png',
+    img: '/insects/caddisfly.png',
     alt: 'Caddisfly - Trichoptera illustration',
     flies: ['Elk Hair Caddis', 'CDC Caddis', 'Sedge', 'Caddis Pupa'],
     monthsActive: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
@@ -58,7 +59,7 @@ const INSECTS: Insect[] = [
     seasonKey: 'winterSpring',
     importance: 2,
     importanceKey: 'important',
-    img: '/images/insects/stonefly.png',
+    img: '/insects/stonefly.png',
     alt: 'Stonefly - Plecoptera illustration',
     flies: ['Stonefly Nymph', 'Kaufmann Stone', 'Yellow Sally', 'Pteronarcys'],
     monthsActive: [1, 2, 3, 4, 5, 11, 12],
@@ -70,7 +71,7 @@ const INSECTS: Insect[] = [
     seasonKey: 'springSummerAutumn',
     importance: 2,
     importanceKey: 'important',
-    img: '/images/insects/midge.png',
+    img: '/insects/midge.png',
     alt: 'Midge - Diptera illustration',
     flies: ['Griffith\'s Gnat', 'Buzzer', 'Black Midge', 'Simulium'],
     monthsActive: [3, 4, 5, 6, 7, 8, 9, 10, 11],
@@ -82,7 +83,7 @@ const INSECTS: Insect[] = [
     seasonKey: 'summer',
     importance: 2,
     importanceKey: 'important',
-    img: '/images/insects/black-ant.png',
+    img: '/insects/black-ant.png',
     alt: 'Black Ant - terrestrial insect illustration',
     flies: ['Foam Ant', 'Hopper', 'Foam Beetle', 'Chernobyl'],
     monthsActive: [6, 7, 8, 9],
@@ -94,7 +95,7 @@ const INSECTS: Insect[] = [
     seasonKey: 'summer',
     importance: 1,
     importanceKey: 'secondary',
-    img: '/images/insects/dragonfly.png',
+    img: '/insects/dragonfly.png',
     alt: 'Dragonfly - Odonata illustration',
     flies: ['Damsel Nymph', 'Dragon Nymph', 'Booby Damsel'],
     monthsActive: [5, 6, 7, 8, 9],
@@ -106,7 +107,7 @@ const INSECTS: Insect[] = [
     seasonKey: 'summer',
     importance: 1,
     importanceKey: 'secondary',
-    img: '/images/insects/beetle.png',
+    img: '/insects/beetle.png',
     alt: 'Beetle - Coleoptera illustration',
     flies: ['Foam Beetle', 'Coch-y-Bonddu', 'Black Beetle'],
     monthsActive: [6, 7, 8, 9],
@@ -118,7 +119,7 @@ const INSECTS: Insect[] = [
     seasonKey: 'spring',
     importance: 2,
     importanceKey: 'important',
-    img: '/images/insects/alderfly.png',
+    img: '/insects/alderfly.png',
     alt: 'Alderfly - Megaloptera illustration',
     flies: ['Alder Larva', 'Hellgrammite', 'Black Sedge'],
     monthsActive: [4, 5, 6],
@@ -185,10 +186,7 @@ const EntomologySection = () => {
                   alt={it.alt}
                   loading="lazy"
                   decoding="async"
-                  onError={(e) => {
-                    const el = e.currentTarget;
-                    if (el.src !== insectPlaceholder) el.src = insectPlaceholder;
-                  }}
+                  onError={handleIllustrationError}
                   className="mx-auto"
                   style={{ width: '80%', maxWidth: '200px', height: 'auto', objectFit: 'contain', filter: 'saturate(0.9)' }}
                 />
@@ -252,10 +250,7 @@ const EntomologySection = () => {
                 alt={selected.alt}
                 loading="lazy"
                 decoding="async"
-                onError={(e) => {
-                  const el = e.currentTarget;
-                  if (el.src !== insectPlaceholder) el.src = insectPlaceholder;
-                }}
+                onError={handleIllustrationError}
                 className="w-full h-48 md:h-64 object-contain mb-4"
                 style={{ filter: 'saturate(0.9)' }}
               />

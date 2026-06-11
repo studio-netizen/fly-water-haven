@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
+import { handleIllustrationError } from './illustrationFallback';
 
 type Species = {
   key: string;
@@ -33,7 +34,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 2,
     difficultyKey: 'intermediate',
-    img: '/images/fish/brown-trout.png',
+    img: '/brown-trout.png',
     alt: 'Brown Trout - Salmo trutta fario illustration',
     bestFlies: ['Adams', 'Pheasant Tail', 'Elk Hair Caddis'],
     bestMonthsKey: 'monthsMarchOct',
@@ -216,10 +217,7 @@ const SpeciesSection = () => {
                 alt={s.alt}
                 loading="lazy"
                 decoding="async"
-                onError={(e) => {
-                  const el = e.currentTarget;
-                  if (el.src !== fishPlaceholder) el.src = fishPlaceholder;
-                }}
+                onError={handleIllustrationError}
                 className="absolute pointer-events-none"
                 style={{ top: '-15px', right: '-10px', width: '160px', height: 'auto', objectFit: 'contain', filter: 'saturate(0.9) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
               />
@@ -287,10 +285,7 @@ const SpeciesSection = () => {
                 alt={selected.alt}
                 loading="lazy"
                 decoding="async"
-                onError={(e) => {
-                  const el = e.currentTarget;
-                  if (el.src !== fishPlaceholder) el.src = fishPlaceholder;
-                }}
+                onError={handleIllustrationError}
                 className="w-full h-48 md:h-64 object-contain mb-4"
                 style={{ filter: 'saturate(0.9)' }}
               />
