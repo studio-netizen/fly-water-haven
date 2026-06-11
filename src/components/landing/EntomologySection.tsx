@@ -249,13 +249,15 @@ const EntomologySection = () => {
 
               <img
                 src={selected.img}
-                alt={t(`landing.entomology.list.${selected.key}.name`)}
+                alt={selected.alt}
+                loading="lazy"
+                decoding="async"
                 onError={(e) => {
                   const el = e.currentTarget;
                   if (el.src !== insectPlaceholder) el.src = insectPlaceholder;
                 }}
                 className="w-full h-48 md:h-64 object-contain mb-4"
-                style={{ filter: 'saturate(0.85)' }}
+                style={{ filter: 'saturate(0.9)' }}
               />
 
               <h3 className="text-2xl md:text-3xl font-bold font-serif text-[#242242] mb-1">
