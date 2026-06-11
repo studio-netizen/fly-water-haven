@@ -179,18 +179,18 @@ const EntomologySection = () => {
               className="group relative flex flex-col text-left bg-[#f8f5f0] rounded-2xl p-4 border border-[#242242]/10 aspect-square overflow-hidden"
               style={{ backgroundColor: '#fdfaf5' }}
             >
-              <div className="flex-1 flex items-center justify-center mb-3">
+              <div className="flex justify-center mb-3">
                 <img
                   src={it.img}
-                  alt=""
-                  aria-hidden="true"
+                  alt={it.alt}
                   loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     const el = e.currentTarget;
                     if (el.src !== insectPlaceholder) el.src = insectPlaceholder;
                   }}
-                  className="max-h-[70%] max-w-[80%] object-contain"
-                  style={{ filter: 'saturate(0.85)' }}
+                  className="mx-auto"
+                  style={{ width: '80%', maxWidth: '200px', height: 'auto', objectFit: 'contain', filter: 'saturate(0.9)' }}
                 />
               </div>
               <h3 className="text-sm md:text-base font-bold font-serif leading-tight text-[#242242]">
