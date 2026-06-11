@@ -20,12 +20,6 @@ type Insect = {
   monthsActive: number[]; // 1..12
 };
 
-// Minimal insect silhouette fallback
-const insectPlaceholder =
-  'data:image/svg+xml;utf8,' +
-  encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><g fill='%23242242' opacity='0.7'><ellipse cx='100' cy='120' rx='14' ry='40'/><ellipse cx='100' cy='70' rx='10' ry='14'/><path d='M100 90 Q40 70 30 110 Q70 110 100 120 Z'/><path d='M100 90 Q160 70 170 110 Q130 110 100 120 Z'/><line x1='95' y1='60' x2='80' y2='40' stroke='%23242242' stroke-width='2'/><line x1='105' y1='60' x2='120' y2='40' stroke='%23242242' stroke-width='2'/></g></svg>`
-  );
 
 const INSECTS: Insect[] = [
   {
@@ -186,7 +180,6 @@ const EntomologySection = () => {
                   alt={it.alt}
                   loading="lazy"
                   decoding="async"
-                  onError={handleIllustrationError}
                   className="mx-auto"
                   style={{ width: '80%', maxWidth: '200px', height: 'auto', objectFit: 'contain', filter: 'saturate(0.9)' }}
                 />
@@ -250,7 +243,6 @@ const EntomologySection = () => {
                 alt={selected.alt}
                 loading="lazy"
                 decoding="async"
-                onError={handleIllustrationError}
                 className="w-full h-48 md:h-64 object-contain mb-4"
                 style={{ filter: 'saturate(0.9)' }}
               />
