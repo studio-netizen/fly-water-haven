@@ -14,6 +14,7 @@ type Insect = {
   importance: Importance;
   importanceKey: 'primary' | 'important' | 'secondary';
   img: string;
+  alt: string;
   flies: string[];
   monthsActive: number[]; // 1..12
 };
