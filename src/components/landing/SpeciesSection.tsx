@@ -12,6 +12,7 @@ type Species = {
   difficulty: 1 | 2 | 3;
   difficultyKey: 'easy' | 'intermediate' | 'technical';
   img: string;
+  alt: string;
   bestFlies: string[];
   bestMonthsKey: string;
   bestRegionsKey: string;
