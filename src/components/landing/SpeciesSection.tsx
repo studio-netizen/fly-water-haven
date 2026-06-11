@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
-import { handleIllustrationError } from './illustrationFallback';
+
 
 type Species = {
   key: string;
@@ -19,12 +19,6 @@ type Species = {
   bestRegionsKey: string;
 };
 
-// Minimal green SVG fish silhouette fallback
-const fishPlaceholder =
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 100'><path fill='%234a7c59' d='M10 50 C 40 10, 110 10, 150 50 C 110 90, 40 90, 10 50 Z M150 50 l 35 -25 v 50 z' opacity='0.9'/><circle cx='40' cy='45' r='4' fill='%23f5f0e8'/></svg>`
-  );
 
 const SPECIES: Species[] = [
   {
@@ -47,7 +41,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏔️',
     difficulty: 3,
     difficultyKey: 'technical',
-    img: '/images/fish/marble-trout.png',
+    img: '/marble-trout.png',
     alt: 'Marble Trout - Salmo marmoratus illustration',
     bestFlies: ['Streamer Zonker', 'Woolly Bugger', 'Stonefly Nymph'],
     bestMonthsKey: 'monthsAprSep',
@@ -60,7 +54,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 1,
     difficultyKey: 'easy',
-    img: '/images/fish/rainbow-trout.png',
+    img: '/rainbow-trout.png',
     alt: 'Rainbow Trout - Oncorhynchus mykiss illustration',
     bestFlies: ['Hare\'s Ear', 'San Juan Worm', 'Parachute Adams'],
     bestMonthsKey: 'monthsAllYear',
@@ -112,7 +106,7 @@ const SPECIES: Species[] = [
     habitatIcon: '🏞️',
     difficulty: 2,
     difficultyKey: 'intermediate',
-    img: '/images/fish/pike.png',
+    img: '/pike.png',
     alt: 'Pike - Esox lucius illustration',
     bestFlies: ['Pike Bunny', 'Deceiver', 'Game Changer'],
     bestMonthsKey: 'monthsOctApr',
@@ -217,7 +211,6 @@ const SpeciesSection = () => {
                 alt={s.alt}
                 loading="lazy"
                 decoding="async"
-                onError={handleIllustrationError}
                 className="absolute pointer-events-none"
                 style={{ top: '-15px', right: '-10px', width: '160px', height: 'auto', objectFit: 'contain', filter: 'saturate(0.9) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
               />
@@ -285,7 +278,6 @@ const SpeciesSection = () => {
                 alt={selected.alt}
                 loading="lazy"
                 decoding="async"
-                onError={handleIllustrationError}
                 className="w-full h-48 md:h-64 object-contain mb-4"
                 style={{ filter: 'saturate(0.9)' }}
               />
