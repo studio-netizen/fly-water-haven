@@ -213,15 +213,15 @@ const SpeciesSection = () => {
             >
               <img
                 src={s.img}
-                alt=""
-                aria-hidden="true"
+                alt={s.alt}
                 loading="lazy"
+                decoding="async"
                 onError={(e) => {
                   const el = e.currentTarget;
                   if (el.src !== fishPlaceholder) el.src = fishPlaceholder;
                 }}
-                className="absolute -top-5 -right-2 w-[140px] h-[100px] object-contain pointer-events-none"
-                style={{ filter: 'saturate(0.85) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
+                className="absolute pointer-events-none"
+                style={{ top: '-15px', right: '-10px', width: '160px', height: 'auto', objectFit: 'contain', filter: 'saturate(0.9) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
               />
               <h3 className="text-lg md:text-xl font-bold font-serif leading-tight mb-1 text-[#242242]">
                 {t(`landing.species.list.${s.key}.name`)}
