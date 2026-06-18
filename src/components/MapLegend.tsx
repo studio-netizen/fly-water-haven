@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Info, X } from 'lucide-react';
 
@@ -64,4 +64,4 @@ const MapLegend = () => {
   );
 };
 
-export default MapLegend;
+export default memo(MapLegend);

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
@@ -117,4 +118,4 @@ const SpotDetailDrawer = ({ spot, open, onOpenChange }: Props) => {
   );
 };
 
-export default SpotDetailDrawer;
+export default memo(SpotDetailDrawer);
