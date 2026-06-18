@@ -167,11 +167,20 @@ const Feed = () => {
 
     if (!profiles) return;
 
-    const suggestions: SuggestedUser[] = [];
-    for (const p of profiles) {
-      const { count } = await supabase.from('posts').select('id', { count: 'exact', head: true }).eq('user_id', p.user_id);
-      suggestions.push({ ...p, post_count: count || 0 });
-    }
+    // Single batched query instead of N+1 counts (was firing 10 round-trips per Feed load)
+    const ids = profiles.map(p => p.user_id);
+    const { data: postRows } = await supabase
+      .from('posts')
+      .select('user_id')
+      .in('user_id', ids);
+
+    const counts = new Map<string, number>();
+    (postRows || []).forEach(r => counts.set(r.user_id, (counts.get(r.user_id) || 0) + 1));
+
+    const suggestions: SuggestedUser[] = profiles.map(p => ({
+      ...p,
+      post_count: counts.get(p.user_id) || 0,
+    }));
     suggestions.sort((a, b) => b.post_count - a.post_count);
     setSuggestedUsers(suggestions.slice(0, 5));
   };

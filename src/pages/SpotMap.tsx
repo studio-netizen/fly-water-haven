@@ -141,7 +141,11 @@ const SpotMap = () => {
   }, [user]);
 
   const fetchSpots = async () => {
-    const { data } = await supabase.from('spots').select('*').order('created_at', { ascending: false });
+    // Trimmed column list — avoid pulling oversized JSON/text fields not used on map
+    const { data } = await supabase
+      .from('spots')
+      .select('id, name, description, spot_type, latitude, longitude, fish_species, hatch_activity, photos, access_info, avg_rating, review_count')
+      .order('created_at', { ascending: false });
     if (data) setSpots(data as Spot[]);
   };
 
