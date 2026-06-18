@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -92,6 +92,8 @@ const SpotMap = () => {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<L.LayerGroup | null>(null);
+  const spotMarkersRef = useRef<Map<string, L.Marker>>(new Map());
+  const reportMarkersRef = useRef<Map<string, L.Marker>>(new Map());
   const [spots, setSpots] = useState<Spot[]>([]);
   const [reports, setReports] = useState<ReportPin[]>([]);
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -163,32 +165,78 @@ const SpotMap = () => {
     }
   }, [spotLocation]);
 
-  useEffect(() => {
-    if (!markersRef.current) return;
-    markersRef.current.clearLayers();
-
-    let filteredSpots = filterType && filterType !== 'all' ? spots.filter(s => s.spot_type === filterType) : spots;
+  // Memoize filtered+sorted spots so identity is stable across unrelated re-renders
+  const visibleSpots = useMemo(() => {
+    let out = filterType && filterType !== 'all' ? spots.filter(s => s.spot_type === filterType) : spots;
     if (filterHatch && filterHatch !== 'all') {
-      filteredSpots = filteredSpots.filter(s => s.hatch_activity?.includes(filterHatch));
+      out = out.filter(s => s.hatch_activity?.includes(filterHatch));
     }
     if (sortBy === 'rating') {
-      filteredSpots = [...filteredSpots].sort((a, b) => (b.avg_rating || 0) - (a.avg_rating || 0));
+      out = [...out].sort((a, b) => (b.avg_rating || 0) - (a.avg_rating || 0));
     } else if (sortBy === 'reviews') {
-      filteredSpots = [...filteredSpots].sort((a, b) => (b.review_count || 0) - (a.review_count || 0));
+      out = [...out].sort((a, b) => (b.review_count || 0) - (a.review_count || 0));
+    }
+    return out;
+  }, [spots, filterType, filterHatch, sortBy]);
+
+  // Stable click handler so memoized children don't re-render
+  const handleSpotClick = useCallback((spot: Spot) => {
+    setActiveSpot(spot);
+    setDrawerOpen(true);
+  }, []);
+
+  // Diff spot markers in place instead of clearing & recreating every render
+  useEffect(() => {
+    const group = markersRef.current;
+    if (!group) return;
+    const existing = spotMarkersRef.current;
+    const nextIds = new Set(visibleSpots.map(s => s.id));
+
+    // Remove markers that no longer pass the filter
+    for (const [id, marker] of existing) {
+      if (!nextIds.has(id)) {
+        group.removeLayer(marker);
+        existing.delete(id);
+      }
     }
 
-    filteredSpots.forEach(spot => {
-      const marker = L.marker([spot.latitude, spot.longitude], {
-        icon: createSpotIcon(spot.spot_type, spot.avg_rating),
-      });
-      marker.on('click', () => {
-        setActiveSpot(spot);
-        setDrawerOpen(true);
-      });
-      marker.addTo(markersRef.current!);
+    // Add new / update position when needed
+    visibleSpots.forEach(spot => {
+      let marker = existing.get(spot.id);
+      if (!marker) {
+        marker = L.marker([spot.latitude, spot.longitude], {
+          icon: createSpotIcon(spot.spot_type, spot.avg_rating),
+        });
+        marker.addTo(group);
+        existing.set(spot.id, marker);
+      } else {
+        const ll = marker.getLatLng();
+        if (ll.lat !== spot.latitude || ll.lng !== spot.longitude) {
+          marker.setLatLng([spot.latitude, spot.longitude]);
+        }
+      }
+      // Always rebind click to the freshest spot snapshot
+      marker.off('click');
+      marker.on('click', () => handleSpotClick(spot));
     });
+  }, [visibleSpots, handleSpotClick]);
+
+  // Diff report markers separately so spot updates don't touch them
+  useEffect(() => {
+    const group = markersRef.current;
+    if (!group) return;
+    const existing = reportMarkersRef.current;
+    const nextIds = new Set(reports.map(r => r.id));
+
+    for (const [id, marker] of existing) {
+      if (!nextIds.has(id)) {
+        group.removeLayer(marker);
+        existing.delete(id);
+      }
+    }
 
     reports.forEach(rep => {
+      if (existing.has(rep.id)) return;
       const marker = L.marker([rep.latitude, rep.longitude], { icon: createReportIcon() });
       const html = `
         <div style="min-width:200px;font-family:inherit;">
@@ -197,9 +245,12 @@ const SpotMap = () => {
           ${rep.image_url ? `<img src="${rep.image_url}" alt="report" style="margin-top:6px;width:100%;border-radius:6px;" />` : ''}
         </div>`;
       marker.bindPopup(html);
-      marker.addTo(markersRef.current!);
+      marker.addTo(group);
+      existing.set(rep.id, marker);
     });
-  }, [spots, reports, filterType, filterHatch, sortBy]);
+  }, [reports]);
+
+  const handleDrawerOpenChange = useCallback((open: boolean) => setDrawerOpen(open), []);
 
   const handlePhotosChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
