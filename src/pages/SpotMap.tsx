@@ -390,7 +390,7 @@ const SpotMap = () => {
         <div ref={mapContainerRef} className="flex-1 z-0" />
 
         <MapLegend />
-        <SpotDetailDrawer spot={activeSpot} open={drawerOpen} onOpenChange={setDrawerOpen} />
+        <SpotDetailDrawer spot={activeSpot} open={drawerOpen} onOpenChange={handleDrawerOpenChange} />
 
         <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
           <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
