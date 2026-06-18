@@ -10,23 +10,23 @@ import Feed from "./pages/Feed";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import SpotDetail from "./pages/SpotDetail";
-import Messages from "./pages/Messages";
-import Notifications from "./pages/Notifications";
-import EditProfile from "./pages/EditProfile";
-import Publish from "./pages/Publish";
-import PostDetail from "./pages/PostDetail";
 import NotFound from "./pages/NotFound";
-import LeadMagnet from "./pages/LeadMagnet";
-import Contatti from "./pages/Contatti";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminLayout from "./components/admin/AdminLayout";
 import ResetPassword from "./pages/ResetPassword";
-import InstallaApp from "./pages/InstallaApp";
 import InstallBanner from "./components/InstallBanner";
-import SearchPage from "./pages/Search";
-import Invite from "./pages/Invite";
 
-// Lazy load heavy pages
+// Lazy load secondary/heavy pages so they don't bloat the initial bundle
+const Messages = lazy(() => import("./pages/Messages"));
+const Notifications = lazy(() => import("./pages/Notifications"));
+const EditProfile = lazy(() => import("./pages/EditProfile"));
+const Publish = lazy(() => import("./pages/Publish"));
+const PostDetail = lazy(() => import("./pages/PostDetail"));
+const LeadMagnet = lazy(() => import("./pages/LeadMagnet"));
+const Contatti = lazy(() => import("./pages/Contatti"));
+const InstallaApp = lazy(() => import("./pages/InstallaApp"));
+const SearchPage = lazy(() => import("./pages/Search"));
+const Invite = lazy(() => import("./pages/Invite"));
 const SpotMap = lazy(() => import("./pages/SpotMap"));
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogArticle = lazy(() => import("./pages/BlogArticle"));
@@ -43,7 +43,16 @@ const AdminReports = lazy(() => import("./pages/admin/AdminReports"));
 const AdminAuditLog = lazy(() => import("./pages/admin/AdminAuditLog"));
 const AdminSystem = lazy(() => import("./pages/admin/AdminSystem"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      gcTime: 10 * 60_000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
