@@ -33,7 +33,8 @@ serve(async (req) => {
 
   const apiKey = Deno.env.get('GOOGLE_PLACES_API_KEY');
   if (!apiKey) {
-    return new Response(JSON.stringify({ error: 'GOOGLE_PLACES_API_KEY not configured' }), {
+    console.error('GOOGLE_PLACES_API_KEY not configured');
+    return new Response(JSON.stringify({ error: 'Places service unavailable' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
@@ -74,8 +75,8 @@ serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    const msg = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: msg }), {
+    console.error('google-places error:', error instanceof Error ? error.message : 'Unknown error');
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

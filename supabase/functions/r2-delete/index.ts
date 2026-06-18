@@ -102,7 +102,8 @@ Deno.serve(async (req) => {
     const res = await aws.fetch(url, { method: "DELETE" });
     if (!res.ok && res.status !== 404) {
       const text = await res.text();
-      return new Response(JSON.stringify({ error: `R2 delete failed: ${res.status} ${text}` }), {
+      console.error(`R2 delete failed: ${res.status} ${text}`);
+      return new Response(JSON.stringify({ error: "Storage delete failed" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -112,7 +113,8 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
-    return new Response(JSON.stringify({ error: String(e?.message || e) }), {
+    console.error("r2-delete error:", String(e?.message || e));
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

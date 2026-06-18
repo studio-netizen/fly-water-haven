@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { Check, X, Trash2, ExternalLink, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+import { sanitizeHttpUrl } from '@/lib/sanitize-url';
 
 interface Report {
   id: string;
@@ -140,11 +141,14 @@ export default function AdminReports() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    {r.image_url ? (
-                      <a href={r.image_url} target="_blank" rel="noreferrer">
-                        <img src={r.image_url} alt="" className="w-12 h-12 rounded object-cover" />
-                      </a>
-                    ) : '—'}
+                    {(() => {
+                      const safeUrl = sanitizeHttpUrl(r.image_url);
+                      return safeUrl ? (
+                        <a href={safeUrl} target="_blank" rel="noreferrer">
+                          <img src={safeUrl} alt="" className="w-12 h-12 rounded object-cover" />
+                        </a>
+                      ) : '—';
+                    })()}
                   </TableCell>
                   <TableCell className="text-xs">
                     <a
