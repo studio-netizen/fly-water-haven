@@ -1,4 +1,25 @@
-/* Google Fonts loaded async via index.html with font-display: swap */
+/* Self-hosted fonts — eliminates render-blocking external requests */
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/fonts/Outfit-300-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/fonts/Inter-400-900.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/SourceSerif4-400-700.woff2') format('woff2');
+}
 
 @tailwind base;
 @tailwind components;
