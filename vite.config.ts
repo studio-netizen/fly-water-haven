@@ -23,5 +23,6 @@ export default defineConfig(({ mode }) => ({
     // Questo assicura che i file vengano generati correttamente per GitHub
     outDir: "dist",
     assetsDir: "assets",
+    cssMinify: true,
   }
 }));

@@ -178,10 +178,12 @@ const EntomologySection = () => {
                 <img
                   src={it.img}
                   alt={it.alt}
+                  width={200}
+                  height={200}
                   loading="lazy"
                   decoding="async"
-                  className="mx-auto"
-                  style={{ width: '80%', maxWidth: '200px', height: 'auto', objectFit: 'contain', filter: 'saturate(0.9)' }}
+                  className="insect-illustration mx-auto"
+                  style={{ filter: 'saturate(0.9)' }}
                 />
               </div>
               <h3 className="text-sm md:text-base font-bold font-serif leading-tight text-[#242242]">
