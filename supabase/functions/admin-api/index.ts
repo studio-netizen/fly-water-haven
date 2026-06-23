@@ -82,7 +82,7 @@ serve(async (req) => {
     switch (action) {
       case "get_system_metrics": {
         const { data, error } = await supabase.rpc("admin_system_metrics");
-        if (error) return json({ error: error.message }, 500);
+        if (error) { console.error("admin-api db error:", error); return json({ error: "Internal server error" }, 500); }
 
         // Count R2-hosted assets (posts.image_url + profiles.avatar_url + spots.photos + reviews.photo_url)
         const r2Public = Deno.env.get("R2_PUBLIC_URL") || "";
@@ -400,7 +400,7 @@ serve(async (req) => {
             .eq("id", id)
             .select()
             .single();
-          if (error) return json({ error: error.message }, 400);
+          if (error) { console.error("admin-api db error:", error); return json({ error: "Request failed" }, 400); }
           return json(data);
         } else {
           const { data, error } = await supabase
@@ -408,7 +408,7 @@ serve(async (req) => {
             .insert(post)
             .select()
             .single();
-          if (error) return json({ error: error.message }, 400);
+          if (error) { console.error("admin-api db error:", error); return json({ error: "Request failed" }, 400); }
           return json(data);
         }
       }
@@ -440,7 +440,7 @@ serve(async (req) => {
           .insert(dup)
           .select()
           .single();
-        if (error) return json({ error: error.message }, 400);
+        if (error) { console.error("admin-api db error:", error); return json({ error: "Request failed" }, 400); }
         return json(data);
       }
 
@@ -474,7 +474,7 @@ serve(async (req) => {
             reviewed_at: new Date().toISOString(),
           })
           .eq("id", id);
-        if (error) return json({ error: error.message }, 400);
+        if (error) { console.error("admin-api db error:", error); return json({ error: "Request failed" }, 400); }
         return json({ success: true });
       }
 
@@ -513,7 +513,7 @@ serve(async (req) => {
         if (actionFilter) q = q.eq("action", actionFilter);
         if (search) q = q.ilike("actor_email", `%${search}%`);
         const { data, count, error } = await q;
-        if (error) return json({ error: error.message }, 400);
+        if (error) { console.error("admin-api db error:", error); return json({ error: "Request failed" }, 400); }
         return json({ rows: data || [], total: count || 0 });
       }
 
@@ -534,7 +534,7 @@ serve(async (req) => {
         if (actionFilter) q = q.eq("action", actionFilter);
         if (search) q = q.ilike("actor_email", `%${search}%`);
         const { data, error } = await q;
-        if (error) return json({ error: error.message }, 400);
+        if (error) { console.error("admin-api db error:", error); return json({ error: "Request failed" }, 400); }
         return json({ rows: data || [] });
       }
 
@@ -554,6 +554,7 @@ serve(async (req) => {
         return json({ error: "Unknown action" }, 400);
     }
   } catch (e) {
-    return json({ error: (e as Error).message }, 500);
+    console.error("admin-api unhandled error:", e);
+    return json({ error: "Internal server error" }, 500);
   }
 });
