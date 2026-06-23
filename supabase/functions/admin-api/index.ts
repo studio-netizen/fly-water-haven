@@ -554,6 +554,7 @@ serve(async (req) => {
         return json({ error: "Unknown action" }, 400);
     }
   } catch (e) {
-    return json({ error: (e as Error).message }, 500);
+    console.error("admin-api unhandled error:", e);
+    return json({ error: "Internal server error" }, 500);
   }
 });
