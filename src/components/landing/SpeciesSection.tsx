@@ -209,10 +209,12 @@ const SpeciesSection = () => {
               <img
                 src={s.img}
                 alt={s.alt}
+                width={160}
+                height={100}
                 loading="lazy"
                 decoding="async"
-                className="absolute pointer-events-none"
-                style={{ top: '-15px', right: '-10px', width: '160px', height: 'auto', objectFit: 'contain', filter: 'saturate(0.9) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
+                className="species-illustration absolute pointer-events-none"
+                style={{ top: '-15px', right: '-10px', filter: 'saturate(0.9) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
               />
               <h3 className="text-lg md:text-xl font-bold font-serif leading-tight mb-1 text-[#242242]">
                 {t(`landing.species.list.${s.key}.name`)}
