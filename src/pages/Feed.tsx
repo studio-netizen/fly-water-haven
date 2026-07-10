@@ -138,7 +138,7 @@ const Feed = () => {
     </div>
   );
 
-  if (!user) return <Landing />;
+  if (!user) return <Suspense fallback={<div className="min-h-screen bg-background" />}><Landing /></Suspense>;
 
   if (showOnboarding && user) {
     return <OnboardingWizard onComplete={() => setShowOnboarding(false)} />;
