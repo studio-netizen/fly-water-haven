@@ -118,4 +118,4 @@ const DesktopSidebar = () => {
   );
 };
 
-export default DesktopSidebar;
+export default memo(DesktopSidebar);
