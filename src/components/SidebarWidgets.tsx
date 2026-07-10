@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { Star } from 'lucide-react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -22,55 +23,71 @@ interface TopSpot {
 
 const SidebarWidgets = () => {
   const { user } = useAuth();
-  const [users, setUsers] = useState<TopUser[]>([]);
-  const [spots, setSpots] = useState<TopSpot[]>([]);
-  const [following, setFollowing] = useState<Set<string>>(new Set());
+  const qc = useQueryClient();
 
-  useEffect(() => {
-    (async () => {
+  const { data: users = [] } = useQuery<TopUser[]>({
+    queryKey: ['sidebar-top-users', user?.id],
+    staleTime: 5 * 60_000,
+    gcTime: 10 * 60_000,
+    queryFn: async () => {
       const { data: profiles } = await supabase
         .from('profiles')
         .select('user_id, username, display_name, avatar_url')
         .limit(20);
-      if (profiles) {
-        const withCounts: TopUser[] = [];
-        for (const p of profiles) {
-          if (user && p.user_id === user.id) continue;
-          const { count } = await supabase
-            .from('posts')
-            .select('id', { count: 'exact', head: true })
-            .eq('user_id', p.user_id);
-          withCounts.push({ ...p, post_count: count || 0 });
-        }
-        withCounts.sort((a, b) => b.post_count - a.post_count);
-        setUsers(withCounts.slice(0, 3));
-      }
+      if (!profiles) return [];
+      const ids = profiles.filter(p => !user || p.user_id !== user.id).map(p => p.user_id);
+      if (!ids.length) return [];
+      const { data: postRows } = await supabase
+        .from('posts')
+        .select('user_id')
+        .in('user_id', ids);
+      const counts = new Map<string, number>();
+      (postRows || []).forEach(r => counts.set(r.user_id, (counts.get(r.user_id) || 0) + 1));
+      return profiles
+        .filter(p => !user || p.user_id !== user.id)
+        .map(p => ({ ...p, post_count: counts.get(p.user_id) || 0 }))
+        .sort((a, b) => b.post_count - a.post_count)
+        .slice(0, 3);
+    },
+  });
 
-      const { data: topSpots } = await supabase
+  const { data: spots = [] } = useQuery<TopSpot[]>({
+    queryKey: ['sidebar-top-spots'],
+    staleTime: 5 * 60_000,
+    gcTime: 10 * 60_000,
+    queryFn: async () => {
+      const { data } = await supabase
         .from('spots')
         .select('id, name, avg_rating, review_count')
         .order('review_count', { ascending: false })
         .limit(3);
-      if (topSpots) setSpots(topSpots as TopSpot[]);
+      return (data as TopSpot[]) || [];
+    },
+  });
 
-      if (user) {
-        const { data: f } = await supabase
-          .from('follows')
-          .select('following_id')
-          .eq('follower_id', user.id);
-        if (f) setFollowing(new Set(f.map((x) => x.following_id)));
-      }
-    })();
-  }, [user]);
+  const { data: following = new Set<string>() } = useQuery<Set<string>>({
+    queryKey: ['following-set', user?.id],
+    enabled: !!user,
+    staleTime: 2 * 60_000,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('follows')
+        .select('following_id')
+        .eq('follower_id', user!.id);
+      return new Set((data || []).map((x) => x.following_id));
+    },
+  });
 
   const toggleFollow = async (targetId: string) => {
     if (!user) return;
-    if (following.has(targetId)) {
+    const isFollowing = following.has(targetId);
+    const next = new Set(following);
+    if (isFollowing) next.delete(targetId); else next.add(targetId);
+    qc.setQueryData(['following-set', user.id], next);
+    if (isFollowing) {
       await supabase.from('follows').delete().eq('follower_id', user.id).eq('following_id', targetId);
-      setFollowing((prev) => { const n = new Set(prev); n.delete(targetId); return n; });
     } else {
       await supabase.from('follows').insert({ follower_id: user.id, following_id: targetId });
-      setFollowing((prev) => new Set(prev).add(targetId));
     }
   };
 
@@ -86,7 +103,7 @@ const SidebarWidgets = () => {
               <div key={u.user_id} className="flex items-center gap-2 px-2">
                 <Link to={`/profile/${u.user_id}`} className="flex items-center gap-2 flex-1 min-w-0">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={u.avatar_url || ''} alt={u.username || ''} />
+                    <AvatarImage src={u.avatar_url || ''} alt={u.username || ''} loading="lazy" />
                     <AvatarFallback className="text-xs bg-primary/10 text-primary">
                       {(u.display_name || u.username || 'U')[0].toUpperCase()}
                     </AvatarFallback>
@@ -137,4 +154,4 @@ const SidebarWidgets = () => {
   );
 };
 
-export default SidebarWidgets;
+export default memo(SidebarWidgets);

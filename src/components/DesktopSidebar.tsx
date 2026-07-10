@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Home, Map, PlusSquare, Bell, User, Send, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import logoImg from '@/assets/flywaters-logo-dark.png';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useTranslation } from 'react-i18next';
@@ -14,20 +15,30 @@ import SidebarWidgets from '@/components/SidebarWidgets';
 const DesktopSidebar = () => {
   const { user, signOut } = useAuth();
   const location = useLocation();
-  const [profile, setProfile] = useState<any>(null);
   const unreadMessages = useUnreadMessages();
-  const [unreadNotifs, setUnreadNotifs] = useState(0);
   const { t } = useTranslation();
 
-  useEffect(() => {
-    if (!user) return;
-    supabase.from('profiles').select('*').eq('user_id', user.id).single().then(({ data }) => {
-      if (data) setProfile(data);
-    });
-    supabase.from('notifications').select('id', { count: 'exact', head: true })
-      .eq('user_id', user.id).eq('read', false)
-      .then(({ count }) => setUnreadNotifs(count || 0));
-  }, [user]);
+  const { data: profile } = useQuery({
+    queryKey: ['sidebar-profile', user?.id],
+    enabled: !!user,
+    staleTime: 5 * 60_000,
+    queryFn: async () => {
+      const { data } = await supabase.from('profiles').select('*').eq('user_id', user!.id).single();
+      return data;
+    },
+  });
+
+  const { data: unreadNotifs = 0 } = useQuery({
+    queryKey: ['unread-notifs', user?.id],
+    enabled: !!user,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { count } = await supabase.from('notifications')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user!.id).eq('read', false);
+      return count || 0;
+    },
+  });
 
   const links = [
     { to: '/', icon: Home, label: t('nav.feed') },
