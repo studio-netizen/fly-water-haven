@@ -48,7 +48,7 @@ const Blog = () => {
           </Link>
           <div className="flex items-center gap-6 text-sm">
             <Link to="/blog" className="font-medium text-[#242242]">Blog</Link>
-            <Link to="/map" className="text-[#8c8c7a] hover:text-[#242242] transition-colors">Mappa</Link>
+            <Link to="/mappa" className="text-[#8c8c7a] hover:text-[#242242] transition-colors">Mappa</Link>
             <Link to="/contatti" className="text-[#8c8c7a] hover:text-[#242242] transition-colors">Contatti</Link>
           </div>
         </div>

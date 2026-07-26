@@ -42,7 +42,7 @@ const DesktopSidebar = () => {
 
   const links = [
     { to: '/', icon: Home, label: t('nav.feed') },
-    { to: '/map', icon: Map, label: t('nav.map') },
+    { to: '/mappa', icon: Map, label: t('nav.map') },
     { to: '/publish', icon: PlusSquare, label: t('nav.publish') },
     { to: '/messages', icon: Send, label: t('nav.messages'), badge: unreadMessages },
     { to: '/notifications', icon: Bell, label: t('nav.notifications'), badge: unreadNotifs },

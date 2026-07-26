@@ -139,7 +139,7 @@ const Notifications = () => {
                   if (!n.read) markRead(n.id);
                   if ((n.type === 'like' || n.type === 'comment') && n.post_id) navigate(`/post/${n.post_id}`);
                   else if (n.type === 'follow' && profile?.user_id) navigate(`/profile/${profile.user_id}`);
-                  else if (n.type === 'report_approved') navigate('/map');
+                  else if (n.type === 'report_approved') navigate('/mappa');
                 }}
                 className={`group w-full flex items-center gap-3 px-4 py-3 border-b border-border text-left transition-colors hover:bg-muted/30 cursor-pointer ${!n.read ? 'bg-primary/5' : ''}`}
               >

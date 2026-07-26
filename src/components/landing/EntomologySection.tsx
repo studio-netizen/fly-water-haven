@@ -206,7 +206,7 @@ const EntomologySection = () => {
         <div className="mt-14 text-center">
           <p className="text-base md:text-lg text-[#8c8c7a] mb-5">{t('landing.entomology.ctaLead')}</p>
           <button
-            onClick={() => navigate('/map')}
+            onClick={() => navigate('/mappa')}
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold bg-[#242242] text-white hover:opacity-85 transition-opacity"
           >
             {t('landing.entomology.ctaButton')}
@@ -300,7 +300,7 @@ const EntomologySection = () => {
 
               <button
                 onClick={() => {
-                  navigate(`/map?hatch=${encodeURIComponent(selected.key)}`);
+                  navigate(`/mappa?hatch=${encodeURIComponent(selected.key)}`);
                   setSelected(null);
                 }}
                 className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold bg-[#242242] text-white hover:opacity-85 transition-opacity"

@@ -424,7 +424,7 @@ const Profile = () => {
                     {isOwnProfile ? t('profile.emptyReviewsDescOwn') : t('profile.emptyReviewsDescOther')}
                   </p>
                   {isOwnProfile && (
-                    <Button onClick={() => navigate('/map')} size="sm" variant="outline" className="rounded-full gap-1.5">
+                    <Button onClick={() => navigate('/mappa')} size="sm" variant="outline" className="rounded-full gap-1.5">
                       <MapPin className="w-4 h-4" />
                       {t('profile.exploreSpots')}
                     </Button>

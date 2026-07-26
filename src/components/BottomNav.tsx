@@ -10,7 +10,7 @@ const BottomNav = () => {
 
   const links = [
     { to: '/', icon: Home, label: t('nav.feed') },
-    { to: '/map', icon: Map, label: t('nav.map') },
+    { to: '/mappa', icon: Map, label: t('nav.map') },
     { to: '/publish', icon: PlusSquare, label: t('nav.publish'), isCenter: true },
     { to: '/notifications', icon: Bell, label: t('nav.notifications') },
     { to: user ? `/profile/${user.id}` : '/auth', icon: User, label: t('nav.profile') },

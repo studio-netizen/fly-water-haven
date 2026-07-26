@@ -522,7 +522,7 @@ const Feed = () => {
             {!loadingMore && !hasMore && posts.length > 0 && (
               <div className="text-center py-8 px-4 text-sm text-muted-foreground">
                 🎣 Hai visto tutto!{' '}
-                <Link to="/map" className="font-semibold text-[#242242] underline">
+                <Link to="/mappa" className="font-semibold text-[#242242] underline">
                   Aggiungi il tuo primo spot.
                 </Link>
               </div>
