@@ -33,7 +33,7 @@ export default defineConfig(({ mode }) => ({
             '@radix-ui/react-tabs',
             '@radix-ui/react-toast',
           ],
-          'leaflet': ['leaflet', 'react-leaflet'],
+          'leaflet': ['leaflet'],
           'framer': ['framer-motion'],
           'recharts': ['recharts'],
           'tiptap': ['@tiptap/react', '@tiptap/starter-kit'],
