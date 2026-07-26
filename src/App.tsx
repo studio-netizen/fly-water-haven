@@ -132,8 +132,9 @@ const App = () => (
                 <Route path="/cerca" element={<SearchPage />} />
                 <Route path="/invito/:username" element={<Invite />} />
                 <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
+                </Routes>
+              </Suspense>
+            </ErrorBoundary>
             <InstallBanner />
           </BrowserRouter>
         </TooltipProvider>
