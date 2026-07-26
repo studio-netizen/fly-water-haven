@@ -149,7 +149,7 @@ const SpotDetail = () => {
   const fetchReviews = async () => {
     const { data: reviewsData, error } = await supabase
       .from('reviews')
-      .select('id, spot_id, user_id, rating, comment, photo_url, created_at')
+      .select('id, spot_id, user_id, rating, content, photo_url, created_at')
       .eq('spot_id', spotId!)
       .order('created_at', { ascending: false });
     

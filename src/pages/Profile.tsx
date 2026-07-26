@@ -93,7 +93,7 @@ const Profile = () => {
   };
 
   const fetchPosts = async () => {
-    const { data } = await supabase.from('posts').select('id, user_id, content, image_url, no_kill, created_at, likes_count, comments_count, spot_id, species, technique').eq('user_id', userId!).order('created_at', { ascending: false });
+    const { data } = await supabase.from('posts').select('id, user_id, caption, image_url, spot_id, fish_species, fishing_technique, gear_used, location_tag, hatch_activity, like_count, comment_count, created_at').eq('user_id', userId!).order('created_at', { ascending: false });
     if (data) setPosts(data);
   };
 
