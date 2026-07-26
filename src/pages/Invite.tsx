@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import logoImg from '@/assets/flywaters-logo-dark.png';
-import heroImg from '@/assets/hero-fullbleed.jpg';
+import heroImg from '@/assets/hero-fullbleed.webp';
 
 const Invite = () => {
   const { username } = useParams<{ username: string }>();
