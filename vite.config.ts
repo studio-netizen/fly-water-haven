@@ -11,8 +11,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
+    mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -20,9 +19,27 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    // Questo assicura che i file vengano generati correttamente per GitHub
     outDir: "dist",
     assetsDir: "assets",
     cssMinify: true,
-  }
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'supabase': ['@supabase/supabase-js'],
+          'ui-radix': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-toast',
+          ],
+          'leaflet': ['leaflet', 'react-leaflet'],
+          'framer': ['framer-motion'],
+          'recharts': ['recharts'],
+          'tiptap': ['@tiptap/react', '@tiptap/starter-kit'],
+          'i18n': ['i18next', 'react-i18next'],
+        },
+      },
+    },
+  },
 }));
