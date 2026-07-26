@@ -77,7 +77,7 @@ const Profile = () => {
     setProfileLoading(true);
     setProfileNotFound(false);
     try {
-      const { data, error } = await supabase.from('profiles').select('*').eq('user_id', userId!).maybeSingle();
+      const { data, error } = await supabase.from('profiles').select('id, user_id, username, display_name, avatar_url, bio, fishing_types, instagram_url, website_url, is_guide, guide_status, created_at').eq('user_id', userId!).maybeSingle();
       if (error) throw error;
       if (!data) {
         setProfileNotFound(true);
@@ -93,7 +93,7 @@ const Profile = () => {
   };
 
   const fetchPosts = async () => {
-    const { data } = await supabase.from('posts').select('*').eq('user_id', userId!).order('created_at', { ascending: false });
+    const { data } = await supabase.from('posts').select('id, user_id, content, image_url, no_kill, created_at, likes_count, comments_count, spot_id, species, technique').eq('user_id', userId!).order('created_at', { ascending: false });
     if (data) setPosts(data);
   };
 

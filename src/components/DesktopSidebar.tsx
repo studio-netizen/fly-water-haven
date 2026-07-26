@@ -23,7 +23,7 @@ const DesktopSidebar = () => {
     enabled: !!user,
     staleTime: 5 * 60_000,
     queryFn: async () => {
-      const { data } = await supabase.from('profiles').select('*').eq('user_id', user!.id).single();
+      const { data } = await supabase.from('profiles').select('id, user_id, username, display_name, avatar_url, fishing_types').eq('user_id', user!.id).single();
       return data;
     },
   });

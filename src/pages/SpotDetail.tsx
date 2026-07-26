@@ -139,7 +139,7 @@ const SpotDetail = () => {
   const fetchSpot = async () => {
     const { data } = await supabase
       .from('spots')
-      .select('*')
+      .select('id, name, description, spot_type, latitude, longitude, fish_species, access_info, photos, avg_rating, review_count, created_by, created_at, hatch_activity')
       .eq('id', spotId!)
       .single();
     if (data) setSpot(data as Spot);
@@ -149,7 +149,7 @@ const SpotDetail = () => {
   const fetchReviews = async () => {
     const { data: reviewsData, error } = await supabase
       .from('reviews')
-      .select('*')
+      .select('id, spot_id, user_id, rating, comment, photo_url, created_at')
       .eq('spot_id', spotId!)
       .order('created_at', { ascending: false });
     
