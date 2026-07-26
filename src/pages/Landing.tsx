@@ -13,10 +13,10 @@ import heroImg from '@/assets/hero-mosca-club.jpg';
 import editorialImg from '@/assets/editorial-wideshot.jpg';
 import craftImg from '@/assets/craft-anglers.jpg';
 import seasonCold from '@/assets/season-winter.jpg';
-import seasonTemperate from '@/assets/season-spring.jpg';
-import seasonWarm from '@/assets/season-summer.jpg';
-import seasonSalt from '@/assets/season-saltwater.jpg';
-import spotTovel from '@/assets/spot-lago-tovel.jpg';
+import seasonTemperate from '@/assets/season-spring.webp';
+import seasonWarm from '@/assets/season-summer.webp';
+import seasonSalt from '@/assets/season-saltwater.webp';
+import spotTovel from '@/assets/spot-lago-tovel.webp';
 import spotNatisone from '@/assets/spot-torrente-natisone.jpg';
 import spotMella from '@/assets/spot-torrente-mella.jpeg';
 import { useTranslation } from 'react-i18next';
@@ -178,7 +178,7 @@ const Landing = () => {
             >
               {user ? (
                 <button
-                  onClick={() => navigate('/map')}
+                  onClick={() => navigate('/mappa')}
                   className="w-full sm:w-auto px-7 py-3.5 rounded-full text-sm font-semibold bg-white text-[#242242] hover:opacity-85 transition-opacity"
                 >
                   {t('landing.ctaExplore')}
@@ -186,7 +186,7 @@ const Landing = () => {
               ) : (
                 <>
                   <button
-                    onClick={() => navigate('/map')}
+                    onClick={() => navigate('/mappa')}
                     className="w-full sm:w-auto px-7 py-3.5 rounded-full text-sm font-semibold bg-white text-[#242242] hover:opacity-85 transition-opacity"
                   >
                     {t('landing.ctaExplore')}
@@ -242,7 +242,7 @@ const Landing = () => {
             <motion.div key={`text-${seasons[activeSeason].key}`} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }} className="md:col-span-2 self-center">
               <h3 className="text-2xl md:text-3xl font-bold font-serif mb-4">{seasons[activeSeason].label}</h3>
               <p className="text-base md:text-lg leading-relaxed text-[#8c8c7a] mb-8">{seasons[activeSeason].desc}</p>
-              <button onClick={() => navigate('/map')} className="text-sm font-semibold tracking-[0.18em] uppercase text-[#2D3A27] hover:opacity-70 transition-opacity inline-flex items-center gap-2 group">
+              <button onClick={() => navigate('/mappa')} className="text-sm font-semibold tracking-[0.18em] uppercase text-[#2D3A27] hover:opacity-70 transition-opacity inline-flex items-center gap-2 group">
                 {t('landing.exploreSpots')}
                 <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </button>
@@ -361,7 +361,7 @@ const Landing = () => {
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {spots.map((s, i) => (
-              <motion.button key={s.name} variants={slow(i * 0.15)} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} onClick={() => navigate('/map')} className="text-left group">
+              <motion.button key={s.name} variants={slow(i * 0.15)} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-60px' }} onClick={() => navigate('/mappa')} className="text-left group">
                 <div className="overflow-hidden mb-4 rounded-card">
                   <img src={s.img} alt={s.name} className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105" style={{ filter: 'saturate(0.8) contrast(1.05)' }} loading="lazy" width={1200} height={800} />
                 </div>
@@ -380,7 +380,7 @@ const Landing = () => {
             {t('landing.ctaTitle')}
           </motion.h2>
           <motion.div variants={slow(0.2)} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <button onClick={() => navigate('/map')} className="inline-flex items-center justify-center px-8 py-3.5 text-xs tracking-[0.2em] uppercase font-semibold border border-[#f5f0e8]/60 text-[#f5f0e8] hover:bg-[#f5f0e8] hover:text-[#242242] transition-colors">
+            <button onClick={() => navigate('/mappa')} className="inline-flex items-center justify-center px-8 py-3.5 text-xs tracking-[0.2em] uppercase font-semibold border border-[#f5f0e8]/60 text-[#f5f0e8] hover:bg-[#f5f0e8] hover:text-[#242242] transition-colors">
               {t('landing.exploreSpots')}
             </button>
           </motion.div>

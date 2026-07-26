@@ -105,7 +105,7 @@ const Messages = () => {
 
   const fetchConversations = async () => {
     if (!user) return;
-    const { data } = await supabase.from('messages').select('*').or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`).order('created_at', { ascending: false });
+    const { data } = await supabase.from('messages').select('id, sender_id, receiver_id, content, created_at, read').or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`).order('created_at', { ascending: false });
     if (!data) { setLoading(false); return; }
     const convMap = new Map<string, { last_message: string; last_time: string; unread: number }>();
     data.forEach(msg => {
@@ -130,7 +130,7 @@ const Messages = () => {
 
   const fetchMessages = async (partnerId: string) => {
     if (!user) return;
-    const { data } = await supabase.from('messages').select('*').or(`and(sender_id.eq.${user.id},receiver_id.eq.${partnerId}),and(sender_id.eq.${partnerId},receiver_id.eq.${user.id})`).order('created_at', { ascending: true });
+    const { data } = await supabase.from('messages').select('id, sender_id, receiver_id, content, created_at, read').or(`and(sender_id.eq.${user.id},receiver_id.eq.${partnerId}),and(sender_id.eq.${partnerId},receiver_id.eq.${user.id})`).order('created_at', { ascending: true });
     if (data) {
       setMessages(data);
       scrollToBottom();

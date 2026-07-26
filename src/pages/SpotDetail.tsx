@@ -139,7 +139,7 @@ const SpotDetail = () => {
   const fetchSpot = async () => {
     const { data } = await supabase
       .from('spots')
-      .select('*')
+      .select('id, name, description, spot_type, latitude, longitude, fish_species, access_info, photos, avg_rating, review_count, created_by, created_at, hatch_activity')
       .eq('id', spotId!)
       .single();
     if (data) setSpot(data as Spot);
@@ -149,7 +149,7 @@ const SpotDetail = () => {
   const fetchReviews = async () => {
     const { data: reviewsData, error } = await supabase
       .from('reviews')
-      .select('*')
+      .select('id, spot_id, user_id, rating, content, photo_url, created_at')
       .eq('spot_id', spotId!)
       .order('created_at', { ascending: false });
     
@@ -242,7 +242,7 @@ const SpotDetail = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ backgroundColor: '#f5f0e8', color: '#242242' }}>
         <p className="text-lg">Spot non trovato</p>
-        <Button variant="outline" onClick={() => navigate('/map')}>Torna alla mappa</Button>
+        <Button variant="outline" onClick={() => navigate('/mappa')}>Torna alla mappa</Button>
       </div>
     );
   }
@@ -261,7 +261,7 @@ const SpotDetail = () => {
 
       <header className="sticky top-0 z-40 border-b border-[#242242]/10 px-4 py-3" style={{ backgroundColor: '#f5f0e8' }}>
         <div className="max-w-3xl mx-auto flex items-center gap-3">
-          <button onClick={() => navigate('/map')} className="hover:opacity-70 transition-opacity">
+          <button onClick={() => navigate('/mappa')} className="hover:opacity-70 transition-opacity">
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div className="flex-1 min-w-0">

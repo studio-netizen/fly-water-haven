@@ -175,16 +175,19 @@ const EntomologySection = () => {
               style={{ backgroundColor: '#fdfaf5' }}
             >
               <div className="flex justify-center mb-3">
-                <img
-                  src={it.img}
-                  alt={it.alt}
-                  width={200}
-                  height={200}
-                  loading="lazy"
-                  decoding="async"
-                  className="insect-illustration mx-auto"
-                  style={{ filter: 'saturate(0.9)' }}
-                />
+                <picture>
+                  <source srcSet={it.img.replace(/\.png$/, '.webp')} type="image/webp" />
+                  <img
+                    src={it.img}
+                    alt={it.alt}
+                    width={200}
+                    height={200}
+                    loading="lazy"
+                    decoding="async"
+                    className="insect-illustration mx-auto"
+                    style={{ filter: 'saturate(0.9)' }}
+                  />
+                </picture>
               </div>
               <h3 className="text-sm md:text-base font-bold font-serif leading-tight text-[#242242]">
                 {t(`landing.entomology.list.${it.key}.name`)}
@@ -206,7 +209,7 @@ const EntomologySection = () => {
         <div className="mt-14 text-center">
           <p className="text-base md:text-lg text-[#8c8c7a] mb-5">{t('landing.entomology.ctaLead')}</p>
           <button
-            onClick={() => navigate('/map')}
+            onClick={() => navigate('/mappa')}
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold bg-[#242242] text-white hover:opacity-85 transition-opacity"
           >
             {t('landing.entomology.ctaButton')}
@@ -300,7 +303,7 @@ const EntomologySection = () => {
 
               <button
                 onClick={() => {
-                  navigate(`/map?hatch=${encodeURIComponent(selected.key)}`);
+                  navigate(`/mappa?hatch=${encodeURIComponent(selected.key)}`);
                   setSelected(null);
                 }}
                 className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold bg-[#242242] text-white hover:opacity-85 transition-opacity"

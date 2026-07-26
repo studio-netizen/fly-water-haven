@@ -225,7 +225,7 @@ const FlyFishingRegion = () => {
         {/* Map link */}
         <section className="max-w-5xl mx-auto px-4 pb-8">
           <button
-            onClick={() => navigate('/map')}
+            onClick={() => navigate('/mappa')}
             className="w-full flex items-center justify-between p-5 border border-[#242242]/10 rounded-2xl hover:border-[#4a7c59]/40 transition-colors group"
           >
             <div className="flex items-center gap-3">
@@ -301,7 +301,7 @@ const FlyFishingRegion = () => {
               <Link to="/blog" className="text-sm px-4 py-2 border border-[#242242]/15 rounded-full hover:border-[#242242]/30 transition-colors">
                 Fly Fishing Blog
               </Link>
-              <Link to="/map" className="text-sm px-4 py-2 border border-[#242242]/15 rounded-full hover:border-[#242242]/30 transition-colors">
+              <Link to="/mappa" className="text-sm px-4 py-2 border border-[#242242]/15 rounded-full hover:border-[#242242]/30 transition-colors">
                 Interactive Map
               </Link>
               <Link to="/contatti" className="text-sm px-4 py-2 border border-[#242242]/15 rounded-full hover:border-[#242242]/30 transition-colors">

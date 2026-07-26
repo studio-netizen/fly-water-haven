@@ -50,7 +50,7 @@ const WelcomeBanner = () => {
 
       <div className="flex items-center gap-2">
         <button
-          onClick={() => navigate('/map')}
+          onClick={() => navigate('/mappa')}
           className="text-xs font-semibold px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
         >
           Esplora la mappa

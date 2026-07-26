@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { AdminAuthProvider, useAdminAuth } from "@/contexts/AdminAuthContext";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import Feed from "./pages/Feed";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
@@ -88,17 +89,19 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Suspense fallback={<LazyFallback />}>
-              <Routes>
-                <Route path="/" element={<Feed />} />
-                <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-                <Route path="/login" element={<Navigate to="/auth" replace />} />
-                <Route path="/register" element={<Navigate to="/auth" replace />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/profile/:userId" element={<Profile />} />
-                <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
-                <Route path="/map" element={<SpotMap />} />
-                <Route path="/spot/:spotId" element={<SpotDetail />} />
+            <ErrorBoundary>
+              <Suspense fallback={<LazyFallback />}>
+                <Routes>
+                  <Route path="/" element={<Feed />} />
+                  <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
+                  <Route path="/login" element={<Navigate to="/auth" replace />} />
+                  <Route path="/register" element={<Navigate to="/auth" replace />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/profile/:userId" element={<Profile />} />
+                  <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+                  <Route path="/mappa" element={<SpotMap />} />
+                  <Route path="/map" element={<Navigate to="/mappa" replace />} />
+                  <Route path="/spot/:spotId" element={<SpotDetail />} />
                 <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
                 <Route path="/messages/:userId" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
                 <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
@@ -129,8 +132,9 @@ const App = () => (
                 <Route path="/cerca" element={<SearchPage />} />
                 <Route path="/invito/:username" element={<Invite />} />
                 <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
+                </Routes>
+              </Suspense>
+            </ErrorBoundary>
             <InstallBanner />
           </BrowserRouter>
         </TooltipProvider>

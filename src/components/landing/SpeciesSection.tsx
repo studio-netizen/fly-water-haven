@@ -206,16 +206,19 @@ const SpeciesSection = () => {
               whileHover={{ y: -4 }}
               className="group relative h-full flex flex-col text-left bg-white rounded-2xl p-5 pr-[130px] pt-10 overflow-visible shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] transition-shadow duration-200"
             >
-              <img
-                src={s.img}
-                alt={s.alt}
-                width={160}
-                height={100}
-                loading="lazy"
-                decoding="async"
-                className="species-illustration absolute pointer-events-none"
-                style={{ top: '-15px', right: '-10px', filter: 'saturate(0.9) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
-              />
+              <picture>
+                <source srcSet={s.img.replace(/\.png$/, '.webp')} type="image/webp" />
+                <img
+                  src={s.img}
+                  alt={s.alt}
+                  width={160}
+                  height={100}
+                  loading="lazy"
+                  decoding="async"
+                  className="species-illustration absolute pointer-events-none"
+                  style={{ top: '-15px', right: '-10px', filter: 'saturate(0.9) drop-shadow(2px 4px 6px rgba(0,0,0,0.1))' }}
+                />
+              </picture>
               <h3 className="text-lg md:text-xl font-bold font-serif leading-tight mb-1 text-[#242242]">
                 {t(`landing.species.list.${s.key}.name`)}
               </h3>
@@ -240,7 +243,7 @@ const SpeciesSection = () => {
         <div className="mt-14 text-center">
           <p className="text-base md:text-lg text-[#8c8c7a] mb-5">{t('landing.species.ctaLead')}</p>
           <button
-            onClick={() => navigate('/map')}
+            onClick={() => navigate('/mappa')}
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold bg-[#242242] text-white hover:opacity-85 transition-opacity"
           >
             {t('landing.species.ctaButton')}
@@ -325,7 +328,7 @@ const SpeciesSection = () => {
 
               <button
                 onClick={() => {
-                  navigate(`/map?species=${encodeURIComponent(selected.key)}`);
+                  navigate(`/mappa?species=${encodeURIComponent(selected.key)}`);
                   setSelected(null);
                 }}
                 className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold bg-[#242242] text-white hover:opacity-85 transition-opacity"

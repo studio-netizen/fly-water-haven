@@ -123,7 +123,7 @@ const LeadMagnet = () => {
                       Controlla la tua casella email. Se non trovi nulla, guarda nello spam.
                     </p>
                     <Button asChild variant="outline">
-                      <a href="/map">Esplora la mappa →</a>
+                      <a href="/mappa">Esplora la mappa →</a>
                     </Button>
                   </div>
                 ) : (
