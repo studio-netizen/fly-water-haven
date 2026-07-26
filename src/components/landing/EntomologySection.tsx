@@ -175,16 +175,19 @@ const EntomologySection = () => {
               style={{ backgroundColor: '#fdfaf5' }}
             >
               <div className="flex justify-center mb-3">
-                <img
-                  src={it.img}
-                  alt={it.alt}
-                  width={200}
-                  height={200}
-                  loading="lazy"
-                  decoding="async"
-                  className="insect-illustration mx-auto"
-                  style={{ filter: 'saturate(0.9)' }}
-                />
+                <picture>
+                  <source srcSet={it.img.replace(/\.png$/, '.webp')} type="image/webp" />
+                  <img
+                    src={it.img}
+                    alt={it.alt}
+                    width={200}
+                    height={200}
+                    loading="lazy"
+                    decoding="async"
+                    className="insect-illustration mx-auto"
+                    style={{ filter: 'saturate(0.9)' }}
+                  />
+                </picture>
               </div>
               <h3 className="text-sm md:text-base font-bold font-serif leading-tight text-[#242242]">
                 {t(`landing.entomology.list.${it.key}.name`)}
