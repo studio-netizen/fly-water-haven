@@ -27,6 +27,8 @@ interface Prediction {
     main_text: string;
     secondary_text: string;
   };
+  // Nominatim fallback carries coords directly to skip a details call
+  _nominatim?: { lat: number; lng: number };
 }
 
 const LocationPicker = ({ value, onChange, showMapPreview = false, placeholder = "Cerca località..." }: LocationPickerProps) => {
@@ -66,18 +68,49 @@ const LocationPicker = ({ value, onChange, showMapPreview = false, placeholder =
     return () => { if (miniMapRef.current) { miniMapRef.current.remove(); miniMapRef.current = null; } };
   }, [value, showMapPreview]);
 
+  const searchNominatim = async (input: string): Promise<Prediction[]> => {
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=6&accept-language=it&q=${encodeURIComponent(input)}`;
+      const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return (Array.isArray(data) ? data : []).map((r: any) => {
+        const parts = (r.display_name || '').split(',').map((s: string) => s.trim());
+        const main = parts[0] || r.display_name;
+        const secondary = parts.slice(1).join(', ');
+        return {
+          place_id: `nom_${r.place_id}`,
+          description: r.display_name,
+          structured_formatting: { main_text: main, secondary_text: secondary },
+          _nominatim: { lat: parseFloat(r.lat), lng: parseFloat(r.lon) },
+        } as Prediction;
+      });
+    } catch {
+      return [];
+    }
+  };
+
   const searchPlaces = async (input: string) => {
     if (input.length < 2) { setPredictions([]); return; }
     setSearching(true);
     try {
-      const { data, error } = await supabase.functions.invoke('google-places', {
-        body: { action: 'autocomplete', input },
-      });
-      if (!error && data?.predictions) {
-        setPredictions(data.predictions);
-        setShowDropdown(true);
+      let results: Prediction[] = [];
+      try {
+        const { data, error } = await supabase.functions.invoke('google-places', {
+          body: { action: 'autocomplete', input },
+        });
+        if (!error && data?.predictions?.length) {
+          results = data.predictions;
+        }
+      } catch {
+        // fall through to Nominatim
       }
-    } catch {} finally { setSearching(false); }
+      if (results.length === 0) {
+        results = await searchNominatim(input);
+      }
+      setPredictions(results);
+      setShowDropdown(true);
+    } finally { setSearching(false); }
   };
 
   const handleInputChange = (val: string) => {
@@ -92,6 +125,18 @@ const LocationPicker = ({ value, onChange, showMapPreview = false, placeholder =
 
   const selectPlace = async (prediction: Prediction) => {
     setShowDropdown(false);
+    // Nominatim results already carry coordinates — no details call needed
+    if (prediction._nominatim) {
+      onChange({
+        name: prediction.structured_formatting.main_text,
+        address: prediction.description,
+        lat: prediction._nominatim.lat,
+        lng: prediction._nominatim.lng,
+      });
+      setQuery('');
+      setPredictions([]);
+      return;
+    }
     setSearching(true);
     try {
       const { data, error } = await supabase.functions.invoke('google-places', {
@@ -106,8 +151,12 @@ const LocationPicker = ({ value, onChange, showMapPreview = false, placeholder =
         });
         setQuery('');
         setPredictions([]);
+      } else {
+        toast.error('Impossibile recuperare i dettagli della località');
       }
-    } catch {} finally { setSearching(false); }
+    } catch {
+      toast.error('Errore nel recupero della località');
+    } finally { setSearching(false); }
   };
 
   const useGPS = () => {
