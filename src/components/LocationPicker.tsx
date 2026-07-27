@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
 import { MapPin, Navigation, X, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -110,7 +111,14 @@ const LocationPicker = ({ value, onChange, showMapPreview = false, placeholder =
   };
 
   const useGPS = () => {
-    if (!navigator.geolocation) return;
+    if (!navigator.geolocation) {
+      toast.error('Geolocalizzazione non supportata dal browser');
+      return;
+    }
+    if (typeof window !== 'undefined' && !window.isSecureContext) {
+      toast.error('La geolocalizzazione richiede una connessione sicura (HTTPS)');
+      return;
+    }
     setGpsLoading(true);
     setShowDropdown(false);
     navigator.geolocation.getCurrentPosition(
@@ -136,6 +144,7 @@ const LocationPicker = ({ value, onChange, showMapPreview = false, placeholder =
               lng: longitude,
             });
           }
+          toast.success('Posizione rilevata');
         } catch {
           onChange({
             name: 'Posizione attuale',
@@ -145,8 +154,19 @@ const LocationPicker = ({ value, onChange, showMapPreview = false, placeholder =
           });
         } finally { setGpsLoading(false); }
       },
-      () => { setGpsLoading(false); },
-      { enableHighAccuracy: true, timeout: 10000 }
+      (err) => {
+        setGpsLoading(false);
+        if (err.code === err.PERMISSION_DENIED) {
+          toast.error('Consenti l\'accesso alla posizione nelle impostazioni del browser per usare questa funzione');
+        } else if (err.code === err.POSITION_UNAVAILABLE) {
+          toast.error('Posizione non disponibile. Verifica GPS o connessione');
+        } else if (err.code === err.TIMEOUT) {
+          toast.error('Tempo scaduto nel rilevare la posizione. Riprova');
+        } else {
+          toast.error('Impossibile ottenere la posizione');
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
   };
 

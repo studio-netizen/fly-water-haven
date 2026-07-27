@@ -71,15 +71,30 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
   };
 
   const handleGeolocation = () => {
-    if (!navigator.geolocation) return;
+    if (!navigator.geolocation) {
+      toast.error('Geolocalizzazione non supportata dal browser');
+      return;
+    }
+    if (typeof window !== 'undefined' && !window.isSecureContext) {
+      toast.error('La geolocalizzazione richiede una connessione sicura (HTTPS)');
+      return;
+    }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         if (mapRef.current) {
           mapRef.current.setView([pos.coords.latitude, pos.coords.longitude], 10, { animate: true });
           L.marker([pos.coords.latitude, pos.coords.longitude]).addTo(mapRef.current);
         }
+        toast.success('Posizione rilevata');
       },
-      () => toast.error('Impossibile ottenere la posizione'),
+      (err) => {
+        if (err.code === err.PERMISSION_DENIED) {
+          toast.error('Consenti l\'accesso alla posizione nelle impostazioni del browser per usare questa funzione');
+        } else {
+          toast.error('Impossibile ottenere la posizione');
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
   };
 
