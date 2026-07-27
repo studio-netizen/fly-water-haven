@@ -13,8 +13,10 @@ import { Badge } from '@/components/ui/badge';
 import GuideAvatar from '@/components/GuideAvatar';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
+import EmptyState from '@/components/EmptyState';
 import WelcomeBanner from '@/components/WelcomeBanner';
 import ZoomableImage from '@/components/ZoomableImage';
+
 import { toast } from 'sonner';
 import { useUnreadMessages } from '@/hooks/useUnreadMessages';
 import { useTranslation } from 'react-i18next';
@@ -319,20 +321,20 @@ const Feed = () => {
             ))}
           </div>
         ) : posts.length === 0 ? (
-          <div className="text-center py-16 px-4">
-            <p className="text-lg font-semibold text-foreground mb-1">
-              {feedMode === 'following' ? t('feed.noFollowingPosts') : t('feed.noCatches')}
-            </p>
-            <p className="text-sm text-muted-foreground mb-6">
-              {feedMode === 'following'
-                ? t('feed.followOthers')
-                : t('feed.beFirst')}
-            </p>
+          <>
+            <EmptyState
+              icon={MapPin}
+              title={feedMode === 'following' ? t('feed.noFollowingPosts') : t('emptyStates.feedTitle')}
+              description={feedMode === 'following' ? t('feed.followOthers') : t('emptyStates.feedDesc')}
+              actionLabel={t('emptyStates.feedCta')}
+              actionTo="/mappa"
+              actionIcon={MapPin}
+            />
 
             {suggestedUsers.length > 0 && (
-              <div className="mt-4">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">{t('feed.suggestedAnglers')}</p>
-                <div className="space-y-3">
+              <div className="mt-2 px-4 pb-6">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium text-center">{t('feed.suggestedAnglers')}</p>
+                <div className="space-y-3 max-w-sm mx-auto">
                   {suggestedUsers.map(su => (
                     <SuggestedUserCard
                       key={su.user_id}
@@ -345,7 +347,8 @@ const Feed = () => {
                 </div>
               </div>
             )}
-          </div>
+          </>
+
         ) : (
           <div className="flex flex-col gap-4 p-4">
             {posts.map((post, idx) => (

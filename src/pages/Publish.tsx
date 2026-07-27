@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -17,10 +18,13 @@ import { FISH_SPECIES, FISHING_TECHNIQUES, FISHING_GEAR, HATCH_ACTIVITIES } from
 import { logAudit } from '@/lib/audit';
 import { uploadToR2 } from '@/lib/r2';
 
+
 const Publish = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const fileRef = useRef<HTMLInputElement>(null);
+
 
   const [caption, setCaption] = useState('');
   const [selectedSpecies, setSelectedSpecies] = useState<string[]>([]);
@@ -31,9 +35,11 @@ const Publish = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [compressing, setCompressing] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [isPublic, setIsPublic] = useState(true);
   const [location, setLocation] = useState<LocationResult | null>(null);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
+
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -53,8 +59,11 @@ const Publish = () => {
   const handleSubmit = async () => {
     if (!user || !imageFile) return;
     setLoading(true);
+    setUploadProgress(0);
     try {
-      const publicUrl = await uploadToR2(imageFile, 'posts');
+      const publicUrl = await uploadToR2(imageFile, 'posts', {
+        onProgress: (pct) => setUploadProgress(pct),
+      });
 
       const { data: inserted, error } = await supabase.from('posts').insert({
         user_id: user.id,
@@ -75,8 +84,10 @@ const Publish = () => {
       toast.error(err.message);
     } finally {
       setLoading(false);
+      setUploadProgress(0);
     }
   };
+
 
   if (!user) {
     return (
@@ -105,15 +116,29 @@ const Publish = () => {
 
       <div className="max-w-lg mx-auto px-4 py-4 space-y-5">
         <div
-          onClick={() => fileRef.current?.click()}
-          className="aspect-[4/5] rounded-xl border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-primary/50 transition-colors overflow-hidden bg-muted"
+          onClick={() => !loading && fileRef.current?.click()}
+          className="relative aspect-[4/5] rounded-xl border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-primary/50 transition-colors overflow-hidden bg-muted"
         >
           {imagePreview ? (
-            <img src={imagePreview} alt="Anteprima" className="w-full h-full object-cover" />
+            <>
+              <img src={imagePreview} alt="Anteprima" className="w-full h-full object-cover" />
+              {loading && (
+                <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white gap-2">
+                  <div className="text-3xl font-bold tabular-nums">{uploadProgress}%</div>
+                  <div className="w-2/3 h-1.5 rounded-full bg-white/20 overflow-hidden">
+                    <div
+                      className="h-full bg-white transition-all duration-200"
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                  </div>
+                  <p className="text-xs opacity-80">{t('upload.uploading')}...</p>
+                </div>
+              )}
+            </>
           ) : compressing ? (
             <div className="text-center">
               <Loader2 className="w-12 h-12 text-muted-foreground mx-auto mb-3 animate-spin" />
-              <p className="text-sm text-muted-foreground font-medium">Caricamento in corso...</p>
+              <p className="text-sm text-muted-foreground font-medium">{t('upload.processing')}</p>
             </div>
           ) : (
             <div className="text-center">
@@ -123,6 +148,7 @@ const Publish = () => {
           )}
         </div>
         <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" onChange={handleFileChange} className="hidden" />
+
 
         <div>
           <Label className="text-sm font-medium">Posizione</Label>

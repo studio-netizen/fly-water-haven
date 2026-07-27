@@ -80,7 +80,9 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
     setSizeInfo(null);
 
     const uploadPromise = (async () => {
-      const publicUrl = await uploadToR2(snapshot.file, 'posts');
+      const publicUrl = await uploadToR2(snapshot.file, 'posts', {
+        onProgress: () => {},
+      });
       const { data: inserted, error } = await supabase.from('posts').insert({
         user_id: user.id,
         image_url: publicUrl,
@@ -101,6 +103,7 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
       error: 'Errore nel caricamento. Riprova.',
     });
   };
+
 
   if (!user) return null;
 
