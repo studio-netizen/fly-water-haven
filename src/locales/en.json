@@ -507,5 +507,39 @@
       "ice-fishing": "🧊 Ice fishing"
     },
     "searchUsers": "Search anglers..."
+  },
+  "emptyStates": {
+    "notificationsTitle": "No notifications yet",
+    "notificationsDesc": "When someone likes, comments, or follows you, you'll see it here.",
+    "notificationsCta": "Explore the map",
+    "feedTitle": "The feed is quiet",
+    "feedDesc": "Be the first to share a catch or report a spot to spark the community.",
+    "feedCta": "Report a spot",
+    "savedTitle": "No saved posts",
+    "savedDesc": "Tap the bookmark on posts that inspire you. You'll find them here.",
+    "savedCta": "Browse the feed",
+    "messagesTitle": "No conversations",
+    "messagesDesc": "Start chatting with other anglers: search a profile and break the ice.",
+    "messagesCta": "Find anglers",
+    "postsOwnTitle": "Share your first catch",
+    "postsOwnDesc": "A photo, the location, and your technique — contribute to the community.",
+    "postsOwnCta": "Create your first post"
+  },
+  "fab": {
+    "open": "Open quick actions",
+    "close": "Close quick actions",
+    "newPost": "New post",
+    "shareSpot": "Share spot",
+    "report": "Report issue"
+  },
+  "upload": {
+    "uploading": "Uploading",
+    "processing": "Optimizing photo..."
+  },
+  "network": {
+    "weakSignal": "Weak signal detected",
+    "retrying": "Retrying...",
+    "offline": "You are offline. Some features may not work.",
+    "backOnline": "Connection restored"
   }
 }

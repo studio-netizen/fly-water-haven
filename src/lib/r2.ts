@@ -21,7 +21,7 @@ interface SignResponse {
 export async function uploadToR2(
   file: File,
   folder: R2Folder,
-  opts: { path?: string; adminToken?: string } = {},
+  opts: { path?: string; adminToken?: string; onProgress?: (pct: number) => void } = {},
 ): Promise<string> {
   const headers: Record<string, string> = {};
   if (opts.adminToken) headers["x-admin-token"] = opts.adminToken;
@@ -39,18 +39,34 @@ export async function uploadToR2(
     throw new Error(error?.message || "Failed to sign R2 upload");
   }
 
-  const putRes = await fetch(data.uploadUrl, {
-    method: "PUT",
-    headers: { "Content-Type": data.contentType },
-    body: file,
+  // XHR-based PUT so we can report upload progress to the caller.
+  await new Promise<void>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", data.uploadUrl);
+    xhr.setRequestHeader("Content-Type", data.contentType);
+    if (opts.onProgress) {
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          opts.onProgress!(Math.min(99, Math.round((e.loaded / e.total) * 100)));
+        }
+      };
+    }
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        opts.onProgress?.(100);
+        resolve();
+      } else {
+        reject(new Error(`R2 upload failed (${xhr.status})`));
+      }
+    };
+    xhr.onerror = () => reject(new Error("R2 upload network error"));
+    xhr.onabort = () => reject(new Error("R2 upload aborted"));
+    xhr.send(file);
   });
-  if (!putRes.ok) {
-    const text = await putRes.text().catch(() => "");
-    throw new Error(`R2 upload failed (${putRes.status}): ${text}`);
-  }
 
   return data.publicUrl;
 }
+
 
 /**
  * Delete a file from R2 by its public URL. Server validates ownership
