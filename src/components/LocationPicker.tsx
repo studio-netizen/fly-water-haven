@@ -27,6 +27,8 @@ interface Prediction {
     main_text: string;
     secondary_text: string;
   };
+  // Nominatim fallback carries coords directly to skip a details call
+  _nominatim?: { lat: number; lng: number };
 }
 
 const LocationPicker = ({ value, onChange, showMapPreview = false, placeholder = "Cerca località..." }: LocationPickerProps) => {
