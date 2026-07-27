@@ -1,5 +1,8 @@
 import { lazy, Suspense } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, QueryCache } from "@tanstack/react-query";
+import { toast } from "sonner";
+import i18n from "@/i18n";
+
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
@@ -44,16 +47,38 @@ const AdminReports = lazy(() => import("./pages/admin/AdminReports"));
 const AdminAuditLog = lazy(() => import("./pages/admin/AdminAuditLog"));
 const AdminSystem = lazy(() => import("./pages/admin/AdminSystem"));
 
+let lastNetworkToast = 0;
 const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (err: any) => {
+      const msg = String(err?.message || err || '');
+      const isNet =
+        !navigator.onLine ||
+        /Failed to fetch|NetworkError|network error|timeout|ECONNRESET|ENOTFOUND/i.test(msg);
+      if (!isNet) return;
+      const now = Date.now();
+      if (now - lastNetworkToast < 10_000) return;
+      lastNetworkToast = now;
+      toast.warning(i18n.t('network.weakSignal'), {
+        description: i18n.t('network.retrying'),
+      });
+    },
+  }),
   defaultOptions: {
     queries: {
       staleTime: 60_000,
       gcTime: 10 * 60_000,
       refetchOnWindowFocus: false,
-      retry: 1,
+      retry: (failureCount, err: any) => {
+        const msg = String(err?.message || err || '');
+        const isNet = /Failed to fetch|NetworkError|timeout/i.test(msg);
+        return isNet && failureCount < 2;
+      },
+      retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 8000),
     },
   },
 });
+
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();

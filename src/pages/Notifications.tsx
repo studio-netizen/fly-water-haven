@@ -7,8 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Heart, MessageCircle, Star, UserPlus, CheckCheck, Shield, X } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
+import EmptyState from '@/components/EmptyState';
 import { useTranslation } from 'react-i18next';
 import { formatTimeIt } from '@/lib/format-time';
+
 
 const ICONS: Record<string, any> = {
   like: Heart,
@@ -145,11 +147,14 @@ const Notifications = () => {
             ))}
           </div>
         ) : notifications.length === 0 ? (
-          <div className="text-center py-20 px-4">
-            <Heart className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-foreground font-semibold">{t('notifications.noNotifications')}</p>
-            <p className="text-sm text-muted-foreground mt-1">{t('notifications.willAppearHere')}</p>
-          </div>
+          <EmptyState
+            icon={Heart}
+            title={t('emptyStates.notificationsTitle')}
+            description={t('emptyStates.notificationsDesc')}
+            actionLabel={t('emptyStates.notificationsCta')}
+            actionTo="/mappa"
+          />
+
         ) : (
           notifications.map(n => {
             const Icon = ICONS[n.type] || Heart;

@@ -26,6 +26,24 @@ createRoot(document.getElementById("root")!).render(
   </ErrorBoundary>
 );
 
+// Connectivity toasts: warn on offline, confirm on reconnect.
+(async () => {
+  const { toast } = await import("sonner");
+  const { default: i18n } = await import("./i18n");
+  let wasOffline = !navigator.onLine;
+  window.addEventListener("offline", () => {
+    wasOffline = true;
+    toast.warning(i18n.t("network.offline"));
+  });
+  window.addEventListener("online", () => {
+    if (wasOffline) {
+      wasOffline = false;
+      toast.success(i18n.t("network.backOnline"));
+    }
+  });
+})();
+
+
 // Register service worker (skip in Lovable preview / iframes / dev)
 if ("serviceWorker" in navigator) {
   const host = window.location.hostname;
