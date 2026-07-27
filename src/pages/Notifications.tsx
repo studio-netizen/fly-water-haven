@@ -32,14 +32,36 @@ const Notifications = () => {
 
   const fetchNotifications = async () => {
     if (!user) return;
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('notifications')
-      .select('*, profiles:actor_id(user_id, username, display_name, avatar_url)')
+      .select('id, user_id, type, actor_id, post_id, spot_id, read, created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(50);
-    if (data) setNotifications(data);
+    if (error) {
+      console.error('[notifications] fetch error', error);
+      setLoading(false);
+      return;
+    }
+    const rows = data || [];
+    const actorIds = Array.from(new Set(rows.map(r => r.actor_id).filter(Boolean))) as string[];
+    let profileMap = new Map<string, any>();
+    if (actorIds.length) {
+      const { data: profs } = await supabase
+        .from('profiles')
+        .select('user_id, username, display_name, avatar_url')
+        .in('user_id', actorIds);
+      (profs || []).forEach(p => profileMap.set(p.user_id, p));
+    }
+    setNotifications(rows.map(r => ({ ...r, profiles: r.actor_id ? profileMap.get(r.actor_id) || null : null })));
     setLoading(false);
+
+    // Mark all as read so the badge clears
+    const unreadIds = rows.filter(r => !r.read).map(r => r.id);
+    if (unreadIds.length) {
+      await supabase.from('notifications').update({ read: true }).in('id', unreadIds);
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    }
   };
 
   const markAllRead = async () => {
