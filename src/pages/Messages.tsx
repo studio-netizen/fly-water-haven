@@ -76,8 +76,14 @@ const Messages = () => {
     if (!selectedUser || !user) return;
     fetchMessages(selectedUser.user_id);
     markAsRead(selectedUser.user_id);
+    setPartnerTyping(false);
+    setHasNewBelow(false);
+    setAtBottom(true);
+
+    // Deterministic channel name so both peers join the same broadcast room.
+    const pair = [user.id, selectedUser.user_id].sort().join('_');
     const channel = supabase
-      .channel(`chat-realtime-${selectedUser.user_id}`)
+      .channel(`chat-${pair}`, { config: { broadcast: { self: false } } })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `sender_id=eq.${selectedUser.user_id}` }, (payload: any) => {
         const msg = payload.new as Message;
         const isRelevant = (msg.sender_id === selectedUser.user_id && msg.receiver_id === user.id) || (msg.sender_id === user.id && msg.receiver_id === selectedUser.user_id);
@@ -87,15 +93,36 @@ const Messages = () => {
             const cleaned = prev.filter(m => m.id);
             return [...cleaned, msg];
           });
-          scrollToBottom();
+          setPartnerTyping(false);
+          if (atBottom) {
+            scrollToBottom();
+          } else {
+            setHasNewBelow(true);
+          }
           if (msg.sender_id === selectedUser.user_id) {
             supabase.from('messages').update({ read: true }).eq('id', msg.id).then();
           }
         }
       })
+      .on('broadcast', { event: 'typing' }, (payload: any) => {
+        if (payload?.payload?.from === selectedUser.user_id) {
+          setPartnerTyping(true);
+          if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+          typingTimeoutRef.current = setTimeout(() => setPartnerTyping(false), 3000);
+        }
+      })
+      .on('broadcast', { event: 'stop-typing' }, (payload: any) => {
+        if (payload?.payload?.from === selectedUser.user_id) setPartnerTyping(false);
+      })
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    typingChannelRef.current = channel;
+    return () => {
+      supabase.removeChannel(channel);
+      typingChannelRef.current = null;
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    };
   }, [selectedUser, user]);
+
 
   const markAsRead = async (partnerId: string) => {
     if (!user) return;
