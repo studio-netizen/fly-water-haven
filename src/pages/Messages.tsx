@@ -383,7 +383,7 @@ const Messages = () => {
           <div className="flex items-center gap-2">
             <Input
               value={newMessage}
-              onChange={e => setNewMessage(e.target.value)}
+              onChange={e => handleInputChange(e.target.value)}
               placeholder={t('messages.typeMessage')}
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
               className="rounded-full flex-1"
