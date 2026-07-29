@@ -290,13 +290,20 @@ const Messages = () => {
             </Avatar>
             <div className="min-w-0">
               <span className="font-semibold text-foreground text-sm block truncate">{selectedUser.display_name || selectedUser.username}</span>
-              {selectedUser.username && <span className="text-xs text-muted-foreground block truncate">@{selectedUser.username}</span>}
+              {partnerTyping
+                ? <span className="text-xs text-[hsl(var(--forest-accent))] block truncate">{t('messages.typing')}</span>
+                : selectedUser.username && <span className="text-xs text-muted-foreground block truncate">@{selectedUser.username}</span>
+              }
             </div>
           </button>
         </header>
 
         {/* Messages area */}
-        <div className="flex-1 overflow-y-auto px-4 py-4">
+        <div
+          ref={messagesContainerRef}
+          onScroll={handleMessagesScroll}
+          className="flex-1 overflow-y-auto px-4 py-4 relative"
+        >
           {messages.map((msg, i) => {
             const isMine = msg.sender_id === user.id;
             const showTs = shouldShowTimestamp(messages, i);
@@ -335,8 +342,41 @@ const Messages = () => {
               </div>
             );
           })}
+
+          {partnerTyping && (
+            <div className="flex items-end gap-2 mb-1.5 justify-start">
+              <Avatar className="h-7 w-7 shrink-0 mb-0.5">
+                <AvatarImage src={selectedUser.avatar_url || ''} />
+                <AvatarFallback className="bg-muted text-muted-foreground text-[10px]">
+                  {(selectedUser.display_name || 'U')[0].toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div
+                className="bg-[#f0f0eb] text-foreground px-3.5 py-2.5 flex items-center gap-1"
+                style={{ borderRadius: '18px 18px 18px 4px' }}
+                aria-label={t('messages.typing')}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            </div>
+          )}
+
           <div ref={messagesEndRef} />
         </div>
+
+        {/* Jump-to-bottom pill */}
+        {!atBottom && hasNewBelow && (
+          <button
+            onClick={scrollToBottom}
+            className="absolute left-1/2 -translate-x-1/2 bottom-24 bg-[#242242] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 z-10"
+          >
+            <ChevronDown className="w-3.5 h-3.5" />
+            {t('messages.newMessages')}
+          </button>
+        )}
+
 
         {/* Input bar */}
         <div className="border-t border-border px-4 py-3 bg-background" style={{ paddingBottom: 'max(12px, env(safe-area-inset-bottom))' }}>
