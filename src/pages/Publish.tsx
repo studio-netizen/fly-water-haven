@@ -114,7 +114,7 @@ const Publish = () => {
         </div>
       </header>
 
-      <div className="max-w-lg mx-auto px-4 py-4 space-y-5">
+      <div className="max-w-lg mx-auto px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] space-y-5">
         <div
           onClick={() => !loading && fileRef.current?.click()}
           className="relative aspect-[4/5] rounded-xl border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-primary/50 transition-colors overflow-hidden bg-muted"
