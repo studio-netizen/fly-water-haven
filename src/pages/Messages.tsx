@@ -5,11 +5,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Send, ArrowLeft, PenSquare, Search, Users } from 'lucide-react';
+import { Send, ArrowLeft, PenSquare, Search, Users, ChevronDown } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from 'react-i18next';
+import { hapticLight } from '@/lib/haptic';
 
 interface Conversation {
   user_id: string;
