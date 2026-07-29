@@ -276,6 +276,32 @@ const Feed = () => {
       <SEOHead title={`Feed | Flywaters`} description={t('seo.defaultDescription')} />
       <WelcomeBanner />
 
+      {/* Pull-to-refresh indicator */}
+      <div
+        aria-hidden
+        className="ptr-indicator"
+        style={{
+          height: Math.max(0, ptr.pull),
+          opacity: ptr.pull > 4 ? 1 : 0,
+        }}
+      >
+        <div
+          className={`w-6 h-6 rounded-full border-2 border-[#242242] border-t-transparent ${ptr.refreshing ? 'animate-spin' : ''}`}
+          style={{
+            transform: ptr.refreshing ? 'none' : `rotate(${ptr.progress * 360}deg)`,
+            transition: 'transform 80ms linear',
+          }}
+        />
+      </div>
+      <div
+        ref={ptr.ref}
+        style={{
+          transform: `translateY(${ptr.pull}px)`,
+          transition: ptr.refreshing || ptr.pull === 0 ? 'transform 220ms ease' : 'none',
+        }}
+      >
+
+
       {/* Mobile header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
