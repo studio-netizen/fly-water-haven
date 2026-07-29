@@ -472,6 +472,7 @@ const Feed = () => {
                       backgroundPosition: 'center',
                     }}
                     onSingleTap={() => navigate(`/post/${post.id}`)}
+                    onDoubleTap={() => toggleLike(post.id, { forceLike: true })}
                   />
                 </div>
 
