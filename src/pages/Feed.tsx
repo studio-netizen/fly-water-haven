@@ -583,9 +583,11 @@ const Feed = () => {
           </div>
         )}
       </div>
+      </div>
     </AppLayout>
   );
 };
+
 
 const SuggestedUserCard = ({
   user: su,
