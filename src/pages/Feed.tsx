@@ -189,9 +189,15 @@ const Feed = () => {
     setSuggestedUsers(suggestions.slice(0, 5));
   };
 
-  const toggleLike = async (postId: string) => {
+  const toggleLike = async (postId: string, opts?: { forceLike?: boolean }) => {
     if (!user) return;
     const isLiked = likedPosts.has(postId);
+    // If forceLike, only act when currently not liked (double-tap should never unlike).
+    if (opts?.forceLike && isLiked) {
+      hapticLight();
+      return;
+    }
+    hapticLight();
 
     // Optimistic update
     setLikedPosts(prev => {
