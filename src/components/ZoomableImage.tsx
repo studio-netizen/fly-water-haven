@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
+import { Heart } from 'lucide-react';
 
 interface ZoomableImageProps {
   src: string;
@@ -11,6 +12,8 @@ interface ZoomableImageProps {
   fetchPriority?: 'high' | 'auto';
   decoding?: 'async' | 'auto' | 'sync';
   onSingleTap?: () => void;
+  /** When provided, double-tap fires this instead of zooming (Instagram-style like). */
+  onDoubleTap?: () => void;
   disableZoom?: boolean;
 }
 
@@ -25,32 +28,40 @@ const ZoomableImage = ({
   fetchPriority,
   decoding,
   onSingleTap,
+  onDoubleTap,
   disableZoom = false,
 }: ZoomableImageProps) => {
   const [zoomed, setZoomed] = useState(false);
+  const [burst, setBurst] = useState(0);
   const lastTapRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const triggerBurst = () => setBurst(b => b + 1);
+
   const handleTap = useCallback(() => {
-    if (disableZoom) {
+    const useDoubleTapLike = !!onDoubleTap;
+
+    if (disableZoom && !useDoubleTapLike) {
       onSingleTap?.();
       return;
     }
 
     const now = Date.now();
 
-    // Cancel pending single-tap navigation
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
 
     if (now - lastTapRef.current < 300) {
-      // Double-tap → toggle zoom, cancel navigation
       lastTapRef.current = 0;
-      setZoomed(z => !z);
+      if (useDoubleTapLike) {
+        onDoubleTap!();
+        triggerBurst();
+      } else {
+        setZoomed(z => !z);
+      }
     } else {
-      // Single tap — queue navigation after delay so double-tap can cancel it
       lastTapRef.current = now;
       if (onSingleTap) {
         timerRef.current = setTimeout(() => {
@@ -60,11 +71,11 @@ const ZoomableImage = ({
         }, 320);
       }
     }
-  }, [disableZoom, onSingleTap]);
+  }, [disableZoom, onSingleTap, onDoubleTap]);
 
   return (
     <div
-      className={`overflow-hidden ${className}`}
+      className={`overflow-hidden relative ${className}`}
       onClick={handleTap}
       style={{ touchAction: 'pan-y' }}
     >
@@ -85,6 +96,12 @@ const ZoomableImage = ({
           transformOrigin: 'center center',
         }}
       />
+      {burst > 0 && (
+        <Heart
+          key={burst}
+          className="pointer-events-none absolute inset-0 m-auto w-24 h-24 fill-white text-white heart-burst drop-shadow-lg"
+        />
+      )}
     </div>
   );
 };
