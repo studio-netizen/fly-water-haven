@@ -176,10 +176,29 @@ const Messages = () => {
     if (!user || !selectedUser || !newMessage.trim()) return;
     const content = newMessage.trim();
     setNewMessage('');
+    hapticLight();
+    // Notify peer to stop the typing indicator immediately.
+    typingChannelRef.current?.send({ type: 'broadcast', event: 'stop-typing', payload: { from: user.id } });
+    lastTypingSentRef.current = 0;
     const optimistic: Message = { sender_id: user.id, receiver_id: selectedUser.user_id, content, created_at: new Date().toISOString(), read: false };
     setMessages(prev => [...prev, optimistic]);
     scrollToBottom();
     await supabase.from('messages').insert({ sender_id: user.id, receiver_id: selectedUser.user_id, content });
+  };
+
+  const handleInputChange = (value: string) => {
+    setNewMessage(value);
+    if (!user || !typingChannelRef.current) return;
+    const now = Date.now();
+    // Throttle typing broadcasts to at most one every 1.5s
+    if (value.length > 0 && now - lastTypingSentRef.current > 1500) {
+      lastTypingSentRef.current = now;
+      typingChannelRef.current.send({ type: 'broadcast', event: 'typing', payload: { from: user.id } });
+    }
+    if (value.length === 0) {
+      typingChannelRef.current.send({ type: 'broadcast', event: 'stop-typing', payload: { from: user.id } });
+      lastTypingSentRef.current = 0;
+    }
   };
 
   const searchUsers = async (query: string) => {
@@ -196,7 +215,21 @@ const Messages = () => {
     setSelectedUser({ user_id: profile.user_id, username: profile.username, display_name: profile.display_name, avatar_url: profile.avatar_url, last_message: '', last_time: new Date().toISOString(), unread: 0 });
   };
 
-  const scrollToBottom = () => { setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100); };
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      setHasNewBelow(false);
+    }, 100);
+  };
+
+  const handleMessagesScroll = () => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+    setAtBottom(nearBottom);
+    if (nearBottom) setHasNewBelow(false);
+  };
+
 
   const formatTime = (date: string) => {
     const d = new Date(date);
