@@ -252,20 +252,7 @@ const Feed = () => {
     }
   };
 
-  const handleRefresh = useCallback(async () => {
-    hapticSuccess();
-    setPosts([]);
-    setHasMore(true);
-    await Promise.all([
-      fetchPosts(0, true),
-      fetchFollowedUsers(),
-      fetchSuggestedUsers(),
-      fetchLikedPosts(),
-    ]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [feedMode, followedUsers, user]);
 
-  const ptr = usePullToRefresh<HTMLDivElement>({ onRefresh: handleRefresh });
 
   const handleShare = async (post: Post) => {
     const url = `https://flywaters.app/post/${post.id}`;
