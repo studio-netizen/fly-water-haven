@@ -23,6 +23,8 @@ import { useTranslation } from 'react-i18next';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import { getOptimizedImageUrl, getImageSrcSet } from '@/lib/image-url';
 import { formatTimeIt } from '@/lib/format-time';
+import { usePullToRefresh } from '@/hooks/usePullToRefresh';
+import { hapticLight, hapticSuccess } from '@/lib/haptic';
 
 interface Post {
   id: string;
@@ -134,6 +136,19 @@ const Feed = () => {
     return () => obs.disconnect();
   }, [loadMore]);
 
+  const handleRefresh = useCallback(async () => {
+    if (!user) return;
+    hapticSuccess();
+    setPosts([]);
+    setHasMore(true);
+    await fetchPosts(0, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [feedMode, followedUsers, user]);
+
+  const ptr = usePullToRefresh<HTMLDivElement>({ onRefresh: handleRefresh, disabled: !user });
+
+
+
   if (authLoading) return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
@@ -187,9 +202,15 @@ const Feed = () => {
     setSuggestedUsers(suggestions.slice(0, 5));
   };
 
-  const toggleLike = async (postId: string) => {
+  const toggleLike = async (postId: string, opts?: { forceLike?: boolean }) => {
     if (!user) return;
     const isLiked = likedPosts.has(postId);
+    // If forceLike, only act when currently not liked (double-tap should never unlike).
+    if (opts?.forceLike && isLiked) {
+      hapticLight();
+      return;
+    }
+    hapticLight();
 
     // Optimistic update
     setLikedPosts(prev => {
@@ -221,6 +242,7 @@ const Feed = () => {
 
   const toggleFollow = async (targetId: string) => {
     if (!user) return;
+    hapticLight();
     if (followedUsers.has(targetId)) {
       await supabase.from('follows').delete().eq('follower_id', user.id).eq('following_id', targetId);
       setFollowedUsers(prev => { const n = new Set(prev); n.delete(targetId); return n; });
@@ -229,6 +251,8 @@ const Feed = () => {
       setFollowedUsers(prev => new Set(prev).add(targetId));
     }
   };
+
+
 
   const handleShare = async (post: Post) => {
     const url = `https://flywaters.app/post/${post.id}`;
@@ -251,6 +275,32 @@ const Feed = () => {
     <AppLayout>
       <SEOHead title={`Feed | Flywaters`} description={t('seo.defaultDescription')} />
       <WelcomeBanner />
+
+      {/* Pull-to-refresh indicator */}
+      <div
+        aria-hidden
+        className="ptr-indicator"
+        style={{
+          height: Math.max(0, ptr.pull),
+          opacity: ptr.pull > 4 ? 1 : 0,
+        }}
+      >
+        <div
+          className={`w-6 h-6 rounded-full border-2 border-[#242242] border-t-transparent ${ptr.refreshing ? 'animate-spin' : ''}`}
+          style={{
+            transform: ptr.refreshing ? 'none' : `rotate(${ptr.progress * 360}deg)`,
+            transition: 'transform 80ms linear',
+          }}
+        />
+      </div>
+      <div
+        ref={ptr.ref}
+        style={{
+          transform: `translateY(${ptr.pull}px)`,
+          transition: ptr.refreshing || ptr.pull === 0 ? 'transform 220ms ease' : 'none',
+        }}
+      >
+
 
       {/* Mobile header */}
       <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
@@ -422,6 +472,7 @@ const Feed = () => {
                       backgroundPosition: 'center',
                     }}
                     onSingleTap={() => navigate(`/post/${post.id}`)}
+                    onDoubleTap={() => toggleLike(post.id, { forceLike: true })}
                   />
                 </div>
 
@@ -533,9 +584,11 @@ const Feed = () => {
           </div>
         )}
       </div>
+      </div>
     </AppLayout>
   );
 };
+
 
 const SuggestedUserCard = ({
   user: su,

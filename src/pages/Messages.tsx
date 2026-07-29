@@ -5,11 +5,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Send, ArrowLeft, PenSquare, Search, Users } from 'lucide-react';
+import { Send, ArrowLeft, PenSquare, Search, Users, ChevronDown } from 'lucide-react';
 import AppLayout from '@/components/AppLayout';
 import SEOHead from '@/components/SEOHead';
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from 'react-i18next';
+import { hapticLight } from '@/lib/haptic';
 
 interface Conversation {
   user_id: string;
@@ -44,6 +45,13 @@ const Messages = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const typingChannelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastTypingSentRef = useRef(0);
+  const [partnerTyping, setPartnerTyping] = useState(false);
+  const [atBottom, setAtBottom] = useState(true);
+  const [hasNewBelow, setHasNewBelow] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -68,8 +76,14 @@ const Messages = () => {
     if (!selectedUser || !user) return;
     fetchMessages(selectedUser.user_id);
     markAsRead(selectedUser.user_id);
+    setPartnerTyping(false);
+    setHasNewBelow(false);
+    setAtBottom(true);
+
+    // Deterministic channel name so both peers join the same broadcast room.
+    const pair = [user.id, selectedUser.user_id].sort().join('_');
     const channel = supabase
-      .channel(`chat-realtime-${selectedUser.user_id}`)
+      .channel(`chat-${pair}`, { config: { broadcast: { self: false } } })
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `sender_id=eq.${selectedUser.user_id}` }, (payload: any) => {
         const msg = payload.new as Message;
         const isRelevant = (msg.sender_id === selectedUser.user_id && msg.receiver_id === user.id) || (msg.sender_id === user.id && msg.receiver_id === selectedUser.user_id);
@@ -79,15 +93,36 @@ const Messages = () => {
             const cleaned = prev.filter(m => m.id);
             return [...cleaned, msg];
           });
-          scrollToBottom();
+          setPartnerTyping(false);
+          if (atBottom) {
+            scrollToBottom();
+          } else {
+            setHasNewBelow(true);
+          }
           if (msg.sender_id === selectedUser.user_id) {
             supabase.from('messages').update({ read: true }).eq('id', msg.id).then();
           }
         }
       })
+      .on('broadcast', { event: 'typing' }, (payload: any) => {
+        if (payload?.payload?.from === selectedUser.user_id) {
+          setPartnerTyping(true);
+          if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+          typingTimeoutRef.current = setTimeout(() => setPartnerTyping(false), 3000);
+        }
+      })
+      .on('broadcast', { event: 'stop-typing' }, (payload: any) => {
+        if (payload?.payload?.from === selectedUser.user_id) setPartnerTyping(false);
+      })
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    typingChannelRef.current = channel;
+    return () => {
+      supabase.removeChannel(channel);
+      typingChannelRef.current = null;
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    };
   }, [selectedUser, user]);
+
 
   const markAsRead = async (partnerId: string) => {
     if (!user) return;
@@ -141,10 +176,29 @@ const Messages = () => {
     if (!user || !selectedUser || !newMessage.trim()) return;
     const content = newMessage.trim();
     setNewMessage('');
+    hapticLight();
+    // Notify peer to stop the typing indicator immediately.
+    typingChannelRef.current?.send({ type: 'broadcast', event: 'stop-typing', payload: { from: user.id } });
+    lastTypingSentRef.current = 0;
     const optimistic: Message = { sender_id: user.id, receiver_id: selectedUser.user_id, content, created_at: new Date().toISOString(), read: false };
     setMessages(prev => [...prev, optimistic]);
     scrollToBottom();
     await supabase.from('messages').insert({ sender_id: user.id, receiver_id: selectedUser.user_id, content });
+  };
+
+  const handleInputChange = (value: string) => {
+    setNewMessage(value);
+    if (!user || !typingChannelRef.current) return;
+    const now = Date.now();
+    // Throttle typing broadcasts to at most one every 1.5s
+    if (value.length > 0 && now - lastTypingSentRef.current > 1500) {
+      lastTypingSentRef.current = now;
+      typingChannelRef.current.send({ type: 'broadcast', event: 'typing', payload: { from: user.id } });
+    }
+    if (value.length === 0) {
+      typingChannelRef.current.send({ type: 'broadcast', event: 'stop-typing', payload: { from: user.id } });
+      lastTypingSentRef.current = 0;
+    }
   };
 
   const searchUsers = async (query: string) => {
@@ -161,7 +215,21 @@ const Messages = () => {
     setSelectedUser({ user_id: profile.user_id, username: profile.username, display_name: profile.display_name, avatar_url: profile.avatar_url, last_message: '', last_time: new Date().toISOString(), unread: 0 });
   };
 
-  const scrollToBottom = () => { setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100); };
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      setHasNewBelow(false);
+    }, 100);
+  };
+
+  const handleMessagesScroll = () => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+    setAtBottom(nearBottom);
+    if (nearBottom) setHasNewBelow(false);
+  };
+
 
   const formatTime = (date: string) => {
     const d = new Date(date);
@@ -222,13 +290,20 @@ const Messages = () => {
             </Avatar>
             <div className="min-w-0">
               <span className="font-semibold text-foreground text-sm block truncate">{selectedUser.display_name || selectedUser.username}</span>
-              {selectedUser.username && <span className="text-xs text-muted-foreground block truncate">@{selectedUser.username}</span>}
+              {partnerTyping
+                ? <span className="text-xs text-[hsl(var(--forest-accent))] block truncate">{t('messages.typing')}</span>
+                : selectedUser.username && <span className="text-xs text-muted-foreground block truncate">@{selectedUser.username}</span>
+              }
             </div>
           </button>
         </header>
 
         {/* Messages area */}
-        <div className="flex-1 overflow-y-auto px-4 py-4">
+        <div
+          ref={messagesContainerRef}
+          onScroll={handleMessagesScroll}
+          className="flex-1 overflow-y-auto px-4 py-4 relative"
+        >
           {messages.map((msg, i) => {
             const isMine = msg.sender_id === user.id;
             const showTs = shouldShowTimestamp(messages, i);
@@ -267,15 +342,48 @@ const Messages = () => {
               </div>
             );
           })}
+
+          {partnerTyping && (
+            <div className="flex items-end gap-2 mb-1.5 justify-start">
+              <Avatar className="h-7 w-7 shrink-0 mb-0.5">
+                <AvatarImage src={selectedUser.avatar_url || ''} />
+                <AvatarFallback className="bg-muted text-muted-foreground text-[10px]">
+                  {(selectedUser.display_name || 'U')[0].toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div
+                className="bg-[#f0f0eb] text-foreground px-3.5 py-2.5 flex items-center gap-1"
+                style={{ borderRadius: '18px 18px 18px 4px' }}
+                aria-label={t('messages.typing')}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            </div>
+          )}
+
           <div ref={messagesEndRef} />
         </div>
+
+        {/* Jump-to-bottom pill */}
+        {!atBottom && hasNewBelow && (
+          <button
+            onClick={scrollToBottom}
+            className="absolute left-1/2 -translate-x-1/2 bottom-24 bg-[#242242] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 z-10"
+          >
+            <ChevronDown className="w-3.5 h-3.5" />
+            {t('messages.newMessages')}
+          </button>
+        )}
+
 
         {/* Input bar */}
         <div className="border-t border-border px-4 py-3 bg-background" style={{ paddingBottom: 'max(12px, env(safe-area-inset-bottom))' }}>
           <div className="flex items-center gap-2">
             <Input
               value={newMessage}
-              onChange={e => setNewMessage(e.target.value)}
+              onChange={e => handleInputChange(e.target.value)}
               placeholder={t('messages.typeMessage')}
               onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
               className="rounded-full flex-1"

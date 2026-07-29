@@ -266,7 +266,9 @@
     "seen": "Visto",
     "sent": "Inviato",
     "now": "ora",
-    "yesterday": "ieri"
+    "yesterday": "ieri",
+    "typing": "sta scrivendo…",
+    "newMessages": "Nuovi messaggi"
   },
   "notifications": {
     "title": "Notifiche",

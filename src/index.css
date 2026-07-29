@@ -260,3 +260,27 @@
   }
 }
 
+
+/* Instagram-style heart burst on double-tap */
+@keyframes heart-burst {
+  0%   { opacity: 0; transform: scale(0.4); }
+  30%  { opacity: 0.95; transform: scale(1.15); }
+  60%  { opacity: 0.95; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+.heart-burst {
+  animation: heart-burst 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Pull-to-refresh indicator */
+.ptr-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}

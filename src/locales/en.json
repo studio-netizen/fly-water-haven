@@ -266,7 +266,9 @@
     "seen": "Seen",
     "sent": "Sent",
     "now": "now",
-    "yesterday": "yesterday"
+    "yesterday": "yesterday",
+    "typing": "typing…",
+    "newMessages": "New messages"
   },
   "notifications": {
     "title": "Notifications",
