@@ -103,18 +103,15 @@ const Publish = () => {
     <AppLayout>
       <SEOHead title="Nuovo post | Flywaters" description="Pubblica una nuova cattura o uno spot su Flywaters." />
       <header className="sticky top-0 z-40 safe-top bg-background border-b border-border px-4 py-4">
-        <div className="max-w-lg mx-auto flex items-center justify-between">
+        <div className="max-w-lg mx-auto flex items-center gap-3">
           <button onClick={() => navigate(-1)} className="text-foreground p-2 -ml-2 rounded-full active:bg-muted transition-colors" aria-label="Indietro">
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="text-base font-semibold text-foreground">Nuovo post</h1>
-          <Button size="default" onClick={handleSubmit} disabled={loading || !imageFile} className="text-sm min-h-11 px-5 rounded-full">
-            {loading ? 'Pubblica...' : 'Pubblica'}
-          </Button>
         </div>
       </header>
 
-      <div className="max-w-lg mx-auto px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] space-y-5">
+      <div className="max-w-lg mx-auto px-4 py-4 pb-[calc(6rem+env(safe-area-inset-bottom))] space-y-5">
         <div
           onClick={() => !loading && fileRef.current?.click()}
           className="relative aspect-[4/5] rounded-xl border-2 border-dashed border-border flex items-center justify-center cursor-pointer hover:border-primary/50 transition-colors overflow-hidden bg-muted"
@@ -198,8 +195,23 @@ const Publish = () => {
           <Switch checked={isPublic} onCheckedChange={setIsPublic} />
         </div>
       </div>
+
+      {/* Sticky bottom publish bar */}
+      <div className="fixed bottom-0 inset-x-0 z-40 bg-background/95 backdrop-blur-md border-t border-border px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+        <div className="max-w-lg mx-auto">
+          <Button
+            size="lg"
+            onClick={() => { if ('vibrate' in navigator) navigator.vibrate?.(10); handleSubmit(); }}
+            disabled={loading || !imageFile}
+            className="w-full min-h-12 rounded-full text-base font-semibold"
+          >
+            {loading ? `${t('upload.uploading')}... ${uploadProgress}%` : 'Pubblica'}
+          </Button>
+        </div>
+      </div>
     </AppLayout>
   );
 };
 
 export default Publish;
+
