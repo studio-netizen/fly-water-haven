@@ -136,6 +136,19 @@ const Feed = () => {
     return () => obs.disconnect();
   }, [loadMore]);
 
+  const handleRefresh = useCallback(async () => {
+    if (!user) return;
+    hapticSuccess();
+    setPosts([]);
+    setHasMore(true);
+    await fetchPosts(0, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [feedMode, followedUsers, user]);
+
+  const ptr = usePullToRefresh<HTMLDivElement>({ onRefresh: handleRefresh, disabled: !user });
+
+
+
   if (authLoading) return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
