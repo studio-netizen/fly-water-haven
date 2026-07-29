@@ -23,6 +23,8 @@ import { useTranslation } from 'react-i18next';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import { getOptimizedImageUrl, getImageSrcSet } from '@/lib/image-url';
 import { formatTimeIt } from '@/lib/format-time';
+import { usePullToRefresh } from '@/hooks/usePullToRefresh';
+import { hapticLight, hapticSuccess } from '@/lib/haptic';
 
 interface Post {
   id: string;
