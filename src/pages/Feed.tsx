@@ -229,6 +229,7 @@ const Feed = () => {
 
   const toggleFollow = async (targetId: string) => {
     if (!user) return;
+    hapticLight();
     if (followedUsers.has(targetId)) {
       await supabase.from('follows').delete().eq('follower_id', user.id).eq('following_id', targetId);
       setFollowedUsers(prev => { const n = new Set(prev); n.delete(targetId); return n; });
@@ -237,6 +238,21 @@ const Feed = () => {
       setFollowedUsers(prev => new Set(prev).add(targetId));
     }
   };
+
+  const handleRefresh = useCallback(async () => {
+    hapticSuccess();
+    setPosts([]);
+    setHasMore(true);
+    await Promise.all([
+      fetchPosts(0, true),
+      fetchFollowedUsers(),
+      fetchSuggestedUsers(),
+      fetchLikedPosts(),
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [feedMode, followedUsers, user]);
+
+  const ptr = usePullToRefresh<HTMLDivElement>({ onRefresh: handleRefresh });
 
   const handleShare = async (post: Post) => {
     const url = `https://flywaters.app/post/${post.id}`;
