@@ -102,13 +102,13 @@ const Publish = () => {
   return (
     <AppLayout>
       <SEOHead title="Nuovo post | Flywaters" description="Pubblica una nuova cattura o uno spot su Flywaters." />
-      <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3">
+      <header className="sticky top-0 z-40 safe-top bg-background border-b border-border px-4 py-4">
         <div className="max-w-lg mx-auto flex items-center justify-between">
-          <button onClick={() => navigate(-1)} className="text-foreground">
+          <button onClick={() => navigate(-1)} className="text-foreground p-2 -ml-2 rounded-full active:bg-muted transition-colors" aria-label="Indietro">
             <ArrowLeft className="w-5 h-5" />
           </button>
           <h1 className="text-base font-semibold text-foreground">Nuovo post</h1>
-          <Button size="sm" onClick={handleSubmit} disabled={loading || !imageFile} className="text-sm">
+          <Button size="default" onClick={handleSubmit} disabled={loading || !imageFile} className="text-sm min-h-11 px-5 rounded-full">
             {loading ? 'Pubblica...' : 'Pubblica'}
           </Button>
         </div>
