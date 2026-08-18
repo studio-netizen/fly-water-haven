@@ -92,10 +92,25 @@ Deno.serve(async (req) => {
     const contentType = String(body.contentType || "application/octet-stream");
     const filename = body.filename ? sanitizeName(String(body.filename)) : "file";
     const upsertPath = body.path ? String(body.path) : null;
+    const size = Number.isFinite(Number(body.size)) ? Number(body.size) : null;
 
     if (!ALLOWED_FOLDERS.has(folder)) {
       return new Response(JSON.stringify({ error: "Invalid folder" }), {
         status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (!ALLOWED_CONTENT_TYPES.has(contentType.toLowerCase())) {
+      return new Response(JSON.stringify({ error: "Unsupported file type" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (size !== null && (size <= 0 || size > MAX_UPLOAD_BYTES)) {
+      return new Response(JSON.stringify({ error: "File too large" }), {
+        status: 413,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
