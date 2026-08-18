@@ -10,6 +10,19 @@ const corsHeaders = {
 
 const ALLOWED_FOLDERS = new Set(["posts", "avatars", "spots", "blog", "reports", "reviews"]);
 
+// Only image uploads are ever expected from the app.
+const ALLOWED_CONTENT_TYPES = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+]);
+
+// Hard cap for signed uploads (bytes). Client compresses well below this.
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+
 async function verifyAdminToken(token: string, secret: string): Promise<boolean> {
   try {
     const [payloadB64, sigB64] = token.split(".");
