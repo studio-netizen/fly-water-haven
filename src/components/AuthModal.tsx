@@ -70,11 +70,7 @@ const AuthModal = ({ open, onOpenChange, defaultMode = 'login' }: AuthModalProps
         });
         if (error) throw error;
         if (requestGuideBadge && data.user) {
-          supabase
-            .from('profiles')
-            .update({ guide_status: 'requested' })
-            .eq('user_id', data.user.id)
-            .then(() => {});
+          supabase.rpc('request_guide_badge').then(() => {});
         }
         toast.success('Controlla la tua email per confermare l\'account!');
       }
