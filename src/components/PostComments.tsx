@@ -105,10 +105,7 @@ const PostComments = ({ postId, commentCount, onCommentAdded }: PostCommentsProp
       toast.error('Errore nell\'invio del commento');
     } else {
       setComments(prev => prev.map(c => c.id === tempId ? { ...inserted, profiles: ownProfile || null } : c));
-      await supabase
-        .from('posts')
-        .update({ comment_count: commentCount + 1 })
-        .eq('id', postId);
+      // comment_count is maintained by a database trigger — no manual update needed
       onCommentAdded();
     }
     setLoading(false);
