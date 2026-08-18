@@ -176,10 +176,13 @@ Deno.serve(async (req) => {
     const baseUrl = `${endpoint.replace(/\/$/, "")}/${bucket}/${key}`;
     const url = new URL(baseUrl);
     url.searchParams.set("X-Amz-Expires", "300");
+    const signHeaders: Record<string, string> = { "content-type": contentType };
+    // Binding the exact byte length into the signature prevents oversized uploads.
+    if (size !== null) signHeaders["content-length"] = String(size);
     const signed = await aws.sign(
       new Request(url.toString(), {
         method: "PUT",
-        headers: { "content-type": contentType },
+        headers: signHeaders,
       }),
       { aws: { signQuery: true } },
     );
