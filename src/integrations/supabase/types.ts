@@ -721,6 +721,7 @@ export type Database = {
     }
     Functions: {
       admin_system_metrics: { Args: never; Returns: Json }
+      request_guide_badge: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
