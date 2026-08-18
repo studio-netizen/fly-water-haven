@@ -32,6 +32,7 @@ export async function uploadToR2(
       contentType: file.type || "application/octet-stream",
       filename: opts.path ? undefined : file.name,
       path: opts.path,
+      size: file.size,
     },
     headers,
   });

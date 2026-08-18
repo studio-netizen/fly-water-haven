@@ -10,6 +10,19 @@ const corsHeaders = {
 
 const ALLOWED_FOLDERS = new Set(["posts", "avatars", "spots", "blog", "reports", "reviews"]);
 
+// Only image uploads are ever expected from the app.
+const ALLOWED_CONTENT_TYPES = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+]);
+
+// Hard cap for signed uploads (bytes). Client compresses well below this.
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+
 async function verifyAdminToken(token: string, secret: string): Promise<boolean> {
   try {
     const [payloadB64, sigB64] = token.split(".");
@@ -79,10 +92,25 @@ Deno.serve(async (req) => {
     const contentType = String(body.contentType || "application/octet-stream");
     const filename = body.filename ? sanitizeName(String(body.filename)) : "file";
     const upsertPath = body.path ? String(body.path) : null;
+    const size = Number.isFinite(Number(body.size)) ? Number(body.size) : null;
 
     if (!ALLOWED_FOLDERS.has(folder)) {
       return new Response(JSON.stringify({ error: "Invalid folder" }), {
         status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (!ALLOWED_CONTENT_TYPES.has(contentType.toLowerCase())) {
+      return new Response(JSON.stringify({ error: "Unsupported file type" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (size !== null && (size <= 0 || size > MAX_UPLOAD_BYTES)) {
+      return new Response(JSON.stringify({ error: "File too large" }), {
+        status: 413,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -148,10 +176,13 @@ Deno.serve(async (req) => {
     const baseUrl = `${endpoint.replace(/\/$/, "")}/${bucket}/${key}`;
     const url = new URL(baseUrl);
     url.searchParams.set("X-Amz-Expires", "300");
+    const signHeaders: Record<string, string> = { "content-type": contentType };
+    // Binding the exact byte length into the signature prevents oversized uploads.
+    if (size !== null) signHeaders["content-length"] = String(size);
     const signed = await aws.sign(
       new Request(url.toString(), {
         method: "PUT",
-        headers: { "content-type": contentType },
+        headers: signHeaders,
       }),
       { aws: { signQuery: true } },
     );
