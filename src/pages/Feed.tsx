@@ -364,7 +364,17 @@ const Feed = () => {
 
       {/* Posts */}
       <div className="max-w-lg mx-auto">
-        {loading ? (
+        {loadError && !loading ? (
+          <div className="flex flex-col items-center justify-center gap-4 px-6 py-16 text-center">
+            <p className="text-sm text-muted-foreground">Errore nel caricamento. Riprova.</p>
+            <button
+              onClick={() => fetchPosts(0, true)}
+              className="px-6 py-2.5 rounded-full bg-[#242242] text-[#f5f0e8] text-sm font-semibold"
+            >
+              Riprova
+            </button>
+          </div>
+        ) : loading ? (
           <div className="flex flex-col gap-4 p-4">
             {[1, 2, 3].map(i => (
               <div key={i} className="rounded-card border border-black/[0.08] bg-card shadow-card overflow-hidden">
