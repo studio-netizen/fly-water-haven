@@ -68,6 +68,7 @@ const Feed = () => {
   const [feedMode, setFeedMode] = useState<'forYou' | 'following'>('forYou');
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const unreadMessages = useUnreadMessages();
   const { t } = useTranslation();
   const { saved, toggleSave } = useSavedPosts();
@@ -92,7 +93,7 @@ const Feed = () => {
   }, [user, feedMode, followedUsers]);
 
   const fetchPosts = async (offset: number, replace = false) => {
-    if (replace) setLoading(true); else setLoadingMore(true);
+    if (replace) { setLoading(true); setLoadError(false); } else setLoadingMore(true);
 
     if (feedMode === 'following' && followedUsers.size === 0) {
       setPosts([]); setHasMore(false); setLoading(false); setLoadingMore(false);
@@ -109,13 +110,24 @@ const Feed = () => {
       query = query.in('user_id', Array.from(followedUsers));
     }
 
-    const { data, error } = await query;
+    // Timeout guard: never leave the user staring at an endless skeleton.
+    const timeout = new Promise<{ data: null; error: { message: string } }>((resolve) =>
+      setTimeout(() => resolve({ data: null, error: { message: 'timeout' } }), 8000)
+    );
+
+    const { data, error } = await Promise.race([
+      query as unknown as Promise<{ data: unknown; error: { message: string } | null }>,
+      timeout,
+    ]);
+
     if (!error && data) {
       const batch = data as unknown as Post[];
       setPosts(prev => replace ? batch : [...prev, ...batch]);
       setHasMore(batch.length === PAGE_SIZE);
     } else if (error) {
+      console.error('[Feed] errore caricamento post:', error);
       setHasMore(false);
+      if (replace) setLoadError(true);
     }
     setLoading(false);
     setLoadingMore(false);
