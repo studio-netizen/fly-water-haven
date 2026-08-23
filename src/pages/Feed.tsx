@@ -303,7 +303,7 @@ const Feed = () => {
 
 
       {/* Mobile header */}
-      <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
+      <header className="sticky top-0 z-40 bg-background border-b border-border px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <img src={logoImg} alt="Flywaters — La community italiana per la pesca a mosca" className="h-7" />
           <div className="flex items-center gap-3">
