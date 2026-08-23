@@ -40,7 +40,10 @@ const MobileFAB = () => {
           aria-hidden
         />
       )}
-      <div className="fixed right-4 bottom-20 z-50 lg:hidden flex flex-col items-end gap-2">
+      <div
+        className="fixed right-4 z-50 lg:hidden flex flex-col items-end gap-2"
+        style={{ bottom: 'calc(80px + env(safe-area-inset-bottom))' }}
+      >
         {open && (
           <div className="flex flex-col items-end gap-2 mb-1 animate-scale-in origin-bottom-right">
             {actions.map(({ icon: Icon, label, onClick }) => (
