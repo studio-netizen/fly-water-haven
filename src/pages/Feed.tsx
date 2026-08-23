@@ -260,6 +260,19 @@ const Feed = () => {
 
   const formatTime = (date: string) => formatTimeIt(date);
 
+  if (authLoading) return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+    </div>
+  );
+
+  if (!user) return <Suspense fallback={<div className="min-h-screen bg-background" />}><Landing /></Suspense>;
+
+  if (showOnboarding) {
+    return <OnboardingWizard onComplete={() => setShowOnboarding(false)} />;
+  }
+
+
   return (
     <AppLayout>
       <SEOHead title={`Feed | Flywaters`} description={t('seo.defaultDescription')} />
