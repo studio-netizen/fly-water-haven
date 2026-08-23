@@ -75,7 +75,7 @@ const Auth = () => {
             .then(() => {});
           const profileUpdate: Record<string, any> = { age_confirmed: true };
           if (requestGuideBadge) {
-            supabase.rpc('request_guide_badge').then(() => {});
+            supabase.from('guide_requests').insert({ user_id: data.user.id }).then(() => {});
           }
           let referredBy: string | null = null;
           try { referredBy = localStorage.getItem('flywaters_referred_by'); } catch {}
