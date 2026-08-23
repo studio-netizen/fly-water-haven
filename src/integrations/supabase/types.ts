@@ -268,6 +268,24 @@ export type Database = {
         }
         Relationships: []
       }
+      guide_requests: {
+        Row: {
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       likes: {
         Row: {
           created_at: string
@@ -721,7 +739,6 @@ export type Database = {
     }
     Functions: {
       admin_system_metrics: { Args: never; Returns: Json }
-      request_guide_badge: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
