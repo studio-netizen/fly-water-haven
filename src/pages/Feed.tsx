@@ -68,6 +68,7 @@ const Feed = () => {
   const [feedMode, setFeedMode] = useState<'forYou' | 'following'>('forYou');
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const unreadMessages = useUnreadMessages();
   const { t } = useTranslation();
   const { saved, toggleSave } = useSavedPosts();
@@ -92,7 +93,7 @@ const Feed = () => {
   }, [user, feedMode, followedUsers]);
 
   const fetchPosts = async (offset: number, replace = false) => {
-    if (replace) setLoading(true); else setLoadingMore(true);
+    if (replace) { setLoading(true); setLoadError(false); } else setLoadingMore(true);
 
     if (feedMode === 'following' && followedUsers.size === 0) {
       setPosts([]); setHasMore(false); setLoading(false); setLoadingMore(false);
@@ -109,13 +110,24 @@ const Feed = () => {
       query = query.in('user_id', Array.from(followedUsers));
     }
 
-    const { data, error } = await query;
+    // Timeout guard: never leave the user staring at an endless skeleton.
+    const timeout = new Promise<{ data: null; error: { message: string } }>((resolve) =>
+      setTimeout(() => resolve({ data: null, error: { message: 'timeout' } }), 8000)
+    );
+
+    const { data, error } = await Promise.race([
+      query as unknown as Promise<{ data: unknown; error: { message: string } | null }>,
+      timeout,
+    ]);
+
     if (!error && data) {
       const batch = data as unknown as Post[];
       setPosts(prev => replace ? batch : [...prev, ...batch]);
       setHasMore(batch.length === PAGE_SIZE);
     } else if (error) {
+      console.error('[Feed] errore caricamento post:', error);
       setHasMore(false);
+      if (replace) setLoadError(true);
     }
     setLoading(false);
     setLoadingMore(false);
@@ -149,17 +161,6 @@ const Feed = () => {
 
 
 
-  if (authLoading) return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-    </div>
-  );
-
-  if (!user) return <Suspense fallback={<div className="min-h-screen bg-background" />}><Landing /></Suspense>;
-
-  if (showOnboarding && user) {
-    return <OnboardingWizard onComplete={() => setShowOnboarding(false)} />;
-  }
 
 
   const fetchLikedPosts = async () => {
@@ -271,6 +272,19 @@ const Feed = () => {
 
   const formatTime = (date: string) => formatTimeIt(date);
 
+  if (authLoading) return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+    </div>
+  );
+
+  if (!user) return <Suspense fallback={<div className="min-h-screen bg-background" />}><Landing /></Suspense>;
+
+  if (showOnboarding) {
+    return <OnboardingWizard onComplete={() => setShowOnboarding(false)} />;
+  }
+
+
   return (
     <AppLayout>
       <SEOHead title={`Feed | Flywaters`} description={t('seo.defaultDescription')} />
@@ -303,7 +317,7 @@ const Feed = () => {
 
 
       {/* Mobile header */}
-      <header className="sticky top-0 z-40 bg-background border-b border-border px-4 py-3 lg:hidden">
+      <header className="sticky top-0 z-40 bg-background border-b border-border px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] lg:hidden">
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <img src={logoImg} alt="Flywaters — La community italiana per la pesca a mosca" className="h-7" />
           <div className="flex items-center gap-3">
@@ -323,7 +337,7 @@ const Feed = () => {
       </header>
 
       {/* Feed mode tabs */}
-      <div className="sticky top-[53px] lg:top-0 z-30 bg-background border-b border-border">
+      <div className="sticky top-[calc(53px+env(safe-area-inset-top))] lg:top-0 z-30 bg-background border-b border-border">
         <div className="max-w-lg mx-auto flex">
           <button
             onClick={() => setFeedMode('forYou')}
@@ -350,7 +364,17 @@ const Feed = () => {
 
       {/* Posts */}
       <div className="max-w-lg mx-auto">
-        {loading ? (
+        {loadError && !loading ? (
+          <div className="flex flex-col items-center justify-center gap-4 px-6 py-16 text-center">
+            <p className="text-sm text-muted-foreground">Errore nel caricamento. Riprova.</p>
+            <button
+              onClick={() => fetchPosts(0, true)}
+              className="px-6 py-2.5 rounded-full bg-[#242242] text-[#f5f0e8] text-sm font-semibold"
+            >
+              Riprova
+            </button>
+          </div>
+        ) : loading ? (
           <div className="flex flex-col gap-4 p-4">
             {[1, 2, 3].map(i => (
               <div key={i} className="rounded-card border border-black/[0.08] bg-card shadow-card overflow-hidden">
