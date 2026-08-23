@@ -323,7 +323,7 @@ const Feed = () => {
       </header>
 
       {/* Feed mode tabs */}
-      <div className="sticky top-[53px] lg:top-0 z-30 bg-background border-b border-border">
+      <div className="sticky top-[calc(53px+env(safe-area-inset-top))] lg:top-0 z-30 bg-background border-b border-border">
         <div className="max-w-lg mx-auto flex">
           <button
             onClick={() => setFeedMode('forYou')}
