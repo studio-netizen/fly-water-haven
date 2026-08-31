@@ -23,6 +23,7 @@ import MapAuthGate from '@/components/MapAuthGate';
 import SpotDetailDrawer from '@/components/SpotDetailDrawer';
 import MapLegend from '@/components/MapLegend';
 import ReportIssueDialog from '@/components/ReportIssueDialog';
+import { sanitizeHttpUrl } from '@/lib/sanitize-url';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -238,13 +239,37 @@ const SpotMap = () => {
     reports.forEach(rep => {
       if (existing.has(rep.id)) return;
       const marker = L.marker([rep.latitude, rep.longitude], { icon: createReportIcon() });
-      const html = `
-        <div style="min-width:200px;font-family:inherit;">
-          <strong style="color:#dc2626;text-transform:uppercase;font-size:11px;">${rep.type}</strong>
-          <p style="margin:4px 0 0 0;font-size:13px;line-height:1.4;">${rep.description.replace(/</g,'&lt;')}</p>
-          ${rep.image_url ? `<img src="${rep.image_url}" alt="report" style="margin-top:6px;width:100%;border-radius:6px;" />` : ''}
-        </div>`;
-      marker.bindPopup(html);
+      const container = document.createElement('div');
+      container.style.minWidth = '200px';
+      container.style.fontFamily = 'inherit';
+
+      const title = document.createElement('strong');
+      title.style.color = '#dc2626';
+      title.style.textTransform = 'uppercase';
+      title.style.fontSize = '11px';
+      title.textContent = rep.type;
+      container.appendChild(title);
+
+      const desc = document.createElement('p');
+      desc.style.margin = '4px 0 0 0';
+      desc.style.fontSize = '13px';
+      desc.style.lineHeight = '1.4';
+      desc.textContent = rep.description;
+      container.appendChild(desc);
+
+      const safeImg = sanitizeHttpUrl(rep.image_url);
+      if (safeImg) {
+        const img = document.createElement('img');
+        img.src = safeImg;
+        img.alt = 'report';
+        img.style.marginTop = '6px';
+        img.style.width = '100%';
+        img.style.borderRadius = '6px';
+        container.appendChild(img);
+      }
+
+      marker.bindPopup(container);
+
       marker.addTo(group);
       existing.set(rep.id, marker);
     });
