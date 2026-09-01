@@ -50,6 +50,8 @@ const CreatePostDialog = ({ onPostCreated }: Props) => {
       setImagePreview(URL.createObjectURL(result.file));
       setSizeInfo({ before: result.originalSize, after: result.compressedSize });
       setProgress(100);
+    } catch (err: any) {
+      toast.error(err?.message || 'Impossibile elaborare questa immagine.');
     } finally {
       setCompressing(false);
       setTimeout(() => { setProgress(0); setProgressLabel(''); }, 600);

@@ -51,6 +51,8 @@ const Publish = () => {
       const result = await compressImage(file, 'default');
       setImageFile(result.file);
       setImagePreview(URL.createObjectURL(result.file));
+    } catch (err: any) {
+      toast.error(err?.message || 'Impossibile elaborare questa immagine.');
     } finally {
       setCompressing(false);
     }

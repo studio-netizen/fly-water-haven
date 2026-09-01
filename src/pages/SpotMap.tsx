@@ -286,9 +286,8 @@ const SpotMap = () => {
         const result = await compressImage(file, 'default');
         setSpotPhotos(prev => [...prev, result.file]);
         setSpotPhotosPreviews(prev => [...prev, URL.createObjectURL(result.file)]);
-      } catch {
-        setSpotPhotos(prev => [...prev, file]);
-        setSpotPhotosPreviews(prev => [...prev, URL.createObjectURL(file)]);
+      } catch (e: any) {
+        toast.error(e?.message || 'Impossibile elaborare questa immagine.');
       }
     }
   };

@@ -35,9 +35,8 @@ const ReportIssueDialog = () => {
       const r = await compressImage(file, 'default');
       setPhoto(r.file);
       setPreview(URL.createObjectURL(r.file));
-    } catch {
-      setPhoto(file);
-      setPreview(URL.createObjectURL(file));
+    } catch (e: any) {
+      toast.error(e?.message || 'Impossibile elaborare questa immagine.');
     }
   };
 
