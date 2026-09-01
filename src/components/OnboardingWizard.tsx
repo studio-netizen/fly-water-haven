@@ -58,9 +58,8 @@ const OnboardingWizard = ({ onComplete }: OnboardingWizardProps) => {
       const result = await compressImage(file, 'avatar');
       setAvatarFile(result.file);
       setAvatarPreview(URL.createObjectURL(result.file));
-    } catch {
-      setAvatarFile(file);
-      setAvatarPreview(URL.createObjectURL(file));
+    } catch (e: any) {
+      toast.error(e?.message || 'Impossibile elaborare questa immagine.');
     }
   };
 

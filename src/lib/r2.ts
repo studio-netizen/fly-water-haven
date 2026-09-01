@@ -26,47 +26,63 @@ export async function uploadToR2(
   const headers: Record<string, string> = {};
   if (opts.adminToken) headers["x-admin-token"] = opts.adminToken;
 
-  const { data, error } = await supabase.functions.invoke<SignResponse>("r2-sign-upload", {
-    body: {
-      folder,
-      contentType: file.type || "application/octet-stream",
-      filename: opts.path ? undefined : file.name,
-      path: opts.path,
-      size: file.size,
-    },
-    headers,
-  });
-  if (error || !data?.uploadUrl) {
-    throw new Error(error?.message || "Failed to sign R2 upload");
+  let lastError: Error | null = null;
+
+  // Retry the whole sign+PUT cycle: mobile networks drop connections often.
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) await new Promise((r) => setTimeout(r, 800 * attempt));
+    try {
+      const { data, error } = await supabase.functions.invoke<SignResponse>("r2-sign-upload", {
+        body: {
+          folder,
+          contentType: file.type || "application/octet-stream",
+          filename: opts.path ? undefined : file.name,
+          path: opts.path,
+          size: file.size,
+        },
+        headers,
+      });
+      if (error || !data?.uploadUrl) {
+        throw new Error(error?.message || "Failed to sign R2 upload");
+      }
+
+      // XHR-based PUT so we can report upload progress to the caller.
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", data.uploadUrl);
+        xhr.timeout = 120000;
+        xhr.setRequestHeader("Content-Type", data.contentType);
+        if (opts.onProgress) {
+          xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable) {
+              opts.onProgress!(Math.min(99, Math.round((e.loaded / e.total) * 100)));
+            }
+          };
+        }
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            opts.onProgress?.(100);
+            resolve();
+          } else {
+            reject(new Error(`R2 upload failed (${xhr.status})`));
+          }
+        };
+        xhr.onerror = () => reject(new Error("Connessione interrotta durante il caricamento"));
+        xhr.ontimeout = () => reject(new Error("Caricamento troppo lento, riprova"));
+        xhr.onabort = () => reject(new Error("Caricamento annullato"));
+        xhr.send(file);
+      });
+
+      return data.publicUrl;
+    } catch (e: any) {
+      lastError = e instanceof Error ? e : new Error(String(e));
+      opts.onProgress?.(0);
+    }
   }
 
-  // XHR-based PUT so we can report upload progress to the caller.
-  await new Promise<void>((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open("PUT", data.uploadUrl);
-    xhr.setRequestHeader("Content-Type", data.contentType);
-    if (opts.onProgress) {
-      xhr.upload.onprogress = (e) => {
-        if (e.lengthComputable) {
-          opts.onProgress!(Math.min(99, Math.round((e.loaded / e.total) * 100)));
-        }
-      };
-    }
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        opts.onProgress?.(100);
-        resolve();
-      } else {
-        reject(new Error(`R2 upload failed (${xhr.status})`));
-      }
-    };
-    xhr.onerror = () => reject(new Error("R2 upload network error"));
-    xhr.onabort = () => reject(new Error("R2 upload aborted"));
-    xhr.send(file);
-  });
-
-  return data.publicUrl;
+  throw lastError || new Error("Upload failed");
 }
+
 
 
 /**
